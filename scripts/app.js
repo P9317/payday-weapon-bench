@@ -860,6 +860,8 @@ function populateLoadout(selectedWeapon) {
 
                 attachmentLabel.setAttribute('for', id);
                 attachmentLabel.innerHTML = attachmentName;
+                //translate attachments翻译配件
+                attachmentLabel.setAttribute('data-localisation-key', attachmentLabel.innerHTML);
 
                 attachmentInput.addEventListener('change', () => {
                     updateAttachments();
