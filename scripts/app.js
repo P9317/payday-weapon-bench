@@ -877,7 +877,7 @@ function populateLoadout(selectedWeapon) {
                     if (attachmentData.targetingData) {
                         attachmentStats.push(
                             attachmentData.targetingData
-                                .targetingMagnification + '× Magnification'
+                                .targetingMagnification + getLocalisation('× Magnification')
                         );
                     }
 
@@ -887,14 +887,14 @@ function populateLoadout(selectedWeapon) {
                                 '/' +
                                 (attachmentData.magazineData.ammoInventoryMax ??
                                     200) +
-                                ' Magazine Size'
+                                getLocalisation(' Magazine Size')
                         );
                         attachmentStats.push(
                             (attachmentData.magazineData.ammoPickup.min ?? 5) +
                                 '–' +
                                 (attachmentData.magazineData.ammoPickup.max ??
                                     10) +
-                                ' Ammo Pickup'
+                                getLocalisation(' Ammo Pickup')
                         );
                     }
 
@@ -907,7 +907,8 @@ function populateLoadout(selectedWeapon) {
                             modifier.value > 0
                                 ? '+' + modifier.value
                                 : modifier.value;
-                        attachmentStats.push(attribute + ' ' + value);
+                        attachmentStats.push(getLocalisation(attribute) + ' ' + value);
+                        //attachmentStats.push(attribute + ' ' + value);
                     });
 
                     if (attachmentStats.length == 0) return;
