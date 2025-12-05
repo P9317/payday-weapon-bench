@@ -1,110 +1,159 @@
+
+/**
+ *
+ * @param {string} tag
+ * @param {object} attributes
+ * @param {Array} children
+ * @returns {HTMLElement}
+ */
+function createElementWithAttributes(tag, attributes, children) {
+    const element = document.createElement(tag);
+    Object.entries(attributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+    });
+    children?.forEach(child => element.appendChild(child));
+    return element;
+}
+
+/**
+ *
+ * @param {number} value
+ * @param {number} decimals
+ * @returns {number}
+ */
+function formatNumber(value, decimals = 2) {
+    if (typeof value !== 'number' || isNaN(value)) {
+        return 0;
+    }
+    return Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
+/**
+ * @returns {string|null} 
+ */
+function getCurrentWeapon() {
+    try {
+        const weaponInput = document.querySelector('.selectable-weapon input:checked');
+        return weaponInput ? weaponInput.value : null;
+    } catch (error) {
+        console.error('获取当前武器时出错:', error);
+        return null;
+    }
+}
+
+/**
+ * @param {HTMLElement} element
+ * @param {string} tooltipContent
+ */
+function addTooltipEvents(element, tooltipContent) {
+    element.addEventListener('mouseenter', (event) => {
+        const rect = event.target.getBoundingClientRect();
+        showTooltip(
+            rect.left + 'px', 
+            rect.top + event.target.clientHeight + 'px', 
+            tooltipContent
+        );
+    });
+    element.addEventListener('mouseleave', () => {
+        tooltip.style.visibility = 'hidden';
+    });
+}
+
+/**
+ * @param {HTMLElement} element
+ * @param {string} key
+ * @param {object} variables
+ */
+function setLocalizationAttributes(element, key, variables = {}) {
+    if (!element) {
+        console.warn('setLocalizationAttributes: 元素不存在');
+        return;
+    }
+    
+    if (typeof key !== 'string' || key.trim() === '') {
+        console.warn('setLocalizationAttributes: 本地化键无效');
+        return;
+    }
+    
+    element.setAttribute('data-localisation-key', key);
+    if (variables && typeof variables === 'object' && Object.keys(variables).length > 0) {
+        try {
+            element.setAttribute('data-localisation-var', JSON.stringify(variables));
+        } catch (error) {
+            console.error('setLocalizationAttributes: 序列化变量时出错', error);
+        }
+    }
+}
+
+/**
+ */
+function updateStatsAfterChange() {
+    const currentWeapon = getCurrentWeapon();
+    if (currentWeapon) {
+        try {
+            updateWeaponStats(currentWeapon);
+            updateDamageStats(currentWeapon);
+        } catch (error) {
+            console.error('更新统计数据时出错:', error);
+        }
+    }
+}
+
 const SKILLS = {
-    edge: {
-        name: 'skills-edge',
-        description: 'skills-edge-desc',
-        modifier: 0.1,
-        iconOffset: {
-            x: 0,
-            y: 0,
+    
+////////////////////skill2.0/////////////////////    
+    Rifleman: {
+        name: 'skills-Rifleman',
+        description: 'skills-Rifleman-desc',
+        icons: {
+            base: 'images/AR_AR_Proficency.png',
+            mastered: 'images/AR_AR_Proficency_ACED.png',
         },
-    },
-    longShot: {
-        name: 'skills-long-shot',
-        description: 'skills-long-shot-desc',
-        iconOffset: {
-            x: 128,
-            y: 320,
-        },
-    },
-    faceToFace: {
-        name: 'skills-face-to-face',
-        description: 'skills-face-to-face-desc',
-        modifier: 0.1,
-        iconOffset: {
-            x: 128,
-            y: 512,
-        },
-    },
-    coupDeGrace: {
-        name: 'skills-coup-de-grace',
-        description: 'skills-coup-de-grace-desc',
-        modifier: 0.1,
-        iconOffset: {
-            x: 128,
-            y: 896,
-        },
-    },
-    combatMarking: {
-        name: 'skills-combat-marking',
-        description: 'skills-combat-marking-desc',
-        modifier: 0.2,
-        iconOffset: {
-            x: 64,
-            y: 960,
-        },
-    },
-    painAsymbolia: {
-        name: 'skills-pain-asymbolia',
-        description: 'skills-pain-asymbolia-desc',
-        modifier: 0.1,
-        iconOffset: {
-            x: 320,
-            y: 1216,
-        },
-    },
-    precisionShot: {
-        name: 'skills-precision-shot',
-        description: 'skills-precision-shot-desc',
         iconOffset: {
             x: 192,
-            y: 322,
-        },
-    },
-    highGrain: {
-        name: 'skills-high-grain',
-        description: 'skills-high-grain-desc',
-        attributeModifierMap: [
-            {
-                attribute: 'ArmorPenetration',
-                value: 10,
-            },
-        ],
-        iconOffset: {
-            x: 256,
-            y: 64,
-        },
-    },
-    expose: {
-        name: 'skills-expose',
-        description: 'skills-expose-desc',
-        iconOffset: {
-            x: 256,
-            y: 896,
-        },
-    },
-    duckAndWeave: {
-        name: 'skills-duck-and-weave',
-        description: 'skills-duck-and-weave-desc',
-        modifier: 0.25,
-        iconOffset: {
-            x: 190,
             y: 1280,
         },
+        modifier: 0.1,
+        reloadSpeedModifier: 2.5,
+        allowedClasses: ['Assault Rifle','LMG'],
     },
-    quickReload: {
-        name: 'skills-quick-reload',
-        description: 'skills-quick-reload-desc',
-        attributeModifierMap: [
-            {
-                attribute: 'OverallReloadPlayRate',
-                value: 20,
-            },
-        ],
-        iconOffset: {
-            x: 64,
-            y: 512,
+    BreakingPoint: {
+        name: 'skills-breaking-point',
+        description: 'skills-breaking-point-desc',
+        basemodifier: 0.05,
+        masteredmodifier: 0.15,
+        icons: {
+            base: 'images/AR_Crack_Open.png',
+            mastered: 'images/AR_Crack_Open_ACED.png',
         },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        allowedClasses: ['Assault Rifle','LMG'],
     },
+    HeadGames: {
+        name: 'skills-HeadGames',
+        description: 'skills-HeadGames-desc',
+        icons: {
+            base: 'images/Skills2_Profesional_Sniper_Sniper_Expert.png',
+            mastered: 'images/Skills2_Profesional_Sniper_Sniper_Expert_ACED.png',
+        },
+        iconOffset: {
+            x: 192,
+            y: 1280,
+        },
+        modifier: 0.1,
+        allowedClasses: ['Marksman'],
+    },
+};
+
+// minimal skill numeric values (persist across populateSkills calls)
+const SKILL_VALUES = {
+    // Rifleman adjustable value (1..12)
+    Rifleman: 1,
+    // HeadGames adjustable value (1..12)
+    HeadGames: 1,
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -118,61 +167,70 @@ const EDGE_DEPENDENT_SKILLS = [
 const ENEMIES = {
     swat: {
         displayName: 'SWAT',
-        health: 150,
-        armor: 70,
+        health: 220,
+        armor: 150,
         armorHardness: 1.5,
+        armorLayer: 4,
     },
     heavySwat: {
         displayName: 'Heavy SWAT',
-        health: 150,
-        armor: 170,
+        health: 218,
+        armor: 230,
         armorHardness: 1.5,
+        armorLayer: 5,
     },
     specials: {
         displayName: 'Specials',
-        health: 150,
-        armor: 140,
+        health: 160*1.5,
+        armor: 270,
         armorHardness: 2,
+        armorLayer: 6,
     },
     techies: {
         displayName: 'Techies',
-        health: 150,
-        armor: 140,
+        health: 280,
+        armor: 90,
         armorHardness: 1.5,
+        armorLayer: 2,  
     },
     shield: {
         displayName: 'Shield',
-        health: 160,
-        armor: 180,
+        health: 160*1.5,
+        armor: 270,
         armorHardness: 2.5,
-        visorArmor: 250,
-        visorArmorHardness: 2.5,
+        visorArmor: 240,
+        visorArmorHardness: 7,
+        armorLayer: 6,
     },
     bulldozer: {
         displayName: 'Bulldozer',
-        health: 200,
-        armor: 4000,
+        health: 320*3,
+        armor: 3600*5,
         armorHardness: 4,
-        visorArmor: 850,
+        visorArmor: 2000,
         visorArmorHardness: 4,
+        armorLayer: 35,
     },
     sniper: {
         displayName: 'Sniper',
-        health: 40,
+        health: 80*1.6,
         armor: 0,
         armorHardness: 0,
+        armorLayer: 0,
     },
     cloaker: {
         displayName: 'Cloaker',
-        health: 150,
-        armor: 0,
-        armorHardness: 0,
+        health: 140*1.6,
+        armor: 80,
+        armorHardness: 0,   
+        armorLayer: 2,
     },
     drone: {
         displayName: 'Drone',
         health: 50,
         armor: 50,
         armorHardness: 2,
+        armorLayer: 2,
     },
 };
 
@@ -324,6 +382,18 @@ function applyLoadout(weapon, skills, attachments) {
             'ArmorPenetration',
             attributeModifiers['ArmorPenetration'] ?? 0
         );
+
+    if (Array.isArray(skills) && skills.includes('Rifleman')) {
+        const rv = SKILL_VALUES.Rifleman ?? 1;
+        fireData.armorPenetration += rv * (SKILLS.Rifleman?.modifier ?? 0.1);
+        
+        const masteredSkills = typeof equippedSkillsMastered !== 'undefined' ? equippedSkillsMastered : new Set();
+        if (masteredSkills.has('Rifleman')) {
+            const reloadSpeedBonus = (SKILL_VALUES.Rifleman ?? 1) * (SKILLS.Rifleman?.reloadSpeedModifier ?? 2.5) / 100; // 将百分比转换为小数
+            updatedWeapon.reloadTime /= (1 + reloadSpeedBonus); 
+            updatedWeapon.reloadEmptyTime /= (1 + reloadSpeedBonus * 2); 
+        }
+    }
 
     const viewKick = updatedWeapon.recoilData.viewKick;
 
@@ -536,8 +606,9 @@ function weaponShotsToKill(
     const apDamage = weaponDamage * effectiveArmorPenetration;
     const critApDamage = critDamage * effectiveArmorPenetration;
 
+    const armorDamagePerShot = weaponDamage * (weaponCritMultiplier !== 1 ? armorCritMultiplier : 1);
     const shotsOnArmor = Math.min(
-        Math.ceil(enemyArmor / weaponDamage),
+        Math.ceil(enemyArmor / armorDamagePerShot),
         Math.ceil(enemyHealth / critApDamage)
     );
 
@@ -584,7 +655,164 @@ function weaponShotsToKill(
     };
 }
 
+function weaponShotsToKillByArmorLayer(
+    weaponDamage,
+    weaponCritMultiplier,
+    armorPenetration,
+    enemyHealth,
+    enemyArmor,
+    armorlayer
+) {
+    //if (weaponCritMultiplier < 1) weaponCritMultiplier = 1;
+    if (weaponDamage <= 0) {
+        return {
+            totalShotsNonCrit: Infinity,
+            totalShotsFullCrit: Infinity,
+        };
+    }
+
+    armorlayer = Math.max(0, Math.floor(armorlayer || 0));
+    const penetrationThreshold = Math.floor(armorPenetration || 0);
+    const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
+    const layerArmorValue = armorlayer > 0 ? enemyArmor / armorlayer : 0;
+    const requiredArmorDamage = layerArmorValue * layersToBreak;
+
+    let armorCritMultiplier = 1;
+    if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
+        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
+        armorCritMultiplier *= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
+    }
+
+    // Default armor shots if no BreakingPoint: number of shots needed to do
+    // requiredArmorDamage using armorDamagePerShot per shot
+    const armorDamagePerShot = weaponDamage * (weaponCritMultiplier !== 1 ? armorCritMultiplier : 1);
+    let armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
+
+    // BreakingPoint behaviour (new): if equipped, each failed shot that does not
+    // satisfy the penetration threshold will increase the weapon's armorPenetration
+    // for the *next* shot by a fixed increment (base 0.05, mastered 0.15). We need
+    // to simulate shot-by-shot because armor damage may reduce the effective
+    // "layer" count (enemy armor divided into equal layers), and the penetration
+    // increases only apply to subsequent shots.
+    if (Array.isArray(equippedSkills) && equippedSkills.includes('BreakingPoint')) {
+        const bp = SKILLS.BreakingPoint || {};
+        const increment = equippedSkillsMastered?.has('BreakingPoint')
+            ? (bp.masteredmodifier ?? 0.15)
+            : (bp.basemodifier ?? 0.05);
+
+        // If armorlayer or enemyArmor are zero, no need to simulate
+        if (armorlayer > 0 && enemyArmor > 0 && weaponDamage > 0) {
+            // Preserve initial values
+            const initialArmor = enemyArmor;
+            const initialLayers = armorlayer;
+
+            // layerValue: how much armor corresponds to one layer
+            const layerValue = initialLayers > 0 ? initialArmor / initialLayers : 0;
+
+            let currentArmor = initialArmor;
+            let currentPen = armorPenetration ?? 0; // this will accumulate increments
+            let currentLayers = initialLayers;
+            let shots = 0;
+
+            // Simulate shots until either penetration floor reaches remaining
+            // layer count (i.e. we can start penetrating), or armor is gone
+            while (currentArmor > 0) {
+                // If the current floored penetration already is sufficient to
+                // bypass the remaining layers, we stop (no more armor shots)
+                if (Math.floor(currentPen) >= currentLayers) break;
+
+                // This shot hits armor and reduces its absolute value
+                shots++;
+                // 当武器暴击倍率不等于 1 时，护甲承伤按 armorCritMultiplier 修正
+                currentArmor -= armorDamagePerShot;
+
+                // After a shot that did not penetrate, BreakingPoint increases
+                // the effective penetration for the *next* shot
+                currentPen += Math.max(0, increment);
+
+                // Recompute layers from remaining armor (each layer has size layerValue)
+                currentLayers = layerValue > 0 
+                    ? Math.max(0, Math.floor(currentArmor / layerValue)) 
+                    : 0;
+
+                // If after the shot the currentPen floored is sufficient, we stop
+                if (Math.floor(currentPen) >= currentLayers) break;
+
+                // Otherwise continue; the loop will end when we can penetrate or currentArmor <= 0
+            }
+
+            armorShots = shots;
+        }
+    }
+
+    if (enemyHealth <= 0) {
+        return {
+            totalShotsNonCrit: armorShots,
+            totalShotsFullCrit: armorShots,
+        };
+    }
+
+    // If BreakingPoint was used we may have computed armorShots using an effective
+    // armor-damage-per-shot; calculate overflow using that effective value if present.
+    // Compute overflowDamage: only the portion of the last armor-shot that
+    // exceeded the remaining armor spills into health. Note: with the
+    // BreakingPoint per-shot increment behaviour, the penetration increase
+    // applies to the next shot, so overflow only happens if a shot actually
+    // reduced armor below zero.
+    let overflowDamage = 0;
+    if (armorShots > 0) {
+        // amount of armour actually removed by the shots is armorShots * weaponDamage
+        // but the armour that existed to be removed was requiredArmorDamage when there
+        // was no per-shot penetration change. To keep consistent, if BreakingPoint
+        // was involved and the armour wasn't fully drained, overflow is 0. A simpler
+        // and robust rule: overflowDamage equals max(0, armorShots * weaponDamage - requiredArmorDamage)
+        // except when BreakingPoint increments allowed early termination without
+        // consuming requiredArmorDamage (in which case requiredArmorDamage would be
+        // larger than consumed armour) — that makes overflow negative which we clamp to 0.
+
+        overflowDamage = Math.max(0, armorShots * weaponDamage - requiredArmorDamage);
+
+        if (weaponCritMultiplier !== 1) {
+            overflowDamage *= weaponCritMultiplier;
+        }
+    }
+    const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
+
+    const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / weaponDamage);
+
+    if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
+        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
+        weaponCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
+    }
+
+    const fullCritHealthShots = Math.ceil(
+        remainingHealthAfterOverflow / (weaponDamage * weaponCritMultiplier)
+    );
+
+
+    if (weaponCritMultiplier > 1) {
+        return {
+            armoredCrits: 0,
+            armoredNonCrits: armorShots,
+            unarmoredCrits: fullCritHealthShots,
+            unarmoredNonCrits: 0,
+            totalShots: armorShots + fullCritHealthShots,
+        };
+    }
+
+    return {
+        armoredCrits: 0,
+        armoredNonCrits: armorShots,
+        unarmoredCrits: 0,
+        unarmoredNonCrits: nonCritHealthShots,
+        totalShots: armorShots + nonCritHealthShots,
+        //totalShotsNonCrit: armorShots + nonCritHealthShots,
+        //totalShotsFullCrit: armorShots + fullCritHealthShots,
+    };
+}
+
 let equippedSkills = [],
+    equippedSkillsMastered = new Set(),
     equippedAttachments = [];
 
 const weaponClasses = [
@@ -643,33 +871,45 @@ function populateWeaponSelector() {
         weaponName.innerHTML = WEAPON_DATA[weapon].displayName;
         weaponName.setAttribute('for', id);
 
-        weaponDLC.setAttribute(
-            'data-localisation-key',
+        setLocalizationAttributes(
+            weaponDLC,
             'dlc-' + WEAPON_DATA[weapon].dlc
         );
         weaponDLC.setAttribute('for', id);
 
         weaponInput.addEventListener('change', (event) => {
             populateLoadout(event.target.value);
-            updateWeaponStats(event.target.value);
-            updateDamageStats(event.target.value);
+            updateStatsAfterChange();
         });
 
         if (weapon == 'CAR4') weaponInput.checked = true;
 
         populateLoadout('CAR4');
-        updateWeaponStats('CAR4');
-        updateDamageStats('CAR4');
+        updateStatsAfterChange();
     }
 }
 
 const tooltip = document.querySelector('#tooltip');
 
 function showTooltip(left, top, tooltipBody) {
-    tooltip.style.visibility = 'visible';
-    tooltip.style.left = left;
-    tooltip.style.top = top;
     tooltip.innerHTML = tooltipBody;
+
+    const desiredLeft = parseFloat(left);
+    const desiredTop = parseFloat(top);
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+
+    tooltip.style.left = desiredLeft + 'px';
+    tooltip.style.top = desiredTop + 'px';
+    tooltip.style.visibility = 'hidden';
+
+    const height = tooltip.offsetHeight || 0;
+    const margin = 35;
+    const adjustedTop = desiredTop + height + margin > viewportHeight 
+        ? desiredTop - height - margin 
+        : desiredTop;
+
+    tooltip.style.top = adjustedTop + 'px';
+    tooltip.style.visibility = 'visible';
 }
 
 const skillSelector = document.querySelector(
@@ -682,7 +922,9 @@ const defaultSkillIcons = 'sydch';
 let skillIcons = defaultSkillIcons;
 if (localStorage.getItem('icons')) skillIcons = localStorage.getItem('icons');
 
-function populateSkills() {
+function populateSkills(weaponClass = 'Assault Rifle') {
+    skillSelector.innerHTML = '';
+
     for (const skill in SKILLS) {
         const selectableSkill = skillSelector.appendChild(
             document.createElement('div')
@@ -699,66 +941,323 @@ function populateSkills() {
         skillInput.id = id;
         skillInput.value = skill;
 
-        if (EDGE_DEPENDENT_SKILLS.includes(skill)) skillInput.disabled = true;
+        if (equippedSkills.includes(skill)) {
+            skillInput.checked = true;
+            skillInput.dataset.state = equippedSkillsMastered.has(skill) ? '2' : '1';
+        } else {
+            skillInput.checked = false;
+            skillInput.dataset.state = '0';
+        }
 
-        skillLabel.innerHTML = SKILLS[skill].displayName;
+        const allowed = SKILLS[skill].allowedClasses;
+        if (weaponClass && Array.isArray(allowed) && !allowed.includes(weaponClass)) {
+            selectableSkill.style.display = 'none';
+            skillInput.disabled = true;
+            if (skillInput.checked) {
+                const idx = equippedSkills.indexOf(skill);
+                if (idx > -1) equippedSkills.splice(idx, 1);
+                equippedSkillsMastered.delete(skill);
+                skillInput.checked = false;
+                skillInput.dataset.state = '0';
+            }
+        } else {
+            selectableSkill.style.display = '';
+            skillInput.disabled = false;
+        }
+
+        // put text into a dedicated span so we don't overwrite the overlay img
+        const skillTextSpan = skillLabel.querySelector('.skill-label-text');
+        if (skillTextSpan) {
+            setLocalizationAttributes(skillTextSpan, SKILLS[skill].name);
+            skillTextSpan.innerText = getLocalisation(SKILLS[skill].name);
+        } else {
+            // fallback if template hasn't been updated
+            setLocalizationAttributes(skillLabel, SKILLS[skill].name);
+            skillLabel.innerText = getLocalisation(SKILLS[skill].name);
+        }
         skillLabel.setAttribute('for', id);
 
-        skillLabel.style = `
-            --image-x-offset: ${SKILLS[skill].iconOffset.x * -1}px;
-            --image-y-offset: ${SKILLS[skill].iconOffset.y * -1}px;
-            --image-url: url("images/${
-                skill == 'edge'
-                    ? skillIcons + '-edge.png'
-                    : skillIcons + '-skills.png'
-            }");
-        `;
-
-        skillInput.addEventListener('change', (event) => {
-            updateSkills(event.target.value);
-            updateWeaponStats(
-                document.querySelector('.selectable-weapon input:checked').value
-            );
-            updateDamageStats(
-                document.querySelector('.selectable-weapon input:checked').value
-            );
-        });
-
-        skillLabel.addEventListener('mouseenter', (event) => {
-            const tooltipBody = `
-                <span class="tooltip-title">${getLocalisation(
-                    SKILLS[skill].name
-                )}</span>
-                <span>${getLocalisation(SKILLS[skill].description)}</span>
+        const iconSpec = SKILLS[skill].icons || (SKILLS[skill].iconBase || SKILLS[skill].iconMastered ? { base: SKILLS[skill].iconBase, mastered: SKILLS[skill].iconMastered } : null);
+        if (iconSpec && iconSpec.base) {
+            skillLabel.dataset.iconMode = 'single';
+            skillLabel.style.setProperty('--image-url', `url("${iconSpec.base}")`);
+            skillLabel.style.setProperty('--image-x-offset', 'center');
+            skillLabel.style.setProperty('--image-y-offset', 'center');
+            skillLabel.style.setProperty('--image-size', '64px 64px');
+        } else {
+            skillLabel.dataset.iconMode = 'pack';
+            skillLabel.style = `
+                --image-x-offset: ${SKILLS[skill].iconOffset.x * -1}px;
+                --image-y-offset: ${SKILLS[skill].iconOffset.y * -1}px;
+                --image-url: url("images/${
+                    skill == 'edge'
+                        ? skillIcons + '-edge.png'
+                        : skillIcons + '-skills.png'
+                }");
             `;
+        }
 
-            const rect = event.target.getBoundingClientRect();
+        if (skillLabel.dataset.iconMode === 'pack') {
+            skillLabel.style.setProperty('--image-size', '64px 64px');
+        }
 
-            showTooltip(
-                rect.left + 'px',
-                rect.top + event.target.clientHeight + 'px',
-                tooltipBody
+        if (skill === 'HeadGames') {
+            skillLabel.style.setProperty('--image-scale', '70%');
+        }
+
+        skillLabel.style.position = skillLabel.style.position || 'relative';
+
+        // overlay img is now provided in template (no dynamic creation needed)
+        const overlay = skillLabel.querySelector('.skill-mastered-overlay');
+
+        if (skill === 'Rifleman') {
+            let counter = selectableSkill.querySelector('.rifleman-counter');
+
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'rifleman-counter';
+                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'rifleman-minus';
+                minus.textContent = '-';
+                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'rifleman-value';
+                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+                valueSpan.textContent = SKILL_VALUES.Rifleman ?? 1;
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'rifleman-plus';
+                plus.textContent = '+';
+                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const stopEvent = (ev) => {
+                    ev.stopPropagation();
+                };
+
+                minus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.Rifleman ?? 1;
+                    const next = Math.max(1, cur - 1);
+                    SKILL_VALUES.Rifleman = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('Rifleman')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                plus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.Rifleman ?? 1;
+                    const next = Math.min(12, cur + 1);
+                    SKILL_VALUES.Rifleman = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('Rifleman')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+                counter.appendChild(minus);
+                counter.appendChild(valueSpan);
+                counter.appendChild(plus);
+
+                selectableSkill.appendChild(counter);
+            } else {
+                const valueSpan = counter.querySelector('.rifleman-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.Rifleman ?? 1;
+            }
+        }
+
+        if (skill === 'HeadGames') {
+            let counter = selectableSkill.querySelector('.headgames-counter');
+
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'rifleman-counter headgames-counter';
+                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'headgames-minus';
+                minus.textContent = '-';
+                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'headgames-value';
+                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+                valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'headgames-plus';
+                plus.textContent = '+';
+                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const stopEvent = (ev) => {
+                    ev.stopPropagation();
+                };
+
+                minus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.HeadGames ?? 1;
+                    const next = Math.max(1, cur - 1);
+                    SKILL_VALUES.HeadGames = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('HeadGames')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                plus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.HeadGames ?? 1;
+                    const next = Math.min(12, cur + 1);
+                    SKILL_VALUES.HeadGames = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('HeadGames')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+                counter.appendChild(minus);
+                counter.appendChild(valueSpan);
+                counter.appendChild(plus);
+
+                selectableSkill.appendChild(counter);
+            } else {
+                const valueSpan = counter.querySelector('.headgames-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
+            }
+        }
+
+
+         const applyVisualState = (state) => {
+             // Keep data-state on both input and label in sync (some CSS targets input[data-state])
+             skillInput.dataset.state = state;
+             skillLabel.dataset.state = state;
+
+             // checked should be true for both basic(1) and mastered(2), false for none(0)
+             skillInput.checked = state !== '0';
+
+             // Use a class to control the icon-only greyscale via CSS on the ::before pseudo-element
+             skillLabel.classList.toggle('unselected', state === '0');
+
+             // toggle mastered overlay
+             skillLabel.classList.toggle('mastered', state === '2');
+
+             // ensure the container .skill has .selected when any state except '0' so the page's
+             // original selected visuals (which use .skill.selected or :has(> input:checked)) are
+             // applied consistently. When state is '0' remove .selected to clear visuals.
+             selectableSkill.classList.toggle('selected', state !== '0');
+
+             if (skillLabel.dataset.iconMode === 'single') {
+                 const baseIcon = (SKILLS[skill].icons && SKILLS[skill].icons.base) || SKILLS[skill].iconBase;
+                 const masteredIcon = (SKILLS[skill].icons && SKILLS[skill].icons.mastered) || SKILLS[skill].iconMastered || baseIcon;
+                 const iconUrl = state === '2' ? masteredIcon : baseIcon;
+                 if (iconUrl) {
+                     skillLabel.style.setProperty('--image-url', `url("${iconUrl}")`);
+                 }
+             }
+
+                     console.debug('Skill state updated', {
+                 skill,
+                 state,
+                 mastered: equippedSkillsMastered.has(skill),
+                 overlayVisible: skillLabel.classList.contains('mastered'),
+             });
+         };
+
+        applyVisualState(skillInput.dataset.state);
+
+        skillInput.addEventListener('click', (event) => {
+            event.preventDefault();
+            const skill = event.target.value;
+            const isEquipped = equippedSkills.includes(skill);
+            const isMastered = equippedSkillsMastered.has(skill);
+
+            if (!isEquipped) {
+                equippedSkills.push(skill);
+                equippedSkillsMastered.delete(skill);
+                skillInput.dataset.state = '1';
+                skillInput.checked = true;
+                applyVisualState('1');
+            } else if (isEquipped && !isMastered) {
+                equippedSkillsMastered.add(skill);
+                skillInput.dataset.state = '2';
+                skillInput.checked = true;
+                applyVisualState('2');
+            } else {
+                const idx = equippedSkills.indexOf(skill);
+                if (idx > -1) equippedSkills.splice(idx, 1);
+                equippedSkillsMastered.delete(skill);
+                skillInput.dataset.state = '0';
+                skillInput.checked = false;
+                applyVisualState('0');
+            }
+
+            console.debug('Skill clicked', { skill, state: skillInput.dataset.state });
+            updateStatsAfterChange();
+        });
+
+        skillInput.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            const skill = event.target.value;
+
+            // Context behaviour: always reset to none (用户要求：右键直接回到未选)
+            const idx = equippedSkills.indexOf(skill);
+            if (idx > -1) equippedSkills.splice(idx, 1);
+            equippedSkillsMastered.delete(skill);
+            skillInput.dataset.state = '0';
+            skillInput.checked = false;
+            applyVisualState('0');
+
+            console.debug('Skill contextmenu changed', { skill, state: skillInput.dataset.state });
+
+            updateStatsAfterChange();
+        });
+
+        skillLabel.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            skillInput.dispatchEvent(
+                new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
             );
         });
 
-        skillLabel.addEventListener('mouseleave', (event) => {
-            tooltip.style.visibility = 'hidden';
-        });
+        const tooltipBody = `
+            <span class="tooltip-title">${getLocalisation(
+                SKILLS[skill].name
+            )}</span>
+            <span>${getLocalisation(SKILLS[skill].description)}</span>
+        `;
+        
+        addTooltipEvents(skillLabel, tooltipBody);
     }
 }
 
 function updateSkillIcons() {
     document.querySelectorAll('.skill label').forEach((element) => {
-        if (element.getAttribute('for') == 'edge') {
-            element.style.setProperty(
-                '--image-url',
-                `url("images/${skillIcons}-edge.png")`
-            );
-        } else {
-            element.style.setProperty(
-                '--image-url',
-                `url("images/${skillIcons}-skills.png")`
-            );
+        if (element.dataset.iconMode === 'pack') {
+            if (element.getAttribute('for') == 'edge') {
+                element.style.setProperty(
+                    '--image-url',
+                    `url("images/${skillIcons}-edge.png")`
+                );
+            } else {
+                element.style.setProperty(
+                    '--image-url',
+                    `url("images/${skillIcons}-skills.png")`
+                );
+            }
         }
     });
 }
@@ -788,6 +1287,8 @@ const attachmentSlots = [
 
 function populateLoadout(selectedWeapon) {
     const weapon = WEAPON_DATA[selectedWeapon];
+
+    populateSkills(weapon.class);
 
     document.querySelector('#loadout h2').innerHTML = weapon.displayName;
 
@@ -865,8 +1366,42 @@ function populateLoadout(selectedWeapon) {
 
                 attachmentInput.addEventListener('change', () => {
                     updateAttachments();
-                    updateWeaponStats(selectedWeapon);
-                    updateDamageStats(selectedWeapon);
+                    updateStatsAfterChange();
+                });
+
+                attachmentInput.addEventListener('contextmenu', (event) => {
+                    event.preventDefault();
+                    const slotName = attachmentInput.name;
+                    const defaultValue = defaultAttachment;
+
+                    if (attachmentInput.value !== defaultValue) {
+                        const defaultInput = document.querySelector(
+                            `input[name="${slotName}"][value="${defaultValue}"]`
+                        );
+                        if (defaultInput) {
+                            defaultInput.checked = true;
+                            defaultInput.dispatchEvent(
+                                new Event('change', { bubbles: true })
+                            );
+                        }
+                    } else {
+                        const noneInput = document.querySelector(
+                            `input[name="${slotName}"][value="None"]`
+                        );
+                        if (noneInput && !noneInput.checked) {
+                            noneInput.checked = true;
+                            noneInput.dispatchEvent(
+                                new Event('change', { bubbles: true })
+                            );
+                        }
+                    }
+                });
+
+                attachmentLabel.addEventListener('contextmenu', (event) => {
+                    event.preventDefault();
+                    attachmentInput.dispatchEvent(
+                        new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
+                    );
                 });
 
                 attachmentLabel.addEventListener('mouseenter', (event) => {
@@ -887,14 +1422,14 @@ function populateLoadout(selectedWeapon) {
                                 '/' +
                                 (attachmentData.magazineData.ammoInventoryMax ??
                                     200) +
-                                getLocalisation(' Magazine Size')
+                            getLocalisation(' Magazine Size')
                         );
                         attachmentStats.push(
                             (attachmentData.magazineData.ammoPickup.min ?? 5) +
                                 '–' +
                                 (attachmentData.magazineData.ammoPickup.max ??
                                     10) +
-                                getLocalisation(' Ammo Pickup')
+                            getLocalisation(' Ammo Pickup')
                         );
                     }
 
@@ -916,9 +1451,8 @@ function populateLoadout(selectedWeapon) {
                     const tooltipBody = `
                         <span>${attachmentStats.join('</br>')}</span>
                     `;
-
+                    
                     const rect = event.target.getBoundingClientRect();
-
                     showTooltip(
                         rect.left + 'px',
                         rect.top + event.target.clientHeight + 'px',
@@ -926,7 +1460,7 @@ function populateLoadout(selectedWeapon) {
                     );
                 });
 
-                attachmentLabel.addEventListener('mouseleave', (event) => {
+                attachmentLabel.addEventListener('mouseleave', () => {
                     tooltip.style.visibility = 'hidden';
                 });
             }
@@ -939,22 +1473,11 @@ function populateLoadout(selectedWeapon) {
 function updateSkills(selectedSkill) {
     const skillIsEquipped = equippedSkills.includes(selectedSkill);
 
-    if (!skillIsEquipped) equippedSkills.push(selectedSkill);
-    else equippedSkills.splice(equippedSkills.indexOf(selectedSkill), 1);
-
-    if (selectedSkill !== 'edge') return;
-    for (const skill of EDGE_DEPENDENT_SKILLS) {
-        const skillInput = document.querySelector(`input[value=${skill}]`);
-
-        if (skillIsEquipped) {
-            skillInput.disabled = true;
-            skillInput.checked = false;
-
-            if (equippedSkills.includes(skill))
-                equippedSkills.splice(equippedSkills.indexOf(skill), 1);
-        } else {
-            skillInput.disabled = false;
-        }
+    if (!skillIsEquipped) {
+        equippedSkills.push(selectedSkill);
+    } else {
+        equippedSkills.splice(equippedSkills.indexOf(selectedSkill), 1);
+        equippedSkillsMastered.delete(selectedSkill);
     }
 }
 
@@ -990,13 +1513,13 @@ function updateWeaponStats(selectedWeapon) {
         fireData.projectilesPerFiredRound > 1
     ) {
         baseDamageStat.innerHTML =
-            Math.round(fireData.damageDistanceArray[0].damage * 100) / 100 +
+            formatNumber(fireData.damageDistanceArray[0].damage) +
             '*' +
             Math.round(fireData.projectilesPerFiredRound) +
             '/';
     } else {
         baseDamageStat.innerHTML =
-            Math.round(fireData.damageDistanceArray[0].damage * 100) / 100 +
+            formatNumber(fireData.damageDistanceArray[0].damage) +
             '/';
     }
 
@@ -1012,8 +1535,14 @@ function updateWeaponStats(selectedWeapon) {
     );
 
     const baseMultiplierStat = document.querySelector('#stat-base-multiplier');
-    baseMultiplierStat.innerHTML =
-        fireData.criticalDamageMultiplierDistanceArray[0].multiplier + '×/';
+    let baseMultiplier = fireData.criticalDamageMultiplierDistanceArray[0].multiplier;
+    
+    if (equippedSkills.includes('HeadGames')) {
+        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
+        baseMultiplier *= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
+    }
+    
+    baseMultiplierStat.innerHTML = formatNumber(baseMultiplier, 2) + '×/';
 
     const baseMultiplierRange = baseMultiplierStat.appendChild(
         document.createElement('span')
@@ -1026,8 +1555,9 @@ function updateWeaponStats(selectedWeapon) {
         }"}`
     );
 
-    document.querySelector('#stat-armor-penetration').innerHTML =
-        fireData.armorPenetration;
+    const rawAp = Number(fireData.armorPenetration ?? 0);
+    const apDisplay = formatNumber(rawAp).toString().replace(/\.0+$/, '');
+    document.querySelector('#stat-armor-penetration').innerHTML = apDisplay;
 
     const fireModeStat = document.querySelector('#stat-fire-type');
     fireModeStat.innerHTML = fireData.fireType;
@@ -1058,17 +1588,17 @@ function updateWeaponStats(selectedWeapon) {
         fireData.ammoPickup.min + '–' + weapon.fireData.ammoPickup.max;
 
     const reloadStat = document.querySelector('#stat-reload');
-    reloadStat.setAttribute('data-localisation-key', 'stats-time');
-    reloadStat.setAttribute(
-        'data-localisation-var',
-        `{"duration": "${Math.round(weapon.reloadTime * 1000) / 1000}"}`
+    setLocalizationAttributes(
+        reloadStat,
+        'stats-time',
+        {"duration": formatNumber(weapon.reloadTime, 3).toString()}
     );
 
     const fullReloadStat = document.querySelector('#stat-full-reload');
-    fullReloadStat.setAttribute('data-localisation-key', 'stats-time');
-    fullReloadStat.setAttribute(
-        'data-localisation-var',
-        `{"duration": "${Math.round(weapon.reloadEmptyTime * 1000) / 1000}"}`
+    setLocalizationAttributes(
+        fullReloadStat,
+        'stats-time',
+        {"duration": formatNumber(weapon.reloadEmptyTime, 3).toString()}
     );
 
     const weaponDamageStats = document.querySelector(
@@ -1095,12 +1625,15 @@ function updateWeaponStats(selectedWeapon) {
         );
 
         damageStat.children[1].innerHTML =
-            Math.round(damageStep.damage * 100) / 100;
+            formatNumber(damageStep.damage);
     });
 
     const weaponCritStats = document.querySelector('#weapon-stats-damage > div')
         .children[1];
     weaponCritStats.innerHTML = '';
+
+    const headGamesLevel = equippedSkills.includes('HeadGames') ? (SKILL_VALUES.HeadGames ?? 1) : 0;
+    const headGamesModifier = equippedSkills.includes('HeadGames') ? (SKILLS.HeadGames?.modifier ?? 0) : 0;
 
     weapon.fireData.criticalDamageMultiplierDistanceArray.forEach(
         (criticalDamageStep) => {
@@ -1116,16 +1649,21 @@ function updateWeaponStats(selectedWeapon) {
             );
             critStat.children[0].setAttribute(
                 'data-localisation-var',
-                `{"distance": "${
+                `{"distance":"${
                     Math.round(Math.min(criticalDamageStep.distance, 100000)) /
                     100
                 }"}`
             );
 
-            critStat.children[1].innerHTML =
-                criticalDamageStep.multiplier + 'x';
+            let finalMultiplier = criticalDamageStep.multiplier;
+            if (headGamesLevel > 0) {
+                finalMultiplier *= (1 + headGamesModifier * headGamesLevel);
+            }
+
+            critStat.children[1].innerHTML = formatNumber(finalMultiplier, 2) + 'x';
         }
     );
+
 
     const recoilPatternStat = document.querySelector('svg#recoil-pattern');
 
@@ -1272,24 +1810,24 @@ function updateWeaponStats(selectedWeapon) {
     initialNumStat.innerHTML = weapon.recoilData.viewKick.initialNum;
 
     const equipTimeStat = document.querySelector('#stat-equip-time');
-    equipTimeStat.setAttribute('data-localisation-key', 'stats-time');
-    equipTimeStat.setAttribute(
-        'data-localisation-var',
-        `{"duration": "${Math.round(weapon.equipTime * 1000) / 1000}"}`
+    setLocalizationAttributes(
+        equipTimeStat,
+        'stats-time',
+        {"duration": formatNumber(weapon.equipTime, 3).toString()}
     );
 
     const unequipTimeStat = document.querySelector('#stat-unequip-time');
-    unequipTimeStat.setAttribute('data-localisation-key', 'stats-time');
-    unequipTimeStat.setAttribute(
-        'data-localisation-var',
-        `{"duration": "${Math.round(weapon.unequipTime * 1000) / 1000}"}`
+    setLocalizationAttributes(
+        unequipTimeStat,
+        'stats-time',
+        {"duration": formatNumber(weapon.unequipTime, 3).toString()}
     );
 
     const sprintExitTimeStat = document.querySelector('#stat-sprint-exit-time');
-    sprintExitTimeStat.setAttribute('data-localisation-key', 'stats-time');
-    sprintExitTimeStat.setAttribute(
-        'data-localisation-var',
-        `{"duration": "${Math.round(weapon.sprintExitTime * 1000) / 1000}"}`
+    setLocalizationAttributes(
+        sprintExitTimeStat,
+        'stats-time',
+        {"duration": formatNumber(weapon.sprintExitTime, 3).toString()}
     );
 }
 
@@ -1336,23 +1874,32 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         )
             enemyArmor = 0;
 
-        const shotsToKill = weaponShotsToKill(
+//        const shotsToKill = weaponShotsToKill(
+//            damage,
+//            multiplier,
+//            effectiveArmorPenetration(
+//                fireData.armorPenetration,
+//                enemy.armorHardness
+//            ),
+//            enemy.health,
+//            enemyArmor
+//        );
+        const shotsToKill = weaponShotsToKillByArmorLayer(
             damage,
             multiplier,
-            effectiveArmorPenetration(
-                fireData.armorPenetration,
-                enemy.armorHardness
-            ),
+            fireData.armorPenetration,
             enemy.health,
-            enemyArmor
+            enemyArmor,
+            enemy.armorLayer
         );
 
         if (enemy.displayName == 'Bulldozer' || enemy.displayName == 'Shield') {
-            const shotsToBreakVisor =
-                fireData.armorPenetration < enemy.visorArmorHardness - 0.99
-                    ? Math.ceil(enemy.visorArmor / damage)
-                    : 0;
-
+            const shotsToBreakVisor = enemy.displayName == 'Bulldozer' 
+                ? Math.ceil(enemy.visorArmor / damage)
+                : fireData.armorPenetration < enemy.visorArmorHardness - 0.99
+                ? Math.ceil(enemy.visorArmor / damage)
+                : 0;
+    
             shotsToKill.visorShots = shotsToBreakVisor;
             shotsToKill.nonVisorShots = shotsToKill.totalShots;
             if (headshots) shotsToKill.totalShots += shotsToBreakVisor;
@@ -1474,17 +2021,31 @@ function updateDamageStats(selectedWeapon) {
             );
         }
 
-        if (enemyData.armorHardness) {
-            const enemyArmorHardness = enemyInfo.appendChild(
+//        if (enemyData.armorHardness) {
+//            const enemyArmorHardness = enemyInfo.appendChild(
+//                document.createElement('span')
+//            );
+//            enemyArmorHardness.setAttribute(
+//                'data-localisation-key',
+//                'enemy-stats-armor-hardness'
+//            );
+//            enemyArmorHardness.setAttribute(
+//                'data-localisation-var',
+//                `{"hardness":"${enemyData.armorHardness}"}`
+//            );
+//        }
+
+        if (enemyData.armorLayer) {
+            const enemyArmorLayer = enemyInfo.appendChild(
                 document.createElement('span')
             );
-            enemyArmorHardness.setAttribute(
+            enemyArmorLayer.setAttribute(
                 'data-localisation-key',
-                'enemy-stats-armor-hardness'
+                'enemy-stats-armor-layer'
             );
-            enemyArmorHardness.setAttribute(
+            enemyArmorLayer.setAttribute(
                 'data-localisation-var',
-                `{"hardness":"${enemyData.armorHardness}"}`
+                `{"layer":"${enemyData.armorLayer}"}`
             );
         }
 
@@ -1578,12 +2139,10 @@ function updateDamageStats(selectedWeapon) {
             const ttk = damageBreakdown.appendChild(
                 document.createElement('span')
             );
-            ttk.setAttribute('data-localisation-key', 'stats-time');
-            ttk.setAttribute(
-                'data-localisation-var',
-                `{"duration": "${
-                    Math.round(timeToKill(weapon, totalShots) * 100) / 100
-                }"}`
+            setLocalizationAttributes(
+                ttk,
+                'stats-time',
+                {"duration": formatNumber(timeToKill(weapon, totalShots), 2).toString()}
             );
 
             if (totalShots > weapon.fireData.ammoLoaded) {
@@ -1678,12 +2237,10 @@ function updateDamageStats(selectedWeapon) {
             const ttk = damageBreakdown.appendChild(
                 document.createElement('span')
             );
-            ttk.setAttribute('data-localisation-key', 'stats-time');
-            ttk.setAttribute(
-                'data-localisation-var',
-                `{"duration": "${
-                    Math.round(timeToKill(weapon, totalShots) * 100) / 100
-                }"}`
+            setLocalizationAttributes(
+                ttk,
+                'stats-time',
+                {"duration": formatNumber(timeToKill(weapon, totalShots), 2).toString()}
             );
 
             if (totalShots > weapon.fireData.ammoLoaded) {

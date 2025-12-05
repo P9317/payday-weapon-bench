@@ -426,22 +426,28 @@ h1 {
     width: 4.236em;
     height: 4.236em;
 
+    overflow: hidden;
     color: transparent;
 }
 
 .skill label::before {
     position: absolute;
-    top: calc((4.236em - 64px) / 2);
-    left: calc((4.236em - 64px) / 2);
+    top: 50%;
+    left: 50%;
 
     width: 64px;
     height: 64px;
-    scale: 70%;
+    transform: translate(-50%, -50%) scale(var(--image-scale, 70%));
 
     background:
         var(--image-url) var(--image-x-offset) var(--image-y-offset) no-repeat;
+    background-size: var(--image-size, auto);
 
     content: '';
+}
+
+.skill label.unselected::before {
+    filter: grayscale(80%) brightness(0.75);
 }
 
 .skill input:disabled + label::before {
@@ -695,12 +701,18 @@ span.damage-breakdown span {
 
 .selectable-weapon:has(> input:checked),
 .skill:has(> input:checked) label,
+.skill.selected label,
+.skill input[data-state="1"]:checked + label,
+.skill input[data-state="2"]:checked + label,
 .attachment:has(> input:checked) label {
     border-color: var(--color-primary);
 }
 
 .selectable-weapon:has(> input:checked)::after,
 .skill:has(> input:checked) label::after,
+.skill.selected label::after,
+.skill input[data-state="1"]:checked + label::after,
+.skill input[data-state="2"]:checked + label::after,
 .attachment:has(> input:checked) label::after {
     position: absolute;
     top: 0;
@@ -746,4 +758,9 @@ span.damage-breakdown span {
 
     font-family: var(--font-mono);
     color: var(--color-text-alt);
+}
+
+.skill label::after {
+    content: none;
+    border: none;
 }
