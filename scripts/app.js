@@ -760,7 +760,7 @@ function weaponShotsToKillByArmorLayer(
     // applies to the next shot, so overflow only happens if a shot actually
     // reduced armor below zero.
     let overflowDamage = 0;
-    if (armorShots > 0 && armorShots * weaponDamage > enemy.armor) {
+    if (armorShots > 0 && armorShots * weaponDamage > enemyArmor) {
         // amount of armour actually removed by the shots is armorShots * weaponDamage
         // but the armour that existed to be removed was requiredArmorDamage when there
         // was no per-shot penetration change. To keep consistent, if BreakingPoint
@@ -770,7 +770,7 @@ function weaponShotsToKillByArmorLayer(
         // consuming requiredArmorDamage (in which case requiredArmorDamage would be
         // larger than consumed armour) — that makes overflow negative which we clamp to 0.
 
-        overflowDamage = Math.max(0, armorShots * weaponDamage - enemy.armor);
+        overflowDamage = Math.max(0, armorShots * weaponDamage - enemyArmor);
 
         if (weaponCritMultiplier !== 1) {
             overflowDamage *= weaponCritMultiplier;
