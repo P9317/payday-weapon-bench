@@ -1,7 +1,7 @@
 {
     "title": "Payday 3 Weapon Bench",
     "credits": "Made by Jade 🌺 ✦ Skill Icons by Sydch ✦ Special Thanks to Price9317 and Lunar Pearl",
-    "whats-new": "Updated to Smash & Grab",
+    "whats-new": "Updated to Skills 2.0",
     "dlc-1": "Syntax Error",
     "dlc-2": "Boys in Blue",
     "dlc-3": "Houston Breakout",
@@ -9,12 +9,14 @@
     "dlc-5": "Party Powder",
 
     "skills-Rifleman":"RIFLEMAN",
-    "skills-Rifleman-desc":"<b>BASE:</b>For every skill equipped in Commando branch, Assault Rifles and LMGs gain an additional 0.1 Armor Penetration.\n<b>ACE:</b>Assault Rifle and LMG reload speed increases by 2.5% for every skill equipped in Commando branch.",
+    "skills-Rifleman-desc":"<b>BASE:</b>For every skill equipped in Commando branch, Assault Rifles and LMGs gain an additional 0.1 Armor Penetration.<br><b>ACE:</b>Assault Rifle and LMG reload speed increases by 2.5% for every skill equipped in Commando branch.",
     "skills-breaking-point": "BREAKING POINT",
-    "skills-breaking-point-desc": "<b>BASE:</b>Armor Penetration for Assault Rifles and LMGs increases by 0.05 for each hit that does not penetrate an enemy's armor.\n<b>ACE:</b>This Armor Penetration bonus increases to 0.15.",
+    "skills-breaking-point-desc": "<b>BASE:</b>Armor Penetration for Assault Rifles and LMGs increases by 0.05 for each hit that does not penetrate an enemy's armor.<br><b>ACE:</b>This Armor Penetration bonus increases to 0.15.",
     "skills-HeadGames": "HEAD GAMES",
-    "skills-HeadGames-desc": "<b>BASE:</b>For every skill equipped in this branch, your headshot multiplier with Sniper and Marksman rifles increases by 0.1.\n<b>ACE:</b>For each headshot you land with a Sniper or Marksman rifle, your next shot will deal 10% more damage.",
-    
+    "skills-HeadGames-desc": "<b>BASE:</b>For every skill equipped in this branch, your headshot multiplier with Sniper and Marksman rifles increases by 0.1.<br><b>ACE:</b>For each headshot you land with a Sniper or Marksman rifle, your next shot will deal 10% more damage.",
+    "skills-HollowPointRounds": "HOLLOW-POINT ROUNDS",
+    "skills-HollowPointRounds-desc": "<b>BASE:</b>Assault Rifles and LMGs deal 15% more health damage.<br><b>ACE:</b>Raise your health damage bonus from Assault Rifles and LMGs to 40%.",
+        
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
     "weapon-class-shotgun": "Shotgun",

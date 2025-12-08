@@ -132,6 +132,21 @@ const SKILLS = {
         },
         allowedClasses: ['Assault Rifle','LMG'],
     },
+    HollowPointRounds: {
+        name: 'skills-HollowPointRounds',
+        description: 'skills-HollowPointRounds-desc',
+        basemodifier: 0.15,
+        masteredmodifier: 0.40,
+        icons: {
+            base: 'images/AR__Hollow_Point_Rounds.png',
+            mastered: 'images/AR__Hollow_Point_Rounds_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        allowedClasses: ['Assault Rifle','LMG'],
+    },    
     HeadGames: {
         name: 'skills-HeadGames',
         description: 'skills-HeadGames-desc',
@@ -382,6 +397,15 @@ function applyLoadout(weapon, skills, attachments) {
             'ArmorPenetration',
             attributeModifiers['ArmorPenetration'] ?? 0
         );
+    if (weapon == 'MX63') {
+        updatedWeapon.reloadTime = 4.4999995;
+        updatedWeapon.reloadEmptyTime = 5.166667;
+    }
+    if (weapon == 'T32') {
+        updatedWeapon.reloadTime = 1.4666667;
+        updatedWeapon.reloadEmptyTime = 1.9999999;
+    }
+
 
     if (Array.isArray(skills) && skills.includes('Rifleman')) {
         const rv = SKILL_VALUES.Rifleman ?? 1;
@@ -495,14 +519,6 @@ function applyLoadout(weapon, skills, attachments) {
     };
 
     // Bandaid fix for inaccurate reload notify times
-    if (weapon == 'MX63') {
-        updatedWeapon.reloadTime = 4.4999995;
-        updatedWeapon.reloadEmptyTime = 5.166667;
-    }
-    if (weapon == 'T32') {
-        updatedWeapon.reloadTime = 1.4666667;
-        updatedWeapon.reloadEmptyTime = 1.9999999;
-    }
 
     if (attributeModifiers['OverallReloadPlayRate']) {
         updatedWeapon.reloadTime /= convertAttributeModifier(
@@ -676,6 +692,7 @@ function weaponShotsToKillByArmorLayer(
     const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
     const layerArmorValue = armorlayer > 0 ? enemyArmor / armorlayer : 0;
     const requiredArmorDamage = layerArmorValue * layersToBreak;
+    let healthDamage = weaponDamage;
 
     let armorCritMultiplier = 1;
     if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
@@ -723,7 +740,6 @@ function weaponShotsToKillByArmorLayer(
 
                 // This shot hits armor and reduces its absolute value
                 shots++;
-                // 当武器暴击倍率不等于 1 时，护甲承伤按 armorCritMultiplier 修正
                 currentArmor -= armorDamagePerShot;
 
                 // After a shot that did not penetrate, BreakingPoint increases
@@ -776,9 +792,17 @@ function weaponShotsToKillByArmorLayer(
             overflowDamage *= weaponCritMultiplier;
         }
     }
+        if (Array.isArray(equippedSkills) && equippedSkills.includes('HollowPointRounds')) {
+        const hp = SKILLS.HollowPointRounds || {};
+        const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
+            ? (hp.masteredmodifier ?? 0.4)
+            : (hp.basemodifier ?? 0.15);    
+            overflowDamage *= (1 + HealBonus);
+            healthDamage *= (1 + HealBonus);
+    }
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
 
-    const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / weaponDamage);
+    const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
 
     if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
         const hgLevel = SKILL_VALUES.HeadGames ?? 1;
@@ -786,7 +810,7 @@ function weaponShotsToKillByArmorLayer(
     }
 
     const fullCritHealthShots = Math.ceil(
-        remainingHealthAfterOverflow / (weaponDamage * weaponCritMultiplier)
+        remainingHealthAfterOverflow / (healthDamage * weaponCritMultiplier)
     );
 
 
