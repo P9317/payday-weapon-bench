@@ -98,6 +98,21 @@ function updateStatsAfterChange() {
         }
     }
 }
+/**
+ * @param {string} -skillName 
+ * @returns {boolean} - isSkillMastered
+ */
+function isSkillMastered(skillName) {
+    return equippedSkills.includes(skillName) && equippedSkillsMastered.has(skillName);
+}
+/**
+ * 
+ * @param {string} skillName 
+ * @returns {boolean} - isSkillEquipped
+ */
+function isSkillEquipped(skillName) {
+    return equippedSkills.includes(skillName);
+}
 
 const SKILLS = {
     
@@ -106,8 +121,8 @@ const SKILLS = {
         name: 'skills-Rifleman',
         description: 'skills-Rifleman-desc',
         icons: {
-            base: 'images/AR_AR_Proficency.png',
-            mastered: 'images/AR_AR_Proficency_ACED.png',
+            base: 'images/Skills2.0/AR_AR_Proficency.png',
+            mastered: 'images/Skills2.0/AR_AR_Proficency_ACED.png',
         },
         iconOffset: {
             x: 192,
@@ -123,8 +138,8 @@ const SKILLS = {
         basemodifier: 0.05,
         masteredmodifier: 0.15,
         icons: {
-            base: 'images/AR_Crack_Open.png',
-            mastered: 'images/AR_Crack_Open_ACED.png',
+            base: 'images/Skills2.0/AR_Crack_Open.png',
+            mastered: 'images/Skills2.0/AR_Crack_Open_ACED.png',
         },
         iconOffset: {
             x: 320,
@@ -138,8 +153,8 @@ const SKILLS = {
         basemodifier: 0.15,
         masteredmodifier: 0.40,
         icons: {
-            base: 'images/AR__Hollow_Point_Rounds.png',
-            mastered: 'images/AR__Hollow_Point_Rounds_ACED.png',
+            base: 'images/Skills2.0/AR__Hollow_Point_Rounds.png',
+            mastered: 'images/Skills2.0/AR__Hollow_Point_Rounds_ACED.png',
         },
         iconOffset: {
             x: 320,
@@ -151,8 +166,8 @@ const SKILLS = {
         name: 'skills-HeadGames',
         description: 'skills-HeadGames-desc',
         icons: {
-            base: 'images/Skills2_Profesional_Sniper_Sniper_Expert.png',
-            mastered: 'images/Skills2_Profesional_Sniper_Sniper_Expert_ACED.png',
+            base: 'images/Skills2.0/Skills2_Profesional_Sniper_Sniper_Expert.png',
+            mastered: 'images/Skills2.0/Skills2_Profesional_Sniper_Sniper_Expert_ACED.png',
         },
         iconOffset: {
             x: 192,
@@ -161,6 +176,21 @@ const SKILLS = {
         modifier: 0.1,
         allowedClasses: ['Marksman'],
     },
+    PremiumBag: {
+        name: 'skills-PremiumBag',
+        description: 'skills-PremiumBag-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag.png',
+            mastered: 'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag_ACED.png',
+        },
+        iconOffset: {
+            x: 192,
+            y: 1280,
+        },
+        modifier: 2,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
+        directMastered: true,
+    },    
 };
 
 // minimal skill numeric values (persist across populateSkills calls)
@@ -407,16 +437,18 @@ function applyLoadout(weapon, skills, attachments) {
     }
 
 
-    if (Array.isArray(skills) && skills.includes('Rifleman')) {
+    if (isSkillEquipped('Rifleman')) {
         const rv = SKILL_VALUES.Rifleman ?? 1;
         fireData.armorPenetration += rv * (SKILLS.Rifleman?.modifier ?? 0.1);
         
-        const masteredSkills = typeof equippedSkillsMastered !== 'undefined' ? equippedSkillsMastered : new Set();
-        if (masteredSkills.has('Rifleman')) {
+        if (isSkillMastered('Rifleman')) {
             const reloadSpeedBonus = (SKILL_VALUES.Rifleman ?? 1) * (SKILLS.Rifleman?.reloadSpeedModifier ?? 2.5) / 100; // 将百分比转换为小数
             updatedWeapon.reloadTime /= (1 + reloadSpeedBonus); 
             updatedWeapon.reloadEmptyTime /= (1 + reloadSpeedBonus * 2); 
         }
+    }
+    if(isSkillMastered('PremiumBag')){
+        fireData.armorPenetration += SKILLS.PremiumBag.modifier ?? 2;
     }
 
     const viewKick = updatedWeapon.recoilData.viewKick;
@@ -695,7 +727,7 @@ function weaponShotsToKillByArmorLayer(
     let healthDamage = weaponDamage;
 
     let armorCritMultiplier = 1;
-    if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
+    if (isSkillEquipped('HeadGames')) {
         const hgLevel = SKILL_VALUES.HeadGames ?? 1;
         armorCritMultiplier *= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
     }
@@ -711,7 +743,7 @@ function weaponShotsToKillByArmorLayer(
     // to simulate shot-by-shot because armor damage may reduce the effective
     // "layer" count (enemy armor divided into equal layers), and the penetration
     // increases only apply to subsequent shots.
-    if (Array.isArray(equippedSkills) && equippedSkills.includes('BreakingPoint')) {
+    if (isSkillEquipped('BreakingPoint')) {
         const bp = SKILLS.BreakingPoint || {};
         const increment = equippedSkillsMastered?.has('BreakingPoint')
             ? (bp.masteredmodifier ?? 0.15)
@@ -792,7 +824,7 @@ function weaponShotsToKillByArmorLayer(
             overflowDamage *= weaponCritMultiplier;
         }
     }
-        if (Array.isArray(equippedSkills) && equippedSkills.includes('HollowPointRounds')) {
+        if (isSkillEquipped('HollowPointRounds')) {
         const hp = SKILLS.HollowPointRounds || {};
         const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
             ? (hp.masteredmodifier ?? 0.4)
@@ -804,7 +836,7 @@ function weaponShotsToKillByArmorLayer(
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
 
-    if (Array.isArray(equippedSkills) && equippedSkills.includes('HeadGames')) {
+    if (isSkillEquipped('HeadGames')) {
         const hgLevel = SKILL_VALUES.HeadGames ?? 1;
         weaponCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
@@ -1208,25 +1240,42 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             const skill = event.target.value;
             const isEquipped = equippedSkills.includes(skill);
             const isMastered = equippedSkillsMastered.has(skill);
+            const isDirectMastered = SKILLS[skill]?.directMastered;
 
-            if (!isEquipped) {
-                equippedSkills.push(skill);
-                equippedSkillsMastered.delete(skill);
-                skillInput.dataset.state = '1';
-                skillInput.checked = true;
-                applyVisualState('1');
-            } else if (isEquipped && !isMastered) {
-                equippedSkillsMastered.add(skill);
-                skillInput.dataset.state = '2';
-                skillInput.checked = true;
-                applyVisualState('2');
+            if (isDirectMastered) {
+                if (!isEquipped) {
+                    equippedSkills.push(skill);
+                    equippedSkillsMastered.add(skill);
+                    skillInput.dataset.state = '2';
+                    applyVisualState('2');
+                } else if (isMastered) {
+                    const idx = equippedSkills.indexOf(skill);
+                    if (idx > -1) equippedSkills.splice(idx, 1);
+                    equippedSkillsMastered.delete(skill);
+                    skillInput.dataset.state = '0';
+                    applyVisualState('0');
+                } else {
+                    equippedSkillsMastered.add(skill);
+                    skillInput.dataset.state = '2';
+                    applyVisualState('2');
+                }
             } else {
-                const idx = equippedSkills.indexOf(skill);
-                if (idx > -1) equippedSkills.splice(idx, 1);
-                equippedSkillsMastered.delete(skill);
-                skillInput.dataset.state = '0';
-                skillInput.checked = false;
-                applyVisualState('0');
+                if (!isEquipped) {
+                    equippedSkills.push(skill);
+                    equippedSkillsMastered.delete(skill);
+                    skillInput.dataset.state = '1';
+                    applyVisualState('1');
+                } else if (isEquipped && !isMastered) {
+                    equippedSkillsMastered.add(skill);
+                    skillInput.dataset.state = '2';
+                    applyVisualState('2');
+                } else {
+                    const idx = equippedSkills.indexOf(skill);
+                    if (idx > -1) equippedSkills.splice(idx, 1);
+                    equippedSkillsMastered.delete(skill);
+                    skillInput.dataset.state = '0';
+                    applyVisualState('0');
+                }
             }
 
             console.debug('Skill clicked', { skill, state: skillInput.dataset.state });

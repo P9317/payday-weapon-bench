@@ -16,6 +16,8 @@
     "skills-HeadGames-desc": "<b>BASE:</b>For every skill equipped in this branch, your headshot multiplier with Sniper and Marksman rifles increases by 0.1.<br><b>ACE:</b>For each headshot you land with a Sniper or Marksman rifle, your next shot will deal 10% more damage.",
     "skills-HollowPointRounds": "HOLLOW-POINT ROUNDS",
     "skills-HollowPointRounds-desc": "<b>BASE:</b>Assault Rifles and LMGs deal 15% more health damage.<br><b>ACE:</b>Raise your health damage bonus from Assault Rifles and LMGs to 40%.",
+    "skills-PremiumBag": "PREMIUM BAG",
+    "skills-PremiumBag-desc": "<b>BASE:</b>When you deploy an Ammo Bag, all heisters within 5 meters regain 2 throwables.<br><b>ACE:</b>Once a heister interacts with your Ammo Bag, they gain 2 Armor Penetration on the next magazine of their primary and secondary weapons.",
         
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
