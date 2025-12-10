@@ -176,6 +176,21 @@ const SKILLS = {
         modifier: 0.1,
         allowedClasses: ['Marksman'],
     },
+    SMGAdept: {
+        name: 'skills-SMGAdept',
+        description: 'skills-SMGAdept-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Ninja_SMG_SMG_Proficiency.png',
+            mastered: 'images/Skills2.0/Skills2_Ninja_SMG_SMG_Proficiency_ACED.png',
+        },
+        iconOffset: {
+            x: 192,
+            y: 1280,
+        },
+        modifier: 0.02,
+        allowedClasses: ['SMG'],
+        directBasiced: true, 
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -190,7 +205,7 @@ const SKILLS = {
         modifier: 2,
         allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
         directMastered: true,
-    },    
+    },       
 };
 
 // minimal skill numeric values (persist across populateSkills calls)
@@ -199,6 +214,7 @@ const SKILL_VALUES = {
     Rifleman: 1,
     // HeadGames adjustable value (1..12)
     HeadGames: 1,
+    SMGAdept: 1,
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -324,7 +340,7 @@ function applyLoadout(weapon, skills, attachments) {
     fireData.ammoLoaded = (equippedMag ?? fireData).ammoLoaded ?? 10;
     fireData.ammoInventory = (equippedMag ?? fireData).ammoInventory ?? 100;
     fireData.ammoInventoryMax =
-        (equippedMag ?? fireData).ammoInventoryMax ?? 200;
+        (equippedMag ?? fireData).ammoInventoryMax ?? 100;
     fireData.ammoPickup = {
         min: (equippedMag ?? fireData).ammoPickup.min ?? 5,
         max: (equippedMag ?? fireData).ammoPickup.max ?? 10,
@@ -1241,6 +1257,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             const isEquipped = equippedSkills.includes(skill);
             const isMastered = equippedSkillsMastered.has(skill);
             const isDirectMastered = SKILLS[skill]?.directMastered;
+            const isdirectBasiced = SKILLS[skill]?.directBasiced;
 
             if (isDirectMastered) {
                 if (!isEquipped) {
@@ -1255,7 +1272,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                     skillInput.dataset.state = '0';
                     applyVisualState('0');
                 } else {
-                    if (skill.hasDirectEquipTag) {
+                    if (isdirectBasiced) {
                         const idx = equippedSkills.indexOf(skill);
                         if (idx > -1) equippedSkills.splice(idx, 1);
                         equippedSkillsMastered.delete(skill);
@@ -1274,7 +1291,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                             skillInput.dataset.state = '1';
                             applyVisualState('1');
                         } else if (isEquipped && !isMastered) {
-                            if (skill.hasDirectEquipTag) {
+                            if (isdirectBasiced) {
                                 const idx = equippedSkills.indexOf(skill);
                                 if (idx > -1) equippedSkills.splice(idx, 1);
                                 equippedSkillsMastered.delete(skill);
@@ -1510,7 +1527,7 @@ function populateLoadout(selectedWeapon) {
                             (attachmentData.magazineData.ammoLoaded ?? 10) +
                                 '/' +
                                 (attachmentData.magazineData.ammoInventoryMax ??
-                                    200) +
+                                    100) +
                             getLocalisation(' Magazine Size')
                         );
                         attachmentStats.push(
