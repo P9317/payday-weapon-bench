@@ -750,7 +750,11 @@ function weaponShotsToKillByArmorLayer(
 
     // Default armor shots if no BreakingPoint: number of shots needed to do
     // requiredArmorDamage using armorDamagePerShot per shot
-    const armorDamagePerShot = weaponDamage * (weaponCritMultiplier !== 1 ? armorCritMultiplier : 1);
+    let armorDamagePerShot = weaponDamage * (weaponCritMultiplier !== 1 ? armorCritMultiplier : 1);
+    if(isSkillEquipped('SMGAdept')) {
+        const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
+        armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
+    }
     let armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
 
     // BreakingPoint behaviour (new): if equipped, each failed shot that does not
@@ -824,7 +828,7 @@ function weaponShotsToKillByArmorLayer(
     // applies to the next shot, so overflow only happens if a shot actually
     // reduced armor below zero.
     let overflowDamage = 0;
-    if (armorShots > 0 && armorShots * weaponDamage > enemyArmor) {
+    if (armorShots > 0 && armorShots * armorDamagePerShot > enemyArmor) {
         // amount of armour actually removed by the shots is armorShots * weaponDamage
         // but the armour that existed to be removed was requiredArmorDamage when there
         // was no per-shot penetration change. To keep consistent, if BreakingPoint
@@ -834,7 +838,7 @@ function weaponShotsToKillByArmorLayer(
         // consuming requiredArmorDamage (in which case requiredArmorDamage would be
         // larger than consumed armour) — that makes overflow negative which we clamp to 0.
 
-        overflowDamage = Math.max(0, armorShots * weaponDamage - enemyArmor);
+        overflowDamage = Math.max(0, armorShots * armorDamagePerShot - enemyArmor);
 
         if (weaponCritMultiplier !== 1) {
             overflowDamage *= weaponCritMultiplier;
@@ -1152,7 +1156,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
 
             if (!counter) {
                 counter = document.createElement('div');
-                counter.className = 'rifleman-counter headgames-counter';
+                counter.className = 'headgames-counter';
                 counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
 
                 const minus = document.createElement('button');
@@ -1194,6 +1198,71 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                     SKILL_VALUES.HeadGames = next;
                     valueSpan.textContent = next;
                     if (equippedSkills.includes('HeadGames')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+                counter.appendChild(minus);
+                counter.appendChild(valueSpan);
+                counter.appendChild(plus);
+
+                selectableSkill.appendChild(counter);
+            } else {
+                const valueSpan = counter.querySelector('.headgames-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
+            }
+        }
+
+        if (skill === 'SMGAdept') {
+            let counter = selectableSkill.querySelector('.SMGAdept-counter');
+
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'SMGAdept-counter';
+                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'SMGAdept-minus';
+                minus.textContent = '-';
+                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'SMGAdept-value';
+                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+                valueSpan.textContent = SKILL_VALUES.SMGAdept ?? 1;
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'SMGAdept-plus';
+                plus.textContent = '+';
+                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const stopEvent = (ev) => {
+                    ev.stopPropagation();
+                };
+
+                minus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.SMGAdept ?? 1;
+                    const next = Math.max(1, cur - 1);
+                    SKILL_VALUES.SMGAdept = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('SMGAdept')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                plus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.SMGAdept ?? 1;
+                    const next = Math.min(12, cur + 1);
+                    SKILL_VALUES.SMGAdept = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('SMGAdept')) {
                         updateStatsAfterChange();
                     }
                 });
