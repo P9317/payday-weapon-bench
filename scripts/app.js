@@ -1255,28 +1255,44 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                     skillInput.dataset.state = '0';
                     applyVisualState('0');
                 } else {
-                    equippedSkillsMastered.add(skill);
-                    skillInput.dataset.state = '2';
-                    applyVisualState('2');
+                    if (skill.hasDirectEquipTag) {
+                        const idx = equippedSkills.indexOf(skill);
+                        if (idx > -1) equippedSkills.splice(idx, 1);
+                        equippedSkillsMastered.delete(skill);
+                        skillInput.dataset.state = '0';
+                        applyVisualState('0');
+                    } else {
+                        equippedSkillsMastered.add(skill);
+                        skillInput.dataset.state = '2';
+                        applyVisualState('2');
+                    }
                 }
             } else {
-                if (!isEquipped) {
-                    equippedSkills.push(skill);
-                    equippedSkillsMastered.delete(skill);
-                    skillInput.dataset.state = '1';
-                    applyVisualState('1');
-                } else if (isEquipped && !isMastered) {
-                    equippedSkillsMastered.add(skill);
-                    skillInput.dataset.state = '2';
-                    applyVisualState('2');
-                } else {
-                    const idx = equippedSkills.indexOf(skill);
-                    if (idx > -1) equippedSkills.splice(idx, 1);
-                    equippedSkillsMastered.delete(skill);
-                    skillInput.dataset.state = '0';
-                    applyVisualState('0');
-                }
-            }
+                        if (!isEquipped) {
+                            equippedSkills.push(skill);
+                            equippedSkillsMastered.delete(skill);
+                            skillInput.dataset.state = '1';
+                            applyVisualState('1');
+                        } else if (isEquipped && !isMastered) {
+                            if (skill.hasDirectEquipTag) {
+                                const idx = equippedSkills.indexOf(skill);
+                                if (idx > -1) equippedSkills.splice(idx, 1);
+                                equippedSkillsMastered.delete(skill);
+                                skillInput.dataset.state = '0';
+                                applyVisualState('0');
+                            } else {
+                                equippedSkillsMastered.add(skill);
+                                skillInput.dataset.state = '2';
+                                applyVisualState('2');
+                            }
+                        } else {
+                            const idx = equippedSkills.indexOf(skill);
+                            if (idx > -1) equippedSkills.splice(idx, 1);
+                            equippedSkillsMastered.delete(skill);
+                            skillInput.dataset.state = '0';
+                            applyVisualState('0');
+                        }
+                }   
 
             console.debug('Skill clicked', { skill, state: skillInput.dataset.state });
             updateStatsAfterChange();
