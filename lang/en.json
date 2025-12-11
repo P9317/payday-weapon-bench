@@ -20,7 +20,9 @@
     "skills-PremiumBag-desc": "<b>BASE:</b>When you deploy an Ammo Bag, all heisters within 5 meters regain 2 throwables.<br><b>ACE:</b>Once a heister interacts with your Ammo Bag, they gain 2 Armor Penetration on the next magazine of their primary and secondary weapons.",
     "skills-SMGAdept": "SMG ADEPT",
     "skills-SMGAdept-desc": "<b>BASE:</b>For every skill equipped in this branch, SMGs deal 2% additional damage to enemy armor.<br><b>ACE:</b>For every skill equipped in this branch, SMG spread reduces by 6%.",
-    
+    "skills-Cracked": "CRACKED",
+    "skills-Cracked-desc": "<b>BASE:</b>When you break an enemy's armor layer with an SMG, that enemy suffers 10% additional damage from all sources.<br><b>ACE:</b>The extra damage enemies suffer when you break their armor with an SMG raises to 30%.",
+
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
     "weapon-class-shotgun": "Shotgun",
