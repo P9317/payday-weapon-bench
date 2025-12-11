@@ -188,8 +188,18 @@ const SKILLS = {
             y: 1280,
         },
         modifier: 0.02,
+        allowedClasses: ['SMG'], 
+    },
+    Cracked: {
+        name: 'skills-Cracked',
+        description: 'skills-Cracked-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Ninja_SMG_Brick_Buster.png',
+            mastered: 'images/Skills2.0/Skills2_Ninja_SMG_Brick_Buster_ACED.png',
+        },
+        basemodifier: 0.1,
+        masteredmodifier: 0.3,
         allowedClasses: ['SMG'],
-        directBasiced: true, 
     },
     PremiumBag: {
         name: 'skills-PremiumBag',
@@ -741,6 +751,7 @@ function weaponShotsToKillByArmorLayer(
     const layerArmorValue = armorlayer > 0 ? enemyArmor / armorlayer : 0;
     const requiredArmorDamage = layerArmorValue * layersToBreak;
     let healthDamage = weaponDamage;
+    let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
 
     let armorCritMultiplier = 1;
     if (isSkillEquipped('HeadGames')) {
@@ -755,7 +766,6 @@ function weaponShotsToKillByArmorLayer(
         const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
         armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
     }
-    let armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
 
     // BreakingPoint behaviour (new): if equipped, each failed shot that does not
     // satisfy the penetration threshold will increase the weapon's armorPenetration
@@ -763,11 +773,12 @@ function weaponShotsToKillByArmorLayer(
     // to simulate shot-by-shot because armor damage may reduce the effective
     // "layer" count (enemy armor divided into equal layers), and the penetration
     // increases only apply to subsequent shots.
-    if (isSkillEquipped('BreakingPoint')) {
-        const bp = SKILLS.BreakingPoint || {};
-        const increment = equippedSkillsMastered?.has('BreakingPoint')
-            ? (bp.masteredmodifier ?? 0.15)
-            : (bp.basemodifier ?? 0.05);
+    if (isSkillEquipped('BreakingPoint') || isSkillEquipped('Cracked')) {
+        if(isSkillEquipped('BreakingPoint')) {
+            increment = equippedSkillsMastered?.has('BreakingPoint')
+                ? (SKILLS.BreakingPoint.masteredmodifier ?? 0.15)
+                : (SKILLS.BreakingPoint.basemodifier ?? 0.05);
+        }
 
         // If armorlayer or enemyArmor are zero, no need to simulate
         if (armorlayer > 0 && enemyArmor > 0 && weaponDamage > 0) {
@@ -781,7 +792,8 @@ function weaponShotsToKillByArmorLayer(
             let currentArmor = initialArmor;
             let currentPen = armorPenetration ?? 0; // this will accumulate increments
             let currentLayers = initialLayers;
-            let shots = 0;
+            let shots = 0,previousArmorLayers = currentLayers;
+            
 
             // Simulate shots until either penetration floor reaches remaining
             // layer count (i.e. we can start penetrating), or armor is gone
@@ -789,28 +801,41 @@ function weaponShotsToKillByArmorLayer(
                 // If the current floored penetration already is sufficient to
                 // bypass the remaining layers, we stop (no more armor shots)
                 if (Math.floor(currentPen) >= currentLayers) break;
+                previousArmorLayers = currentLayers;
 
                 // This shot hits armor and reduces its absolute value
                 shots++;
-                currentArmor -= armorDamagePerShot;
+                currentArmor -= armorDamagePerShot * (1 + CrackedBonus ?? 0);
+                DamagetoArmor += armorDamagePerShot * (1 + CrackedBonus ?? 0);
 
                 // After a shot that did not penetrate, BreakingPoint increases
                 // the effective penetration for the *next* shot
-                currentPen += Math.max(0, increment);
+                if(isSkillEquipped('BreakingPoint')) {
+                    currentPen += Math.max(0, increment);
+                }
 
                 // Recompute layers from remaining armor (each layer has size layerValue)
                 currentLayers = layerValue > 0 
-                    ? Math.max(0, Math.floor(currentArmor / layerValue)) 
+                    ? Math.max(0, Math.ceil(currentArmor / layerValue)) 
                     : 0;
+                if(isSkillEquipped('Cracked')) {
+                    if(previousArmorLayers-currentLayers > 0) {
+                        CrackedBonus += equippedSkillsMastered?.has('Cracked')
+                        ? (SKILLS.Cracked?.masteredmodifier ?? 0.3)
+                        : (SKILLS.Cracked?.basemodifier ?? 0.1);
+                    }
+                }
 
                 // If after the shot the currentPen floored is sufficient, we stop
                 if (Math.floor(currentPen) >= currentLayers) break;
-
                 // Otherwise continue; the loop will end when we can penetrate or currentArmor <= 0
             }
 
             armorShots = shots;
         }
+    } else {
+        armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
+        DamagetoArmor = armorDamagePerShot * armorShots;
     }
 
     if (enemyHealth <= 0) {
@@ -828,7 +853,7 @@ function weaponShotsToKillByArmorLayer(
     // applies to the next shot, so overflow only happens if a shot actually
     // reduced armor below zero.
     let overflowDamage = 0;
-    if (armorShots > 0 && armorShots * armorDamagePerShot > enemyArmor) {
+    if (armorShots > 0 && DamagetoArmor > enemyArmor) {
         // amount of armour actually removed by the shots is armorShots * weaponDamage
         // but the armour that existed to be removed was requiredArmorDamage when there
         // was no per-shot penetration change. To keep consistent, if BreakingPoint
@@ -838,19 +863,21 @@ function weaponShotsToKillByArmorLayer(
         // consuming requiredArmorDamage (in which case requiredArmorDamage would be
         // larger than consumed armour) — that makes overflow negative which we clamp to 0.
 
-        overflowDamage = Math.max(0, armorShots * armorDamagePerShot - enemyArmor);
+        overflowDamage = Math.max(0, DamagetoArmor - enemyArmor);
 
         if (weaponCritMultiplier !== 1) {
             overflowDamage *= weaponCritMultiplier;
         }
     }
         if (isSkillEquipped('HollowPointRounds')) {
-        const hp = SKILLS.HollowPointRounds || {};
         const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
-            ? (hp.masteredmodifier ?? 0.4)
-            : (hp.basemodifier ?? 0.15);    
+            ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
+            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15);    
             overflowDamage *= (1 + HealBonus);
             healthDamage *= (1 + HealBonus);
+    }
+    if (isSkillEquipped('Cracked')) {
+        healthDamage *= (1 + CrackedBonus ?? 0);
     }
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
 
@@ -868,8 +895,8 @@ function weaponShotsToKillByArmorLayer(
 
     if (weaponCritMultiplier > 1) {
         return {
-            armoredCrits: 0,
-            armoredNonCrits: armorShots,
+            armoredCrits: armorShots,
+            armoredNonCrits: 0,
             unarmoredCrits: fullCritHealthShots,
             unarmoredNonCrits: 0,
             totalShots: armorShots + fullCritHealthShots,
