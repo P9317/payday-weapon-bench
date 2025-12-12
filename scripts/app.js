@@ -201,6 +201,21 @@ const SKILLS = {
         masteredmodifier: 0.3,
         allowedClasses: ['SMG'],
     },
+    CallingShotgun:{
+        name: 'skills-CallingShotgun',
+        description: 'skills-CallingShotgun-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
+        },
+        iconOffset: {
+            x: 192,
+            y: 1280,
+        },
+        modifier: 0.025,
+        allowedClasses: ['Shotgun'],
+        directBasiced: true,
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -225,6 +240,7 @@ const SKILL_VALUES = {
     // HeadGames adjustable value (1..12)
     HeadGames: 1,
     SMGAdept: 1,
+    CallingShotgun: 1,
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -400,7 +416,10 @@ function applyLoadout(weapon, skills, attachments) {
             )
                 damage *= damageModifier + SKILLS['faceToFace'].modifier;
             else damage *= damageModifier;
-
+            if(isSkillEquipped('CallingShotgun')){
+                const CSvalue = SKILL_VALUES.CallingShotgun ?? 1;
+                damageStep.distance *= 1+SKILLS['CallingShotgun'].modifier*CSvalue;
+            }
             return {
                 damage: damage,
                 distance: damageStep.distance + rangeModifier,
@@ -1112,7 +1131,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
 
         // overlay img is now provided in template (no dynamic creation needed)
         const overlay = skillLabel.querySelector('.skill-mastered-overlay');
-
+//skill value span
         if (skill === 'Rifleman') {
             let counter = selectableSkill.querySelector('.rifleman-counter');
 
@@ -1177,7 +1196,6 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                 if (valueSpan) valueSpan.textContent = SKILL_VALUES.Rifleman ?? 1;
             }
         }
-
         if (skill === 'HeadGames') {
             let counter = selectableSkill.querySelector('.headgames-counter');
 
@@ -1242,7 +1260,6 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                 if (valueSpan) valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
             }
         }
-
         if (skill === 'SMGAdept') {
             let counter = selectableSkill.querySelector('.SMGAdept-counter');
 
@@ -1303,8 +1320,72 @@ function populateSkills(weaponClass = 'Assault Rifle') {
 
                 selectableSkill.appendChild(counter);
             } else {
-                const valueSpan = counter.querySelector('.headgames-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
+                const valueSpan = counter.querySelector('.SMGAdept-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.SMGAdept ?? 1;
+            }
+        }
+        if (skill === 'CallingShotgun') {
+            let counter = selectableSkill.querySelector('.CallingShotgun-counter');
+
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'CallingShotgun-counter';
+                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'CallingShotgun-minus';
+                minus.textContent = '-';
+                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'CallingShotgun-value';
+                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+                valueSpan.textContent = SKILL_VALUES.CallingShotgun ?? 1;
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'CallingShotgun-plus';
+                plus.textContent = '+';
+                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const stopEvent = (ev) => {
+                    ev.stopPropagation();
+                };
+
+                minus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.CallingShotgun ?? 1;
+                    const next = Math.max(1, cur - 1);
+                    SKILL_VALUES.CallingShotgun = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('CallingShotgun')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                plus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.CallingShotgun ?? 1;
+                    const next = Math.min(12, cur + 1);
+                    SKILL_VALUES.CallingShotgun = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('CallingShotgun')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+                counter.appendChild(minus);
+                counter.appendChild(valueSpan);
+                counter.appendChild(plus);
+
+                selectableSkill.appendChild(counter);
+            } else {
+                const valueSpan = counter.querySelector('.CallingShotgun-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.CallingShotgun ?? 1;
             }
         }
 
