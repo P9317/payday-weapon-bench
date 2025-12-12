@@ -216,6 +216,22 @@ const SKILLS = {
         allowedClasses: ['Shotgun'],
         directBasiced: true,
     },
+    PointBlank: {
+        name: 'skills-PointBlank',
+        description: 'skills-PointBlank-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Point_Blank.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Point_Blank_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        distancemodifier:300,
+        basemodifier: 0.2,
+        masteredmodifier: 0.6,
+        allowedClasses: ['Shotgun'],
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -403,19 +419,19 @@ function applyLoadout(weapon, skills, attachments) {
         if (skills.includes(skill)) damageModifier += SKILLS[skill].modifier;
     }
 
-    const faceToFaceIsEquipped = skills.includes('faceToFace');
-
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
             let damage = damageStep.damage;
 
             // Face to Face adds to the damage modifier within 5 metres
             if (
-                faceToFaceIsEquipped &&
-                damageStep.distance + rangeModifier <= 500
-            )
-                damage *= damageModifier + SKILLS['faceToFace'].modifier;
-            else damage *= damageModifier;
+                isSkillEquipped('PointBlank') &&
+                damageStep.distance + rangeModifier <= SKILLS['PointBlank'].distancemodifier
+            ){const pointBlankModifier = isSkillMastered('PointBlank') 
+                ? SKILLS['PointBlank'].masteredmodifier 
+                : SKILLS['PointBlank'].basemodifier;
+                damage *= damageModifier + pointBlankModifier;
+            }else damage *= damageModifier;
             if(isSkillEquipped('CallingShotgun')){
                 const CSvalue = SKILL_VALUES.CallingShotgun ?? 1;
                 damageStep.distance *= 1+SKILLS['CallingShotgun'].modifier*CSvalue;
@@ -425,28 +441,55 @@ function applyLoadout(weapon, skills, attachments) {
                 distance: damageStep.distance + rangeModifier,
             };
         }
-    );
+    )
+        .filter((item, index, array) => {
+        // Find all items with the same damage value
+        const sameDamageItems = array.filter(x => x.damage === item.damage);
+        // If there's only one item with this damage, keep it
+        if (sameDamageItems.length === 1) return true;
+        // If there are multiple items with this damage, keep the one with the longest distance
+        return item.distance === Math.max(...sameDamageItems.map(x => x.distance));
+    });
 
-    if (faceToFaceIsEquipped) {
-        if (fireData.damageDistanceArray[0].distance > 500) {
+    if (isSkillEquipped('PointBlank')) {
+            const pointBlankModifier = isSkillMastered('PointBlank') 
+                ? SKILLS['PointBlank'].masteredmodifier 
+                : SKILLS['PointBlank'].basemodifier;
+        if (fireData.damageDistanceArray[0].distance > SKILLS['PointBlank'].distancemodifier) {
             // Insert face to face's 5m range at the start of the array
             fireData.damageDistanceArray.unshift({
                 damage:
                     WEAPON_DATA[weapon].fireData.damageDistanceArray[0].damage *
-                    (damageModifier + SKILLS['faceToFace'].modifier),
-                distance: 500,
+                    (damageModifier + pointBlankModifier),
+                distance: SKILLS['PointBlank'].distancemodifier,
             });
-        } else if (fireData.damageDistanceArray[0].distance < 500) {
+        } else if (fireData.damageDistanceArray[0].distance < SKILLS['PointBlank'].distancemodifier) {
             // Insert face to face's 5m range second in the array
             const damage =
                 WEAPON_DATA[weapon].fireData.damageDistanceArray[1].damage *
-                (damageModifier + SKILLS['faceToFace'].modifier);
+                (damageModifier + pointBlankModifier);
 
             fireData.damageDistanceArray.splice(1, 0, {
                 damage: damage,
-                distance: 500,
+                distance: SKILLS['PointBlank'].distancemodifier,
             });
+            
+            const uniqueDamageArray = [];
+            const damageMap = {};
+            
+            for (let i = fireData.damageDistanceArray.length - 1; i >= 0; i--) {
+                const item = fireData.damageDistanceArray[i];
+                const roundedDamage = Math.round(item.damage * 100) / 100; // 四舍五入到小数点后两位
+                
+                if (!damageMap[roundedDamage] || damageMap[roundedDamage] < item.distance) {
+                    damageMap[roundedDamage] = item.distance;
+                    uniqueDamageArray.unshift(item);
+                }
+            }
+            
+            fireData.damageDistanceArray = uniqueDamageArray;
         }
+        
     }
 
     // Long shot removes distance penalties on critical multipliers
