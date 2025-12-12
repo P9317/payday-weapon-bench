@@ -24,6 +24,8 @@
     "skills-Cracked-desc": "<b>BASE:</b>When you break an enemy's armor layer with an SMG, that enemy suffers 10% additional damage from all sources.<br><b>ACE:</b>The extra damage enemies suffer when you break their armor with an SMG raises to 30%.",
     "skills-CallingShotgun": "CALLING SHOTGUN",
     "skills-CallingShotgun-desc": "<b>BASE:</b>For every skill equipped in Shotgunner branch, Shotgun pellets receive a 2.5% reduction to damage falloff.<br><b>ACE:</b>For every skill equipped in Shotgunner branch, the spread of Shotgun pellets reduces by 3% while in ADS.",
+    "skills-PointBlank": "POINT BLANK",
+    "skills-PointBlank-desc": "<b>BASE:</b>Shotguns deal 20% additional damage to enemies within 3 meters.<br><b>ACE:</b>Raise your Shotgun's close-range damage bonus to 60%.",
 
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
