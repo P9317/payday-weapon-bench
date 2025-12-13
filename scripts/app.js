@@ -247,6 +247,22 @@ const SKILLS = {
         masteredmodifier: 0.9,
         allowedClasses: ['Shotgun'],
     },
+    Bullseye:{
+        name: 'skills-Bullseye',
+        description: 'skills-Bullseye-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
+        },
+        iconOffset: {
+            x: 192,
+            y: 1280,
+        },
+        Unmarkmodifier: 0.025,
+        Markmodifier: 0.1,
+        directBasiced: true,
+        allowedClasses: ['Pistol','Revolver'],
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -272,6 +288,7 @@ const SKILL_VALUES = {
     HeadGames: 1,
     SMGAdept: 1,
     CallingShotgun: 1,
+    Bullseye: 1,
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -1451,6 +1468,74 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                 const valueSpan = counter.querySelector('.CallingShotgun-value');
                 if (valueSpan) valueSpan.textContent = SKILL_VALUES.CallingShotgun ?? 1;
             }
+            
+            
+        }
+        if (skill === 'Bullseye') {
+            let counter = selectableSkill.querySelector('.Bullseye-counter');
+
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'Bullseye-counter';
+                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+                const minus = document.createElement('button');
+                minus.type = 'button';
+                minus.className = 'Bullseye-minus';
+                minus.textContent = '-';
+                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'Bullseye-value';
+                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+                valueSpan.textContent = SKILL_VALUES.Bullseye ?? 1;
+
+                const plus = document.createElement('button');
+                plus.type = 'button';
+                plus.className = 'Bullseye-plus';
+                plus.textContent = '+';
+                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+                const stopEvent = (ev) => {
+                    ev.stopPropagation();
+                };
+
+                minus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.Bullseye ?? 1;
+                    const next = Math.max(1, cur - 1);
+                    SKILL_VALUES.Bullseye = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('Bullseye')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                plus.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    const cur = SKILL_VALUES.Bullseye ?? 1;
+                    const next = Math.min(12, cur + 1);
+                    SKILL_VALUES.Bullseye = next;
+                    valueSpan.textContent = next;
+                    if (equippedSkills.includes('Bullseye')) {
+                        updateStatsAfterChange();
+                    }
+                });
+
+                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+                counter.appendChild(minus);
+                counter.appendChild(valueSpan);
+                counter.appendChild(plus);
+
+                selectableSkill.appendChild(counter);
+            } else {
+                const valueSpan = counter.querySelector('.Bullseye-value');
+                if (valueSpan) valueSpan.textContent = SKILL_VALUES.Bullseye ?? 1;
+            }
+            
+            
         }
 
 
