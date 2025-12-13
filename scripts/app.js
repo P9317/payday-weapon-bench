@@ -289,6 +289,7 @@ const SKILL_VALUES = {
     SMGAdept: 1,
     CallingShotgun: 1,
     Bullseye: 1,
+    BullseyeMode: 'Unmarkmodifier', 
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -456,7 +457,13 @@ function applyLoadout(weapon, skills, attachments) {
                 : SKILLS['Annihilation'].basemodifier;
         damageModifier += AnnihilationModifier;
     }
-
+    if(isSkillEquipped('Bullseye')){
+        const BullseyeModifier = SKILL_VALUES.Bullseye;
+        if(SKILL_VALUES.BullseyeMode === 'Unmarkmodifier')
+            damageModifier += BullseyeModifier*(SKILLS['Bullseye'].Unmarkmodifier ?? 0.025);
+        else 
+            damageModifier += BullseyeModifier*(SKILLS['Bullseye'].Markmodifier ?? 0.1)
+    }
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
             let damage = damageStep.damage;
@@ -1530,6 +1537,53 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                 counter.appendChild(plus);
 
                 selectableSkill.appendChild(counter);
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:4px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+                const unmarkBtn = document.createElement('button');
+                unmarkBtn.type = 'button';
+                unmarkBtn.className = 'Bullseye-unmark';
+                unmarkBtn.textContent = SKILLS.Bullseye.Unmarkmodifier * 100 + '%';
+                unmarkBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+                const markBtn = document.createElement('button');
+                markBtn.type = 'button';
+                markBtn.className = 'Bullseye-mark';
+                markBtn.textContent = SKILLS.Bullseye.Markmodifier * 100 + '%';
+                markBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+        
+                const updateButtonStyles = () => {
+                    if (SKILL_VALUES.BullseyeMode === 'Unmarkmodifier') {
+                        unmarkBtn.style.background = 'rgba(255,255,255,0.2)';
+                        markBtn.style.background = 'transparent';
+                    } else {
+                        unmarkBtn.style.background = 'transparent';
+                        markBtn.style.background = 'rgba(255,255,255,0.2)';
+                    }
+                };
+        
+                unmarkBtn.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    SKILL_VALUES.BullseyeMode = 'Unmarkmodifier';
+                    updateButtonStyles();
+                    if (equippedSkills.includes('Bullseye')) {
+                        updateStatsAfterChange();
+                    }
+                });
+        
+                markBtn.addEventListener('click', (ev) => {
+                    stopEvent(ev);
+                    SKILL_VALUES.BullseyeMode = 'Markmodifier';
+                    updateButtonStyles();
+                    if (equippedSkills.includes('Bullseye')) {
+                        updateStatsAfterChange();
+                    }
+                });
+        
+                updateButtonStyles();
+        
+                buttonContainer.appendChild(unmarkBtn);
+                buttonContainer.appendChild(markBtn);
+        
+                selectableSkill.appendChild(buttonContainer);
             } else {
                 const valueSpan = counter.querySelector('.Bullseye-value');
                 if (valueSpan) valueSpan.textContent = SKILL_VALUES.Bullseye ?? 1;
