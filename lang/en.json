@@ -28,6 +28,8 @@
     "skills-PointBlank-desc": "<b>BASE:</b>Shotguns deal 20% additional damage to enemies within 3 meters.<br><b>ACE:</b>Raise your Shotgun's close-range damage bonus to 60%.",
     "skills-Annihilation": "ANNIHILATION",
     "skills-Annihilation-desc": "<b>BASE:</b>Shotguns deal 4% more damage for each pellet that hits the same target.<br><b>ACE:</b>Increase your Shotgun's damage bonus from repeated hits to 10%.",
+    "skills-Bullseye": "BULLSEYE",
+    "skills-Bullseye-desc": "<b>BASE:</b>For every skill equipped in Hitman branch, Handguns deal 2.5% more damage to unmarked targets, or 10% more damage to marked targets.<br><b>ACE:</b>For every skill equipped in Hitman branch, Handguns receive an accuracy bonus of 5%.",
 
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
