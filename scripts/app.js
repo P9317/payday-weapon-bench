@@ -232,6 +232,21 @@ const SKILLS = {
         masteredmodifier: 0.6,
         allowedClasses: ['Shotgun'],
     },
+    Annihilation: {
+        name: 'skills-Annihilation',
+        description: 'skills-Annihilation-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Obilterator.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Obilterator_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        basemodifier: 0.36,
+        masteredmodifier: 0.9,
+        allowedClasses: ['Shotgun'],
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -417,6 +432,12 @@ function applyLoadout(weapon, skills, attachments) {
         'duckAndWeave',
     ]) {
         if (skills.includes(skill)) damageModifier += SKILLS[skill].modifier;
+    }
+    if(isSkillEquipped('Annihilation')){
+        const AnnihilationModifier = isSkillMastered('Annihilation') 
+                ? SKILLS['Annihilation'].masteredmodifier 
+                : SKILLS['Annihilation'].basemodifier;
+        damageModifier += AnnihilationModifier;
     }
 
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(

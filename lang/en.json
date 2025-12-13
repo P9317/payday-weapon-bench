@@ -26,6 +26,8 @@
     "skills-CallingShotgun-desc": "<b>BASE:</b>For every skill equipped in Shotgunner branch, Shotgun pellets receive a 2.5% reduction to damage falloff.<br><b>ACE:</b>For every skill equipped in Shotgunner branch, the spread of Shotgun pellets reduces by 3% while in ADS.",
     "skills-PointBlank": "POINT BLANK",
     "skills-PointBlank-desc": "<b>BASE:</b>Shotguns deal 20% additional damage to enemies within 3 meters.<br><b>ACE:</b>Raise your Shotgun's close-range damage bonus to 60%.",
+    "skills-Annihilation": "ANNIHILATION",
+    "skills-Annihilation-desc": "<b>BASE:</b>Shotguns deal 4% more damage for each pellet that hits the same target.<br><b>ACE:</b>Increase your Shotgun's damage bonus from repeated hits to 10%.",
 
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
