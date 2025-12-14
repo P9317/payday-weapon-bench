@@ -99,19 +99,38 @@ function updateStatsAfterChange() {
     }
 }
 /**
- * @param {string} -skillName 
+ * @param {string} skillName
  * @returns {boolean} - isSkillMastered
  */
 function isSkillMastered(skillName) {
     return equippedSkills.includes(skillName) && equippedSkillsMastered.has(skillName);
 }
+
 /**
- * 
- * @param {string} skillName 
+ * @param {string} skillName
  * @returns {boolean} - isSkillEquipped
  */
 function isSkillEquipped(skillName) {
     return equippedSkills.includes(skillName);
+}
+
+/**
+ * 获取技能修饰符，根据是否精通返回相应值
+ * @param {string} skillName - 技能名称
+ * @param {string} modifierType - 修饰符类型 ('modifier', 'basemodifier', 'masteredmodifier' 等)
+ * @returns {number} - 修饰符值
+ */
+function getSkillModifier(skillName, modifierType = 'modifier') {
+    const skill = SKILLS[skillName];
+    if (!skill) return 0;
+
+    if (modifierType === 'basemodifier' || modifierType === 'masteredmodifier') {
+        return isSkillMastered(skillName)
+            ? (skill.masteredmodifier ?? 0)
+            : (skill.basemodifier ?? 0);
+    }
+
+    return skill[modifierType] ?? 0;
 }
 function preloadImages(imageUrls) {
     imageUrls.forEach(url => {
@@ -942,12 +961,12 @@ function weaponShotsToKillByArmorLayer(
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
 
     let armorCritMultiplier = 1;
-    const hgLevel = SKILL_VALUES.HeadGames ?? 1
-    if (isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+    const hgLevel = SKILL_VALUES.HeadGames ?? 1;
+    if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
         armorCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
-    }else if(isSkillEquipped('SkullTrauma')){
+    }else if(weaponCritMultiplier !== 1&&isSkillEquipped('SkullTrauma')){
         armorCritMultiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
-    }else if(isSkillEquipped('HeadGames')){
+    }else if(weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')){
         armorCritMultiplier *= 1+(SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
 
@@ -1063,11 +1082,11 @@ function weaponShotsToKillByArmorLayer(
 
         overflowDamage = Math.max(0, DamagetoArmor - enemyArmor);
         let baseCritMultiplier = weaponCritMultiplier;
-        if (isSkillEquipped('HeadGames') && isSkillEquipped('SkullTrauma')) {
+        if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames') && isSkillEquipped('SkullTrauma')) {
             baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel + (SKILLS.SkullTrauma?.modifier ?? 0.15));
-        } else if (isSkillEquipped('SkullTrauma')) {
+        } else if (weaponCritMultiplier !== 1&&isSkillEquipped('SkullTrauma')) {
             baseCritMultiplier /= (1 + (SKILLS.SkullTrauma?.modifier ?? 0.15));
-        } else if (isSkillEquipped('HeadGames')) {
+        } else if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
             baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
         }
         if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
@@ -1227,6 +1246,133 @@ const defaultSkillIcons = 'sydch';
 let skillIcons = defaultSkillIcons;
 if (localStorage.getItem('icons')) skillIcons = localStorage.getItem('icons');
 
+/**
+ * 创建技能数值计数器
+ * @param {HTMLElement} selectableSkill - 技能容器元素
+ * @param {string} skillName - 技能名称
+ * @param {string} counterClass - 计数器CSS类名
+ * @param {string} valueClass - 值显示元素CSS类名
+ * @param {string} minusClass - 减少按钮CSS类名
+ * @param {string} plusClass - 增加按钮CSS类名
+ * @param {number} minValue - 最小值
+ * @param {number} maxValue - 最大值
+ * @param {boolean} hasModeButtons - 是否有模式切换按钮（仅Bullseye）
+ */
+function createSkillCounter(selectableSkill, skillName, counterClass, valueClass, minusClass, plusClass, minValue = 1, maxValue = 12, hasModeButtons = false) {
+    let counter = selectableSkill.querySelector(`.${counterClass}`);
+
+    if (!counter) {
+        counter = document.createElement('div');
+        counter.className = counterClass;
+        counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+        const minus = document.createElement('button');
+        minus.type = 'button';
+        minus.className = minusClass;
+        minus.textContent = '-';
+        minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+        const valueSpan = document.createElement('span');
+        valueSpan.className = valueClass;
+        valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
+        valueSpan.textContent = SKILL_VALUES[skillName] ?? 1;
+
+        const plus = document.createElement('button');
+        plus.type = 'button';
+        plus.className = plusClass;
+        plus.textContent = '+';
+        plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
+
+        const stopEvent = (ev) => {
+            ev.stopPropagation();
+        };
+
+        minus.addEventListener('click', (ev) => {
+            stopEvent(ev);
+            const cur = SKILL_VALUES[skillName] ?? 1;
+            const next = Math.max(minValue, cur - 1);
+            SKILL_VALUES[skillName] = next;
+            valueSpan.textContent = next;
+            if (equippedSkills.includes(skillName)) {
+                updateStatsAfterChange();
+            }
+        });
+
+        plus.addEventListener('click', (ev) => {
+            stopEvent(ev);
+            const cur = SKILL_VALUES[skillName] ?? 1;
+            const next = Math.min(maxValue, cur + 1);
+            SKILL_VALUES[skillName] = next;
+            valueSpan.textContent = next;
+            if (equippedSkills.includes(skillName)) {
+                updateStatsAfterChange();
+            }
+        });
+
+        minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+        plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+        counter.appendChild(minus);
+        counter.appendChild(valueSpan);
+        counter.appendChild(plus);
+
+        selectableSkill.appendChild(counter);
+
+        if (hasModeButtons) {
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:4px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+            const unmarkBtn = document.createElement('button');
+            unmarkBtn.type = 'button';
+            unmarkBtn.className = 'Bullseye-unmark';
+            unmarkBtn.textContent = SKILLS.Bullseye.Unmarkmodifier * 100 + '%';
+            unmarkBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+            const markBtn = document.createElement('button');
+            markBtn.type = 'button';
+            markBtn.className = 'Bullseye-mark';
+            markBtn.textContent = SKILLS.Bullseye.Markmodifier * 100 + '%';
+            markBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+
+            const updateButtonStyles = () => {
+                if (SKILL_VALUES.BullseyeMode === 'Unmarkmodifier') {
+                    unmarkBtn.style.background = 'rgba(255,255,255,0.2)';
+                    markBtn.style.background = 'transparent';
+                } else {
+                    unmarkBtn.style.background = 'transparent';
+                    markBtn.style.background = 'rgba(255,255,255,0.2)';
+                }
+            };
+
+            unmarkBtn.addEventListener('click', (ev) => {
+                stopEvent(ev);
+                SKILL_VALUES.BullseyeMode = 'Unmarkmodifier';
+                updateButtonStyles();
+                if (equippedSkills.includes('Bullseye')) {
+                    updateStatsAfterChange();
+                }
+            });
+
+            markBtn.addEventListener('click', (ev) => {
+                stopEvent(ev);
+                SKILL_VALUES.BullseyeMode = 'Markmodifier';
+                updateButtonStyles();
+                if (equippedSkills.includes('Bullseye')) {
+                    updateStatsAfterChange();
+                }
+            });
+
+            updateButtonStyles();
+
+            buttonContainer.appendChild(unmarkBtn);
+            buttonContainer.appendChild(markBtn);
+
+            selectableSkill.appendChild(buttonContainer);
+        }
+    } else {
+        const valueSpan = counter.querySelector(`.${valueClass}`);
+        if (valueSpan) valueSpan.textContent = SKILL_VALUES[skillName] ?? 1;
+    }
+}
+
 function populateSkills(weaponClass = 'Assault Rifle') {
     skillSelector.innerHTML = '';
 
@@ -1316,375 +1462,19 @@ function populateSkills(weaponClass = 'Assault Rifle') {
         const overlay = skillLabel.querySelector('.skill-mastered-overlay');
 //skill value span
         if (skill === 'Rifleman') {
-            let counter = selectableSkill.querySelector('.rifleman-counter');
-
-            if (!counter) {
-                counter = document.createElement('div');
-                counter.className = 'rifleman-counter';
-                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-
-                const minus = document.createElement('button');
-                minus.type = 'button';
-                minus.className = 'rifleman-minus';
-                minus.textContent = '-';
-                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'rifleman-value';
-                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
-                valueSpan.textContent = SKILL_VALUES.Rifleman ?? 1;
-
-                const plus = document.createElement('button');
-                plus.type = 'button';
-                plus.className = 'rifleman-plus';
-                plus.textContent = '+';
-                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const stopEvent = (ev) => {
-                    ev.stopPropagation();
-                };
-
-                minus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.Rifleman ?? 1;
-                    const next = Math.max(1, cur - 1);
-                    SKILL_VALUES.Rifleman = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('Rifleman')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                plus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.Rifleman ?? 1;
-                    const next = Math.min(12, cur + 1);
-                    SKILL_VALUES.Rifleman = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('Rifleman')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-
-                counter.appendChild(minus);
-                counter.appendChild(valueSpan);
-                counter.appendChild(plus);
-
-                selectableSkill.appendChild(counter);
-            } else {
-                const valueSpan = counter.querySelector('.rifleman-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.Rifleman ?? 1;
-            }
+            createSkillCounter(selectableSkill, 'Rifleman', 'rifleman-counter', 'rifleman-value', 'rifleman-minus', 'rifleman-plus');
         }
         if (skill === 'HeadGames') {
-            let counter = selectableSkill.querySelector('.headgames-counter');
-
-            if (!counter) {
-                counter = document.createElement('div');
-                counter.className = 'headgames-counter';
-                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-
-                const minus = document.createElement('button');
-                minus.type = 'button';
-                minus.className = 'headgames-minus';
-                minus.textContent = '-';
-                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'headgames-value';
-                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
-                valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
-
-                const plus = document.createElement('button');
-                plus.type = 'button';
-                plus.className = 'headgames-plus';
-                plus.textContent = '+';
-                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const stopEvent = (ev) => {
-                    ev.stopPropagation();
-                };
-
-                minus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.HeadGames ?? 1;
-                    const next = Math.max(1, cur - 1);
-                    SKILL_VALUES.HeadGames = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('HeadGames')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                plus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.HeadGames ?? 1;
-                    const next = Math.min(12, cur + 1);
-                    SKILL_VALUES.HeadGames = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('HeadGames')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-
-                counter.appendChild(minus);
-                counter.appendChild(valueSpan);
-                counter.appendChild(plus);
-
-                selectableSkill.appendChild(counter);
-            } else {
-                const valueSpan = counter.querySelector('.headgames-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.HeadGames ?? 1;
-            }
+            createSkillCounter(selectableSkill, 'HeadGames', 'headgames-counter', 'headgames-value', 'headgames-minus', 'headgames-plus');
         }
         if (skill === 'SMGAdept') {
-            let counter = selectableSkill.querySelector('.SMGAdept-counter');
-
-            if (!counter) {
-                counter = document.createElement('div');
-                counter.className = 'SMGAdept-counter';
-                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-
-                const minus = document.createElement('button');
-                minus.type = 'button';
-                minus.className = 'SMGAdept-minus';
-                minus.textContent = '-';
-                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'SMGAdept-value';
-                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
-                valueSpan.textContent = SKILL_VALUES.SMGAdept ?? 1;
-
-                const plus = document.createElement('button');
-                plus.type = 'button';
-                plus.className = 'SMGAdept-plus';
-                plus.textContent = '+';
-                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const stopEvent = (ev) => {
-                    ev.stopPropagation();
-                };
-
-                minus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.SMGAdept ?? 1;
-                    const next = Math.max(1, cur - 1);
-                    SKILL_VALUES.SMGAdept = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('SMGAdept')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                plus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.SMGAdept ?? 1;
-                    const next = Math.min(12, cur + 1);
-                    SKILL_VALUES.SMGAdept = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('SMGAdept')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-
-                counter.appendChild(minus);
-                counter.appendChild(valueSpan);
-                counter.appendChild(plus);
-
-                selectableSkill.appendChild(counter);
-            } else {
-                const valueSpan = counter.querySelector('.SMGAdept-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.SMGAdept ?? 1;
-            }
+            createSkillCounter(selectableSkill, 'SMGAdept', 'SMGAdept-counter', 'SMGAdept-value', 'SMGAdept-minus', 'SMGAdept-plus');
         }
         if (skill === 'CallingShotgun') {
-            let counter = selectableSkill.querySelector('.CallingShotgun-counter');
-
-            if (!counter) {
-                counter = document.createElement('div');
-                counter.className = 'CallingShotgun-counter';
-                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-
-                const minus = document.createElement('button');
-                minus.type = 'button';
-                minus.className = 'CallingShotgun-minus';
-                minus.textContent = '-';
-                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'CallingShotgun-value';
-                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
-                valueSpan.textContent = SKILL_VALUES.CallingShotgun ?? 1;
-
-                const plus = document.createElement('button');
-                plus.type = 'button';
-                plus.className = 'CallingShotgun-plus';
-                plus.textContent = '+';
-                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const stopEvent = (ev) => {
-                    ev.stopPropagation();
-                };
-
-                minus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.CallingShotgun ?? 1;
-                    const next = Math.max(1, cur - 1);
-                    SKILL_VALUES.CallingShotgun = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('CallingShotgun')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                plus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.CallingShotgun ?? 1;
-                    const next = Math.min(12, cur + 1);
-                    SKILL_VALUES.CallingShotgun = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('CallingShotgun')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-
-                counter.appendChild(minus);
-                counter.appendChild(valueSpan);
-                counter.appendChild(plus);
-
-                selectableSkill.appendChild(counter);
-            } else {
-                const valueSpan = counter.querySelector('.CallingShotgun-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.CallingShotgun ?? 1;
-            }
-            
-            
+            createSkillCounter(selectableSkill, 'CallingShotgun', 'CallingShotgun-counter', 'CallingShotgun-value', 'CallingShotgun-minus', 'CallingShotgun-plus');
         }
         if (skill === 'Bullseye') {
-            let counter = selectableSkill.querySelector('.Bullseye-counter');
-
-            if (!counter) {
-                counter = document.createElement('div');
-                counter.className = 'Bullseye-counter';
-                counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-
-                const minus = document.createElement('button');
-                minus.type = 'button';
-                minus.className = 'Bullseye-minus';
-                minus.textContent = '-';
-                minus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'Bullseye-value';
-                valueSpan.style.cssText = 'min-width:12px;text-align:center;display:inline-block;font-size:0.85em;line-height:1;';
-                valueSpan.textContent = SKILL_VALUES.Bullseye ?? 1;
-
-                const plus = document.createElement('button');
-                plus.type = 'button';
-                plus.className = 'Bullseye-plus';
-                plus.textContent = '+';
-                plus.style.cssText = 'min-width:16px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.9em;line-height:1;';
-
-                const stopEvent = (ev) => {
-                    ev.stopPropagation();
-                };
-
-                minus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.Bullseye ?? 1;
-                    const next = Math.max(1, cur - 1);
-                    SKILL_VALUES.Bullseye = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('Bullseye')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                plus.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    const cur = SKILL_VALUES.Bullseye ?? 1;
-                    const next = Math.min(12, cur + 1);
-                    SKILL_VALUES.Bullseye = next;
-                    valueSpan.textContent = next;
-                    if (equippedSkills.includes('Bullseye')) {
-                        updateStatsAfterChange();
-                    }
-                });
-
-                minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-                plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
-
-                counter.appendChild(minus);
-                counter.appendChild(valueSpan);
-                counter.appendChild(plus);
-
-                selectableSkill.appendChild(counter);
-                const buttonContainer = document.createElement('div');
-                buttonContainer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:4px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
-                const unmarkBtn = document.createElement('button');
-                unmarkBtn.type = 'button';
-                unmarkBtn.className = 'Bullseye-unmark';
-                unmarkBtn.textContent = SKILLS.Bullseye.Unmarkmodifier * 100 + '%';
-                unmarkBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
-                const markBtn = document.createElement('button');
-                markBtn.type = 'button';
-                markBtn.className = 'Bullseye-mark';
-                markBtn.textContent = SKILLS.Bullseye.Markmodifier * 100 + '%';
-                markBtn.style.cssText = 'flex:1;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
-        
-                const updateButtonStyles = () => {
-                    if (SKILL_VALUES.BullseyeMode === 'Unmarkmodifier') {
-                        unmarkBtn.style.background = 'rgba(255,255,255,0.2)';
-                        markBtn.style.background = 'transparent';
-                    } else {
-                        unmarkBtn.style.background = 'transparent';
-                        markBtn.style.background = 'rgba(255,255,255,0.2)';
-                    }
-                };
-        
-                unmarkBtn.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    SKILL_VALUES.BullseyeMode = 'Unmarkmodifier';
-                    updateButtonStyles();
-                    if (equippedSkills.includes('Bullseye')) {
-                        updateStatsAfterChange();
-                    }
-                });
-        
-                markBtn.addEventListener('click', (ev) => {
-                    stopEvent(ev);
-                    SKILL_VALUES.BullseyeMode = 'Markmodifier';
-                    updateButtonStyles();
-                    if (equippedSkills.includes('Bullseye')) {
-                        updateStatsAfterChange();
-                    }
-                });
-        
-                updateButtonStyles();
-        
-                buttonContainer.appendChild(unmarkBtn);
-                buttonContainer.appendChild(markBtn);
-        
-                selectableSkill.appendChild(buttonContainer);
-            } else {
-                const valueSpan = counter.querySelector('.Bullseye-value');
-                if (valueSpan) valueSpan.textContent = SKILL_VALUES.Bullseye ?? 1;
-            }
-            
-            
+            createSkillCounter(selectableSkill, 'Bullseye', 'Bullseye-counter', 'Bullseye-value', 'Bullseye-minus', 'Bullseye-plus', 1, 12, true);
         }
 
 
@@ -2443,7 +2233,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             ) ?? fireData.damageDistanceArray.slice(-1)[0]
         ).damage;
 
-        const multiplier = headshots
+        let multiplier = headshots
             ? (
                   fireData.criticalDamageMultiplierDistanceArray.find(
                       (critMultiplierStep) =>
@@ -2452,6 +2242,14 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
                   fireData.criticalDamageMultiplierDistanceArray.slice(-1)[0]
               ).multiplier
             : 1;
+
+        if (headshots && isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+            multiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1)+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+        }else if(headshots &&isSkillEquipped('SkullTrauma')){
+            multiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+        }else if(headshots &&isSkillEquipped('HeadGames')){
+            multiplier *= 1+(SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1);
+        }
 
         let enemyArmor = enemy.armor;
 
