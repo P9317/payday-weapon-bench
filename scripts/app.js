@@ -113,6 +113,37 @@ function isSkillMastered(skillName) {
 function isSkillEquipped(skillName) {
     return equippedSkills.includes(skillName);
 }
+function preloadImages(imageUrls) {
+    imageUrls.forEach(url => {
+        const img = new Image();
+        img.src = url;
+    });
+}
+
+const SKILL_ICONS_TO_PRELOAD = [
+        'images/Skills2.0/AR_AR_Proficency.png',
+        'images/Skills2.0/AR_AR_Proficency_ACED.png',
+        'images/Skills2.0/AR_Crack_Open.png',
+        'images/Skills2.0/AR_Crack_Open_ACED.png',
+        'images/Skills2.0/AR__Hollow_Point_Rounds.png',
+        'images/Skills2.0/AR__Hollow_Point_Rounds_ACED.png',
+        'images/Skills2.0/Skills2_Profesional_Sniper_Sniper_Expert.png',
+        'images/Skills2.0/Skills2_Profesional_Sniper_Sniper_Expert_ACED.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_SMG_Proficiency.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_SMG_Proficiency_ACED.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_Brick_Buster.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_Brick_Buster_ACED.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Point_Blank.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Point_Blank_ACED.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Obilterator.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Obilterator_ACED.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert.png',
+        'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
+        'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag.png',
+        'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag_ACED.png',
+];
 
 const SKILLS = {
     
@@ -2755,7 +2786,7 @@ function updateDamageStats(selectedWeapon) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await initialiseDefaultLocale();
-
+    preloadImages(SKILL_ICONS_TO_PRELOAD);
     populateWeaponSelector();
     populateSkills();
 
