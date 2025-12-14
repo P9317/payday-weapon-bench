@@ -1,3 +1,4 @@
 {
-    "Codegeex.CompletionDelay": 1
+    "Codegeex.CompletionDelay": 1,
+    "Codegeex.RepoIndex": true
 }

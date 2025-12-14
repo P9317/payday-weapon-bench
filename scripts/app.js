@@ -143,6 +143,10 @@ const SKILL_ICONS_TO_PRELOAD = [
         'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
         'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag.png',
         'images/Skills2.0/Skills2_Profesional_Ammo_High_Quality_Bag_ACED.png',
+        'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Exploiter.png',
+        'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Exploiter_ACED.png',   
+        'images/Skills2.0/Skills2_Profesional_Sniper_Graze.png',
+        'images/Skills2.0/Skills2_Profesional_Sniper_Graze_ACED.png',
 ];
 
 const SKILLS = {
@@ -160,7 +164,7 @@ const SKILLS = {
             y: 1280,
         },
         modifier: 0.1,
-        reloadSpeedModifier: 2.5,
+        reloadSpeedModifier: 0.025,
         allowedClasses: ['Assault Rifle','LMG'],
     },
     BreakingPoint: {
@@ -206,6 +210,35 @@ const SKILLS = {
         },
         modifier: 0.1,
         allowedClasses: ['Marksman'],
+    },
+    SkullTrauma:{
+        name: 'skills-SkullTrauma',
+        description: 'skills-SkullTrauma-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Profesional_Sniper_Graze.png',
+            mastered: 'images/Skills2.0/Skills2_Profesional_Sniper_Graze_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        modifier: 0.15,
+        reloadSpeedModifier: 0.2,
+        allowedClasses: ['Marksman'],
+    },
+    ArmorPiercing:{
+        name: 'skills-ArmorPiercing',
+        description: 'skills-ArmorPiercing-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Profesional_Sniper_Piercing_Ammo.png',
+            mastered: 'images/Skills2.0/Skills2_Profesional_Sniper_Piercing_Ammo_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        allowedClasses: ['Marksman'],
+        directBasiced: true,
     },
     SMGAdept: {
         name: 'skills-SMGAdept',
@@ -293,6 +326,17 @@ const SKILLS = {
         Markmodifier: 0.1,
         directBasiced: true,
         allowedClasses: ['Pistol','Revolver'],
+    },
+    CheapTrick:{
+        name: 'skills-CheapTrick',
+        description: 'skills-CheapTrick-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Exploiter.png',
+            mastered: 'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Exploiter_ACED.png',
+        },
+        modifier: 1.0,
+        allowedClasses: ['Pistol','Revolver'],
+        directMastered: true,
     },
     PremiumBag: {
         name: 'skills-PremiumBag',
@@ -479,6 +523,7 @@ function applyLoadout(weapon, skills, attachments) {
         'combatMarking',
         'painAsymbolia',
         'duckAndWeave',
+        'CheapTrick',
     ]) {
         if (skills.includes(skill)) damageModifier += SKILLS[skill].modifier;
     }
@@ -495,6 +540,7 @@ function applyLoadout(weapon, skills, attachments) {
         else 
             damageModifier += BullseyeModifier*(SKILLS['Bullseye'].Markmodifier ?? 0.1)
     }
+
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
             let damage = damageStep.damage;
@@ -606,10 +652,14 @@ function applyLoadout(weapon, skills, attachments) {
         fireData.armorPenetration += rv * (SKILLS.Rifleman?.modifier ?? 0.1);
         
         if (isSkillMastered('Rifleman')) {
-            const reloadSpeedBonus = (SKILL_VALUES.Rifleman ?? 1) * (SKILLS.Rifleman?.reloadSpeedModifier ?? 2.5) / 100; // 将百分比转换为小数
+            const reloadSpeedBonus = (SKILL_VALUES.Rifleman ?? 1) * (SKILLS.Rifleman?.reloadSpeedModifier ?? 0.025); // 将百分比转换为小数
             updatedWeapon.reloadTime /= (1 + reloadSpeedBonus); 
             updatedWeapon.reloadEmptyTime /= (1 + reloadSpeedBonus * 2); 
         }
+    }
+    if(isSkillMastered('SkullTrauma')){
+        updatedWeapon.reloadTime /= (1 + SKILLS.SkullTrauma?.reloadSpeedModifier); // 将百分比转换为小数
+        updatedWeapon.reloadEmptyTime /= (1 + SKILLS.SkullTrauma?.reloadSpeedModifier);
     }
     if(isSkillMastered('PremiumBag')){
         fireData.armorPenetration += SKILLS.PremiumBag.modifier ?? 2;
@@ -873,7 +923,7 @@ function weaponShotsToKillByArmorLayer(
     armorPenetration,
     enemyHealth,
     enemyArmor,
-    armorlayer
+    armorlayer,
 ) {
     //if (weaponCritMultiplier < 1) weaponCritMultiplier = 1;
     if (weaponDamage <= 0) {
@@ -892,9 +942,13 @@ function weaponShotsToKillByArmorLayer(
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
 
     let armorCritMultiplier = 1;
-    if (isSkillEquipped('HeadGames')) {
-        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
-        armorCritMultiplier *= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
+    const hgLevel = SKILL_VALUES.HeadGames ?? 1
+    if (isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+        armorCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if(isSkillEquipped('SkullTrauma')){
+        armorCritMultiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if(isSkillEquipped('HeadGames')){
+        armorCritMultiplier *= 1+(SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
 
     // Default armor shots if no BreakingPoint: number of shots needed to do
@@ -904,14 +958,14 @@ function weaponShotsToKillByArmorLayer(
         const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
         armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
     }
-
+    armorDamagePerShot = Math.floor(armorDamagePerShot);
     // BreakingPoint behaviour (new): if equipped, each failed shot that does not
     // satisfy the penetration threshold will increase the weapon's armorPenetration
     // for the *next* shot by a fixed increment (base 0.05, mastered 0.15). We need
     // to simulate shot-by-shot because armor damage may reduce the effective
     // "layer" count (enemy armor divided into equal layers), and the penetration
     // increases only apply to subsequent shots.
-    if (isSkillEquipped('BreakingPoint') || isSkillEquipped('Cracked')) {
+    if (isSkillEquipped('BreakingPoint') || isSkillEquipped('Cracked')||isSkillEquipped('ArmorPiercing')) {
         if(isSkillEquipped('BreakingPoint')) {
             increment = equippedSkillsMastered?.has('BreakingPoint')
                 ? (SKILLS.BreakingPoint.masteredmodifier ?? 0.15)
@@ -945,7 +999,15 @@ function weaponShotsToKillByArmorLayer(
                 shots++;
                 currentArmor -= armorDamagePerShot * (1 + CrackedBonus ?? 0);
                 DamagetoArmor += armorDamagePerShot * (1 + CrackedBonus ?? 0);
-
+                if(isSkillEquipped('ArmorPiercing')&&armorDamagePerShot>layerValue&&weaponCritMultiplier !== 1&&armorDamagePerShot<enemyArmor) {
+                    currentArmor -= Math.floor(layerValue);
+                    if(currentArmor<=0) {
+                        currentArmor = 0
+                        DamagetoArmor = enemyArmor
+                    }else{
+                        DamagetoArmor += Math.floor(layerValue)
+                    }
+                }
                 // After a shot that did not penetrate, BreakingPoint increases
                 // the effective penetration for the *next* shot
                 if(isSkillEquipped('BreakingPoint')) {
@@ -1002,9 +1064,9 @@ function weaponShotsToKillByArmorLayer(
         // larger than consumed armour) — that makes overflow negative which we clamp to 0.
 
         overflowDamage = Math.max(0, DamagetoArmor - enemyArmor);
-
+        let BaseMultiplier = WEAPON_DATA[selectedWeapon].fireData.criticalDamageMultiplierDistanceArray[0].multiplier;
         if (weaponCritMultiplier !== 1) {
-            overflowDamage *= weaponCritMultiplier;
+            overflowDamage *= BaseMultiplier;
         }
     }
         if (isSkillEquipped('HollowPointRounds')) {
@@ -1020,11 +1082,6 @@ function weaponShotsToKillByArmorLayer(
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
-
-    if (isSkillEquipped('HeadGames')) {
-        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
-        weaponCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
-    }
 
     const fullCritHealthShots = Math.ceil(
         remainingHealthAfterOverflow / (healthDamage * weaponCritMultiplier)
@@ -2053,10 +2110,13 @@ function updateWeaponStats(selectedWeapon) {
 
     const baseMultiplierStat = document.querySelector('#stat-base-multiplier');
     let baseMultiplier = fireData.criticalDamageMultiplierDistanceArray[0].multiplier;
-    
-    if (equippedSkills.includes('HeadGames')) {
-        const hgLevel = SKILL_VALUES.HeadGames ?? 1;
-        baseMultiplier *= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
+    const hgLevel = SKILL_VALUES.HeadGames ?? 1
+    if (isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+        baseMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if(isSkillEquipped('SkullTrauma')){
+        baseMultiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if (isSkillEquipped('HeadGames')) {
+        baseMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
     
     baseMultiplierStat.innerHTML = formatNumber(baseMultiplier, 2) + '×/';
@@ -2173,8 +2233,12 @@ function updateWeaponStats(selectedWeapon) {
             );
 
             let finalMultiplier = criticalDamageStep.multiplier;
-            if (headGamesLevel > 0) {
-                finalMultiplier *= (1 + headGamesModifier * headGamesLevel);
+            if (headGamesLevel > 0&&isSkillEquipped('SkullTrauma')) {
+                finalMultiplier *= (1 + headGamesModifier * headGamesLevel +(SKILLS.SkullTrauma?.modifier ?? 0.15));
+            }else if(isSkillEquipped('SkullTrauma')){
+                finalMultiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+            }else if (isSkillEquipped('HeadGames')) {
+                finalMultiplier *= 1 + headGamesModifier * headGamesLevel;
             }
 
             critStat.children[1].innerHTML = formatNumber(finalMultiplier, 2) + 'x';
@@ -2496,7 +2560,7 @@ function updateDamageStats(selectedWeapon) {
         const filteredSkills = equippedSkills.filter((skill) => {
             return (
                 // In normal gameplay dozers cannot be stunned
-                !(enemy == 'bulldozer' && skill == 'coupDeGrace')
+                !(enemy == 'bulldozer' && skill == 'CheapTrick')
             );
         });
 
