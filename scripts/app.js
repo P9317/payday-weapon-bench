@@ -953,7 +953,12 @@ function weaponShotsToKillByArmorLayer(
 
     // Default armor shots if no BreakingPoint: number of shots needed to do
     // requiredArmorDamage using armorDamagePerShot per shot
-    let armorDamagePerShot = weaponDamage * (weaponCritMultiplier !== 1 ? armorCritMultiplier : 1);
+    let armorDamagePerShot =0;
+    if(weaponCritMultiplier !== 1){
+        armorDamagePerShot = weaponDamage * armorCritMultiplier
+    }else{
+        armorDamagePerShot = weaponDamage
+    }
     if(isSkillEquipped('SMGAdept')) {
         const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
         armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
@@ -1038,13 +1043,6 @@ function weaponShotsToKillByArmorLayer(
         DamagetoArmor = armorDamagePerShot * armorShots;
     }
 
-    if (enemyHealth <= 0) {
-        return {
-            totalShotsNonCrit: armorShots,
-            totalShotsFullCrit: armorShots,
-        };
-    }
-
     // If BreakingPoint was used we may have computed armorShots using an effective
     // armor-damage-per-shot; calculate overflow using that effective value if present.
     // Compute overflowDamage: only the portion of the last armor-shot that
@@ -1064,9 +1062,18 @@ function weaponShotsToKillByArmorLayer(
         // larger than consumed armour) — that makes overflow negative which we clamp to 0.
 
         overflowDamage = Math.max(0, DamagetoArmor - enemyArmor);
-        let BaseMultiplier = WEAPON_DATA[selectedWeapon].fireData.criticalDamageMultiplierDistanceArray[0].multiplier;
-        if (weaponCritMultiplier !== 1) {
-            overflowDamage *= BaseMultiplier;
+        let baseCritMultiplier = weaponCritMultiplier;
+        if (isSkillEquipped('HeadGames') && isSkillEquipped('SkullTrauma')) {
+            baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel + (SKILLS.SkullTrauma?.modifier ?? 0.15));
+        } else if (isSkillEquipped('SkullTrauma')) {
+            baseCritMultiplier /= (1 + (SKILLS.SkullTrauma?.modifier ?? 0.15));
+        } else if (isSkillEquipped('HeadGames')) {
+            baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
+        }
+        if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
+            overflowDamage *= baseCritMultiplier;
+        }else{
+            overflowDamage *= weaponCritMultiplier;
         }
     }
         if (isSkillEquipped('HollowPointRounds')) {
@@ -2425,7 +2432,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             ),
         ]),
     ].sort((a, b) => b - a);
-
+    
     let shotsToKillAtDistances = {},
         previous = {};
 
