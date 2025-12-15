@@ -166,6 +166,8 @@ const SKILL_ICONS_TO_PRELOAD = [
         'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Exploiter_ACED.png',   
         'images/Skills2.0/Skills2_Profesional_Sniper_Graze.png',
         'images/Skills2.0/Skills2_Profesional_Sniper_Graze_ACED.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master.png',
+        'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master_ACED.png',
 ];
 
 const SKILLS = {
