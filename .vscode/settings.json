@@ -1,4 +1,5 @@
 {
     "Codegeex.CompletionDelay": 1,
-    "Codegeex.RepoIndex": true
+    "Codegeex.RepoIndex": true,
+    "liveServer.settings.port": 5504
 }

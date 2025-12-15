@@ -284,6 +284,22 @@ const SKILLS = {
         masteredmodifier: 0.3,
         allowedClasses: ['SMG'],
     },
+    SMGenius: {
+        name: 'skills-SMGenius',
+        description: 'skills-SMGenius-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master.png',
+            mastered: 'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master_ACED.png',
+        },
+        iconOffset: {
+            x: 320,
+            y: 1280,
+        },
+        modifier: 0.05,
+        allowedClasses: ['SMG'],
+        baseMaxValue: 10,
+        masteredMaxValue: 20,
+    },
     CallingShotgun:{
         name: 'skills-CallingShotgun',
         description: 'skills-CallingShotgun-desc',
@@ -326,8 +342,8 @@ const SKILLS = {
             x: 320,
             y: 1280,
         },
-        basemodifier: 0.36,
-        masteredmodifier: 0.9,
+        basemodifier: 0.04,
+        masteredmodifier: 0.1,
         allowedClasses: ['Shotgun'],
     },
     Bullseye:{
@@ -371,7 +387,8 @@ const SKILLS = {
         modifier: 2,
         allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
         directMastered: true,
-    },       
+    },
+
 };
 
 // minimal skill numeric values (persist across populateSkills calls)
@@ -546,11 +563,15 @@ function applyLoadout(weapon, skills, attachments) {
     ]) {
         if (skills.includes(skill)) damageModifier += SKILLS[skill].modifier;
     }
+    if(isSkillEquipped('SMGenius')){
+        damageModifier += SKILLS.SMGenius.modifier * (SKILL_VALUES.SMGenius ?? 1);
+    }
     if(isSkillEquipped('Annihilation')){
-        const AnnihilationModifier = isSkillMastered('Annihilation') 
-                ? SKILLS['Annihilation'].masteredmodifier 
+        const AnnihilationModifier = isSkillMastered('Annihilation')
+                ? SKILLS['Annihilation'].masteredmodifier
                 : SKILLS['Annihilation'].basemodifier;
-        damageModifier += AnnihilationModifier;
+        const projectiles = fireData.projectilesPerFiredRound ?? 1;
+        damageModifier += AnnihilationModifier * (projectiles - 1);
     }
     if(isSkillEquipped('Bullseye')){
         const BullseyeModifier = SKILL_VALUES.Bullseye;
@@ -874,7 +895,7 @@ function effectiveArmorPenetration(armorPenetration, armorHardness) {
  * @param {number} enemyHealth The enemy's health stat
  * @param {number} enemyArmor The enemy's armor stat
  */
-function weaponShotsToKill(
+/*function weaponShotsToKill(
     weaponDamage,
     weaponCritMultiplier,
     effectiveArmorPenetration,
@@ -934,7 +955,7 @@ function weaponShotsToKill(
         unarmoredNonCrits: shotsOnHealth,
         totalShots: shotsOnArmor + shotsOnHealth,
     };
-}
+}*/
 
 function weaponShotsToKillByArmorLayer(
     weaponDamage,
@@ -1258,6 +1279,64 @@ if (localStorage.getItem('icons')) skillIcons = localStorage.getItem('icons');
  * @param {number} maxValue - 最大值
  * @param {boolean} hasModeButtons - 是否有模式切换按钮（仅Bullseye）
  */
+function updateSMGeniusCounterMaxValue() {
+    const smGeniusSkill = document.querySelector('.skill input[value="SMGenius"]');
+    if (!smGeniusSkill) return;
+
+    const isMastered = equippedSkillsMastered.has('SMGenius');
+    const newMaxValue = isMastered ? SKILLS.SMGenius.masteredMaxValue : SKILLS.SMGenius.baseMaxValue;
+
+    const counter = smGeniusSkill.closest('.skill').querySelector('.SMGenius-counter');
+    if (!counter) return;
+
+    const minusBtn = counter.querySelector('.SMGenius-minus');
+    const plusBtn = counter.querySelector('.SMGenius-plus');
+    const valueSpan = counter.querySelector('.SMGenius-value');
+
+    if (!minusBtn || !plusBtn || !valueSpan) return;
+
+    // Remove existing event listeners to avoid duplication
+    const newMinusBtn = minusBtn.cloneNode(true);
+    minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
+
+    const newPlusBtn = plusBtn.cloneNode(true);
+    plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
+
+    // Update the plus button click handler with the new max value
+    newPlusBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const cur = SKILL_VALUES.SMGenius ?? 1;
+        const next = Math.min(newMaxValue, cur + 1);
+        SKILL_VALUES.SMGenius = next;
+        valueSpan.textContent = next;
+        if (equippedSkills.includes('SMGenius')) {
+            updateStatsAfterChange();
+        }
+    });
+
+    // Update the minus button click handler to ensure it doesn't go below 1
+    newMinusBtn.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const cur = SKILL_VALUES.SMGenius ?? 1;
+        const next = Math.max(1, cur - 1);
+        SKILL_VALUES.SMGenius = next;
+        valueSpan.textContent = next;
+        if (equippedSkills.includes('SMGenius')) {
+            updateStatsAfterChange();
+        }
+    });
+
+    // Ensure current value doesn't exceed the new max value
+    const currentValue = SKILL_VALUES.SMGenius ?? 1;
+    if (currentValue > newMaxValue) {
+        SKILL_VALUES.SMGenius = newMaxValue;
+        valueSpan.textContent = newMaxValue;
+        if (equippedSkills.includes('SMGenius')) {
+            updateStatsAfterChange();
+        }
+    }
+}
+
 function createSkillCounter(selectableSkill, skillName, counterClass, valueClass, minusClass, plusClass, minValue = 1, maxValue = 12, hasModeButtons = false) {
     let counter = selectableSkill.querySelector(`.${counterClass}`);
 
@@ -1476,6 +1555,13 @@ function populateSkills(weaponClass = 'Assault Rifle') {
         if (skill === 'Bullseye') {
             createSkillCounter(selectableSkill, 'Bullseye', 'Bullseye-counter', 'Bullseye-value', 'Bullseye-minus', 'Bullseye-plus', 1, 12, true);
         }
+        if (skill === 'SMGenius') {
+            // Get the current max value based on skill mastery state
+            const isMastered = equippedSkillsMastered.has('SMGenius');
+            const maxValue = isMastered ? SKILLS.SMGenius.masteredMaxValue : SKILLS.SMGenius.baseMaxValue;
+            createSkillCounter(selectableSkill, 'SMGenius', 'SMGenius-counter', 'SMGenius-value', 'SMGenius-minus', 'SMGenius-plus', 1, maxValue);
+        }
+
 
 
          const applyVisualState = (state) => {
@@ -1574,10 +1660,15 @@ function populateSkills(weaponClass = 'Assault Rifle') {
                             skillInput.dataset.state = '0';
                             applyVisualState('0');
                         }
-                }   
+                }
 
             console.debug('Skill clicked', { skill, state: skillInput.dataset.state });
             updateStatsAfterChange();
+
+            // Update SMGenius counter max value if the skill is SMGenius
+            if (skill === 'SMGenius') {
+                updateSMGeniusCounterMaxValue();
+            }
         });
 
         skillInput.addEventListener('contextmenu', (event) => {
@@ -2280,12 +2371,17 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         );
 
         if (enemy.displayName == 'Bulldozer' || enemy.displayName == 'Shield') {
-            const shotsToBreakVisor = enemy.displayName == 'Bulldozer' 
-                ? Math.ceil(enemy.visorArmor / damage)
+            const headshotBonus = headshots && (isSkillEquipped('HeadGames') || isSkillEquipped('SkullTrauma'))
+                ? (1 + (isSkillEquipped('HeadGames') ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0) +
+                   (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0))
+                : 1;
+
+            const shotsToBreakVisor = enemy.displayName == 'Bulldozer'
+                ? Math.ceil(enemy.visorArmor / (damage * headshotBonus))
                 : fireData.armorPenetration < enemy.visorArmorHardness - 0.99
                 ? Math.ceil(enemy.visorArmor / damage)
                 : 0;
-    
+
             shotsToKill.visorShots = shotsToBreakVisor;
             shotsToKill.nonVisorShots = shotsToKill.totalShots;
             if (headshots) shotsToKill.totalShots += shotsToBreakVisor;

@@ -24,6 +24,8 @@
     "skills-SMGAdept-desc": "<b>BASE:</b>For every skill equipped in Special Ops branch, SMGs deal 2% additional damage to enemy armor.<br><b>ACE:</b>For every skill equipped in Special Ops branch, SMG spread reduces by 6%.",
     "skills-Cracked": "CRACKED",
     "skills-Cracked-desc": "<b>BASE:</b>When you break an enemy's armor layer with an SMG, that enemy suffers 10% additional damage from all sources.<br><b>ACE:</b>The extra damage enemies suffer when you break their armor with an SMG raises to 30%.",
+    "skills-SMGenius": "SMGenius",
+    "skills-SMGenius-desc": "<b>BASE:</b>When you reload an empty magazine from your SMG, gain a buff that increases SMG damage by 5%, for 10 seconds.This buff can stack up to 10 times.<br><b>ACE:</b>The buff now stacks up to 20 times.",
     "skills-CallingShotgun": "CALLING SHOTGUN",
     "skills-CallingShotgun-desc": "<b>BASE:</b>For every skill equipped in Shotgunner branch, Shotgun pellets receive a 2.5% reduction to damage falloff.<br><b>ACE:</b>For every skill equipped in Shotgunner branch, the spread of Shotgun pellets reduces by 3% while in ADS.",
     "skills-PointBlank": "POINT BLANK",
