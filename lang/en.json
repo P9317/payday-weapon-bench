@@ -36,6 +36,10 @@
     "skills-Bullseye-desc": "<b>BASE:</b>For every skill equipped in Hitman branch, Handguns deal 2.5% more damage to unmarked targets, or 10% more damage to marked targets.<br><b>ACE:</b>For every skill equipped in Hitman branch, Handguns receive an accuracy bonus of 5%.",
     "skills-CheapTrick": "CHEAP TRICK",
     "skills-CheapTrick-desc": "<b>BASE:</b>While you are holding a human shield and wielding a Handgun, take 40% less damage.<br><b>ACE:</b>Shooting stunned enemies with a Handgun deals double damage.",
+    "skills-Sunburn": "SUNBURN",
+    "skills-Sunburn-desc": "<b>BASE:</b>Enemies affected by your Flashbang Grenades take 10% more damage for every skill equipped in Flashpoint branch.<br><b>ACE:</b>Enemies affected by your Flashbang Grenades will lose half their armor layers.",
+    "skills-HulkOut": "SEEING RED",
+    "skills-HulkOut-desc": "<b>BASE:</b>While you have Adrenaline, gain a 2% damage bonus for every skill equipped in Imposter branch.<br><b>ACE:</b>Your Adrenaline damage bonus increases by 5%.",
     "skills-PremiumBag": "PREMIUM BAG",
     "skills-PremiumBag-desc": "<b>BASE:</b>When you deploy an Ammo Bag, all heisters within 5 meters regain 2 throwables.<br><b>ACE:</b>Once a heister interacts with your Ammo Bag, they gain 2 Armor Penetration on the next magazine of their primary and secondary weapons.",
 

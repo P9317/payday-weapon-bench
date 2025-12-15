@@ -168,6 +168,10 @@ const SKILL_ICONS_TO_PRELOAD = [
         'images/Skills2.0/Skills2_Profesional_Sniper_Graze_ACED.png',
         'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master.png',
         'images/Skills2.0/Skills2_Ninja_SMG_SMG_Master_ACED.png',
+        'images/Skills2.0/Skills2_Conman_Casing_Hulk_Out.png',
+        'images/Skills2.0/Skills2_Conman_Casing_Hulk_Out_ACED.png',
+        'images/Skills2.0/Skills2_Hacking_Flashbang_Flashbang_Master.png',
+        'images/Skills2.0/Skills2_Hacking_Flashbang_Flashbang_Master_ACED.png',
 ];
 
 const SKILLS = {
@@ -352,8 +356,8 @@ const SKILLS = {
         name: 'skills-Bullseye',
         description: 'skills-Bullseye-desc',
         icons: {
-            base: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert.png',
-            mastered: 'images/Skills2.0/Skills2_Mechanic_Shotgun_Shotgun_Expert_ACED.png',
+            base: 'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Export.png',
+            mastered: 'images/Skills2.0/Skills2_Hacking_Pistol_Pistol_Export_ACED.png',
         },
         iconOffset: {
             x: 192,
@@ -374,6 +378,27 @@ const SKILLS = {
         modifier: 1.0,
         allowedClasses: ['Pistol','Revolver'],
         directMastered: true,
+    },
+    Sunburn:{
+        name: 'skills-Sunburn',
+        description: 'skills-Sunburn-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Hacking_Flashbang_Flashbang_Master.png',
+            mastered: 'images/Skills2.0/Skills2_Hacking_Flashbang_Flashbang_Master_ACED.png',
+        },
+        modifier: 0.1,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
+    },
+    HulkOut:{
+        name: 'skills-HulkOut',
+        description: 'skills-HulkOut-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Conman_Casing_Hulk_Out.png',
+            mastered: 'images/Skills2.0/Skills2_Conman_Casing_Hulk_Out_ACED.png',
+        },
+        basemodifier: 0.02,
+        masteredmodifier: 0.05,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
     },
     PremiumBag: {
         name: 'skills-PremiumBag',
@@ -554,7 +579,7 @@ function applyLoadout(weapon, skills, attachments) {
         equippedSight?.targetingData?.targetingMagnification > 4
     )
         damageModifier = equippedSight.targetingData.targetingMagnification;
-
+//damage increase with Skills
     for (const skill of [
         'edge',
         'coupDeGrace',
@@ -564,6 +589,11 @@ function applyLoadout(weapon, skills, attachments) {
         'CheapTrick',
     ]) {
         if (skills.includes(skill)) damageModifier += SKILLS[skill].modifier;
+    }
+    if(isSkillMastered('HulkOut')){
+        damageModifier += SKILLS.HulkOut.masteredmodifier * (SKILL_VALUES.HulkOut ?? 1);
+    }else if(isSkillEquipped('HulkOut')){
+        damageModifier += SKILLS.HulkOut.basemodifier * (SKILL_VALUES.HulkOut ?? 1);
     }
     if(isSkillEquipped('SMGenius')){
         damageModifier += SKILLS.SMGenius.modifier * (SKILL_VALUES.SMGenius ?? 1);
@@ -582,7 +612,9 @@ function applyLoadout(weapon, skills, attachments) {
         else 
             damageModifier += BullseyeModifier*(SKILLS['Bullseye'].Markmodifier ?? 0.1)
     }
-
+    if(isSkillEquipped('Sunburn')){
+        damageModifier *= (1+SKILLS['Sunburn'].modifier * (SKILL_VALUES['Sunburn'] ?? 1));
+    }
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
             let damage = damageStep.damage;
@@ -1563,7 +1595,12 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             const maxValue = isMastered ? SKILLS.SMGenius.masteredMaxValue : SKILLS.SMGenius.baseMaxValue;
             createSkillCounter(selectableSkill, 'SMGenius', 'SMGenius-counter', 'SMGenius-value', 'SMGenius-minus', 'SMGenius-plus', 1, maxValue);
         }
-
+        if (skill === 'Sunburn') {
+            createSkillCounter(selectableSkill, 'Sunburn', 'Sunburn-counter', 'Sunburn-value', 'Sunburn-minus', 'Sunburn-plus');
+        }
+        if (skill === 'HulkOut') {
+            createSkillCounter(selectableSkill, 'HulkOut', 'HulkOut-counter', 'HulkOut-value', 'HulkOut-minus', 'HulkOut-plus');
+        }
 
 
          const applyVisualState = (state) => {
@@ -2348,10 +2385,13 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
 
         if (enemy.displayName == 'Bulldozer' && headshots) enemyArmor = 0;
         if (
-            equippedSkills.includes('expose') &&
-            enemy.displayName != 'Bulldozer'
-        )
-            enemyArmor = 0;
+            isSkillMastered('Sunburn') &&
+            enemy.displayName != 'Bulldozer'&&
+            enemy.armorLayer > 0
+        ){
+            let decreaselayer = Math.ceil(enemy.armorLayer/2);
+            enemyArmor *= decreaselayer/enemy.armorLayer;
+        }
 
 //        const shotsToKill = weaponShotsToKill(
 //            damage,
