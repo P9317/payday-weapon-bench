@@ -40,6 +40,8 @@
     "skills-Sunburn-desc": "<b>BASE:</b>Enemies affected by your Flashbang Grenades take 10% more damage for every skill equipped in Flashpoint branch.<br><b>ACE:</b>Enemies affected by your Flashbang Grenades will lose half their armor layers.",
     "skills-HulkOut": "SEEING RED",
     "skills-HulkOut-desc": "<b>BASE:</b>While you have Adrenaline, gain a 2% damage bonus for every skill equipped in Imposter branch.<br><b>ACE:</b>Your Adrenaline damage bonus increases by 5%.",
+    "skills-BulletFrenzy": "BULLET FRENZY",
+    "skills-BulletFrenzy-desc": "<b>BASE:</b>Once a heister interacts with your Ammo Bag, they deal 20% more damage with primary and secondary weapons, as well as their next throwable.<br><b>ACE:</b>Raise the damage bonus from your Ammo Bags to 50%.",
     "skills-PremiumBag": "PREMIUM BAG",
     "skills-PremiumBag-desc": "<b>BASE:</b>When you deploy an Ammo Bag, all heisters within 5 meters regain 2 throwables.<br><b>ACE:</b>Once a heister interacts with your Ammo Bag, they gain 2 Armor Penetration on the next magazine of their primary and secondary weapons.",
 

@@ -400,6 +400,17 @@ const SKILLS = {
         masteredmodifier: 0.05,
         allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
     },
+    BulletFrenzy:{
+        name: 'skills-BulletFrenzy',
+        description: 'skills-BulletFrenzy-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Profesional_Ammo_High_Grain_Ammo.png',
+            mastered: 'images/Skills2.0/Skills2_Profesional_Ammo_High_Grain_Ammo_ACED.png',
+        },
+        basemodifier: 0.2,
+        masteredmodifier: 0.5,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
+    },
     PremiumBag: {
         name: 'skills-PremiumBag',
         description: 'skills-PremiumBag-desc',
@@ -424,10 +435,12 @@ const SKILL_VALUES = {
     Rifleman: 1,
     // HeadGames adjustable value (1..12)
     HeadGames: 1,
+    // New counter for percentage display (0..100%)
+    HeadGamesPercentage: 0,
     SMGAdept: 1,
     CallingShotgun: 1,
     Bullseye: 1,
-    BullseyeMode: 'Unmarkmodifier', 
+    BullseyeMode: 'Unmarkmodifier',
 };
 
 const EDGE_DEPENDENT_SKILLS = [
@@ -595,6 +608,11 @@ function applyLoadout(weapon, skills, attachments) {
     }else if(isSkillEquipped('HulkOut')){
         damageModifier += SKILLS.HulkOut.basemodifier * (SKILL_VALUES.HulkOut ?? 1);
     }
+    if(isSkillMastered('BulletFrenzy')){
+        damageModifier += SKILLS.BulletFrenzy.masteredmodifier;
+    }else if(isSkillEquipped('BulletFrenzy')){
+        damageModifier += SKILLS.BulletFrenzy.basemodifier;
+    }
     if(isSkillEquipped('SMGenius')){
         damageModifier += SKILLS.SMGenius.modifier * (SKILL_VALUES.SMGenius ?? 1);
     }
@@ -614,6 +632,9 @@ function applyLoadout(weapon, skills, attachments) {
     }
     if(isSkillEquipped('Sunburn')){
         damageModifier *= (1+SKILLS['Sunburn'].modifier * (SKILL_VALUES['Sunburn'] ?? 1));
+    }
+    if(isSkillMastered('HeadGames')){
+        damageModifier += SKILL_VALUES.HeadGamesPercentage/100;
     }
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
@@ -1377,7 +1398,7 @@ function createSkillCounter(selectableSkill, skillName, counterClass, valueClass
     if (!counter) {
         counter = document.createElement('div');
         counter.className = counterClass;
-        counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+        counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:-3px;width:4.536em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
 
         const minus = document.createElement('button');
         minus.type = 'button';
@@ -1433,7 +1454,7 @@ function createSkillCounter(selectableSkill, skillName, counterClass, valueClass
 
         if (hasModeButtons) {
             const buttonContainer = document.createElement('div');
-            buttonContainer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:4px;width:4.236em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+            buttonContainer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:4px;margin-top:4px;width:4.536em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
             const unmarkBtn = document.createElement('button');
             unmarkBtn.type = 'button';
             unmarkBtn.className = 'Bullseye-unmark';
@@ -1483,6 +1504,81 @@ function createSkillCounter(selectableSkill, skillName, counterClass, valueClass
     } else {
         const valueSpan = counter.querySelector(`.${valueClass}`);
         if (valueSpan) valueSpan.textContent = SKILL_VALUES[skillName] ?? 1;
+    }
+}
+
+/**
+ * 创建百分比计数器（每次增加10%）
+ * @param {HTMLElement} selectableSkill - 技能容器元素
+ * @param {string} skillName - 技能名称
+ * @param {string} counterClass - 计数器CSS类名
+ * @param {string} valueClass - 值显示元素CSS类名
+ * @param {string} minusClass - 减少按钮CSS类名
+ * @param {string} plusClass - 增加按钮CSS类名
+ */
+function createPercentageCounter(selectableSkill, skillName, counterClass, valueClass, minusClass, plusClass) {
+    let counter = selectableSkill.querySelector(`.${counterClass}`);
+
+    if (!counter) {
+        counter = document.createElement('div');
+        counter.className = counterClass;
+        counter.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:2px;margin-top:4px;width:4.536em;height:1.6em;padding:0 0.15em;box-sizing:border-box;';
+
+        const minus = document.createElement('button');
+        minus.type = 'button';
+        minus.className = minusClass;
+        minus.textContent = '-';
+        minus.style.cssText = 'min-width:12px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+
+        const valueSpan = document.createElement('span');
+        valueSpan.className = valueClass;
+        valueSpan.style.cssText = 'min-width:18px;text-align:center;display:inline-block;font-size:0.75em;line-height:1;';
+        // Display with % sign
+        valueSpan.textContent = (SKILL_VALUES[skillName] ?? 0) + '%';
+
+        const plus = document.createElement('button');
+        plus.type = 'button';
+        plus.className = plusClass;
+        plus.textContent = '+';
+        plus.style.cssText = 'min-width:12px;padding:0;border-radius:3px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit;cursor:pointer;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8em;line-height:1;';
+
+        const stopEvent = (ev) => {
+            ev.stopPropagation();
+        };
+
+        minus.addEventListener('click', (ev) => {
+            stopEvent(ev);
+            const cur = SKILL_VALUES[skillName] ?? 0;
+            const next = Math.max(0, cur - 10);
+            SKILL_VALUES[skillName] = next;
+            valueSpan.textContent = next + '%';
+            if (equippedSkills.includes('HeadGames')) {
+                updateStatsAfterChange();
+            }
+        });
+
+        plus.addEventListener('click', (ev) => {
+            stopEvent(ev);
+            const cur = SKILL_VALUES[skillName] ?? 0;
+            const next = cur + 10;
+            SKILL_VALUES[skillName] = next;
+            valueSpan.textContent = next + '%';
+            if (equippedSkills.includes('HeadGames')) {
+                updateStatsAfterChange();
+            }
+        });
+
+        minus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+        plus.addEventListener('contextmenu', (ev) => ev.stopPropagation());
+
+        counter.appendChild(minus);
+        counter.appendChild(valueSpan);
+        counter.appendChild(plus);
+
+        selectableSkill.appendChild(counter);
+    } else {
+        const valueSpan = counter.querySelector(`.${valueClass}`);
+        if (valueSpan) valueSpan.textContent = (SKILL_VALUES[skillName] ?? 0) + '%';
     }
 }
 
@@ -1548,6 +1644,7 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             skillLabel.style.setProperty('--image-x-offset', 'center');
             skillLabel.style.setProperty('--image-y-offset', 'center');
             skillLabel.style.setProperty('--image-size', '64px 64px');
+            skillLabel.style.setProperty('--image-scale', '80%');
         } else {
             skillLabel.dataset.iconMode = 'pack';
             skillLabel.style = `
@@ -1565,8 +1662,8 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             skillLabel.style.setProperty('--image-size', '64px 64px');
         }
 
-        if (skill === 'HeadGames') {
-            skillLabel.style.setProperty('--image-scale', '70%');
+        if (skillLabel.dataset.iconMode === 'pack') {
+            skillLabel.style.setProperty('--image-scale', '80%');
         }
 
         skillLabel.style.position = skillLabel.style.position || 'relative';
@@ -1579,6 +1676,8 @@ function populateSkills(weaponClass = 'Assault Rifle') {
         }
         if (skill === 'HeadGames') {
             createSkillCounter(selectableSkill, 'HeadGames', 'headgames-counter', 'headgames-value', 'headgames-minus', 'headgames-plus');
+            // Create percentage counter below HeadGames counter
+            createPercentageCounter(selectableSkill, 'HeadGamesPercentage', 'headgames-percentage-counter', 'headgames-percentage-value', 'headgames-percentage-minus', 'headgames-percentage-plus');
         }
         if (skill === 'SMGAdept') {
             createSkillCounter(selectableSkill, 'SMGAdept', 'SMGAdept-counter', 'SMGAdept-value', 'SMGAdept-minus', 'SMGAdept-plus');

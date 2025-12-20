@@ -340,7 +340,7 @@ h1 {
     font-size: 2em;
     font-weight: 1000;
     color: var(--color-text-dim);
-    line-height: 1em;
+    line-height: 0em;
 }
 
 #weapon-name h2 {
@@ -349,7 +349,7 @@ h1 {
     padding-bottom: 1rem;
 
     font-family: var(--font-display);
-    font-size: 6.854em;
+    font-size: 4.536em;
     line-height: 1em;
 
     overflow: hidden;
@@ -425,8 +425,8 @@ h1 {
 }
 
 .skill label {
-    width: 4.236em;
-    height: 4.236em;
+    width: 4.536em;
+    height: 4.536em;
 
     overflow: hidden;
     color: transparent;
@@ -439,7 +439,7 @@ h1 {
 
     width: 64px;
     height: 64px;
-    transform: translate(-50%, -50%) scale(var(--image-scale, 70%));
+    transform: translate(-50%, -50%) scale(var(--image-scale, 80%));
 
     background:
         var(--image-url) var(--image-x-offset) var(--image-y-offset) no-repeat;
