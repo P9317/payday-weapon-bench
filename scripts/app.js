@@ -1640,7 +1640,8 @@ function populateSkills(weaponClass = 'Assault Rifle') {
         const iconSpec = SKILLS[skill].icons || (SKILLS[skill].iconBase || SKILLS[skill].iconMastered ? { base: SKILLS[skill].iconBase, mastered: SKILLS[skill].iconMastered } : null);
         if (iconSpec && iconSpec.base) {
             skillLabel.dataset.iconMode = 'single';
-            skillLabel.style.setProperty('--image-url', `url("${iconSpec.base}")`);
+            const baseIcon = iconSpec.base.replace('Skills2.0', skillIcons);
+            skillLabel.style.setProperty('--image-url', `url("${baseIcon}")`);
             skillLabel.style.setProperty('--image-x-offset', 'center');
             skillLabel.style.setProperty('--image-y-offset', 'center');
             skillLabel.style.setProperty('--image-size', '64px 64px');
@@ -1722,8 +1723,8 @@ function populateSkills(weaponClass = 'Assault Rifle') {
              selectableSkill.classList.toggle('selected', state !== '0');
 
              if (skillLabel.dataset.iconMode === 'single') {
-                 const baseIcon = (SKILLS[skill].icons && SKILLS[skill].icons.base) || SKILLS[skill].iconBase;
-                 const masteredIcon = (SKILLS[skill].icons && SKILLS[skill].icons.mastered) || SKILLS[skill].iconMastered || baseIcon;
+                 const baseIcon = SKILLS[skill].icons ? SKILLS[skill].icons.base.replace('Skills2.0', skillIcons) : SKILLS[skill].iconBase;
+                 const masteredIcon = SKILLS[skill].icons ? SKILLS[skill].icons.mastered.replace('Skills2.0', skillIcons) : SKILLS[skill].iconMastered || baseIcon;
                  const iconUrl = state === '2' ? masteredIcon : baseIcon;
                  if (iconUrl) {
                      skillLabel.style.setProperty('--image-url', `url("${iconUrl}")`);
@@ -1857,6 +1858,16 @@ function updateSkillIcons() {
                     '--image-url',
                     `url("images/${skillIcons}-skills.png")`
                 );
+            }
+        } else if (element.dataset.iconMode === 'single') {
+            const skillId = element.getAttribute('for');
+            const skill = Object.keys(SKILLS).find(s => s.replace(/([a-z])([A-Z0-9])/g, '$1-$2').toLowerCase() === skillId);
+            if (skill && SKILLS[skill].icons) {
+                const state = element.dataset.state || '1';
+                const baseIcon = SKILLS[skill].icons.base.replace('Skills2.0', skillIcons);
+                const masteredIcon = SKILLS[skill].icons.mastered.replace('Skills2.0', skillIcons);
+                const iconUrl = state === '2' ? masteredIcon : baseIcon;
+                element.style.setProperty('--image-url', `url("${iconUrl}")`);
             }
         }
     });
