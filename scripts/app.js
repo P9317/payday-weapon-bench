@@ -1020,7 +1020,7 @@ function weaponShotsToKillByArmorLayer(
     enemyArmor,
     armorlayer,
 ) {
-    //if (weaponCritMultiplier < 1) weaponCritMultiplier = 1;
+    if (weaponCritMultiplier < 1) weaponCritMultiplier = 1;
     if (weaponDamage <= 0) {
         return {
             totalShotsNonCrit: Infinity,
@@ -1028,6 +1028,8 @@ function weaponShotsToKillByArmorLayer(
         };
     }
 
+
+    
     armorlayer = Math.max(0, Math.floor(armorlayer || 0));
     const penetrationThreshold = Math.floor(armorPenetration || 0);
     const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
