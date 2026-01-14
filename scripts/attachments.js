@@ -3175,8 +3175,8 @@ const ATTACHMENT_DATA = Object.freeze({
             "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 5
             }
         }
     },
@@ -3193,8 +3193,8 @@ const ATTACHMENT_DATA = Object.freeze({
             "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 5
             }
         }
     },
@@ -3211,8 +3211,8 @@ const ATTACHMENT_DATA = Object.freeze({
             "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 5
             }
         }
     },
