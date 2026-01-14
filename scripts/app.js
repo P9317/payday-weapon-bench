@@ -301,10 +301,10 @@ const SKILLS = {
             x: 320,
             y: 1280,
         },
-        modifier: 0.05,
+        modifier: 0.08,
         allowedClasses: ['SMG'],
-        baseMaxValue: 10,
-        masteredMaxValue: 20,
+        baseMaxValue: 5,
+        masteredMaxValue: 10,
     },
     CallingShotgun:{
         name: 'skills-CallingShotgun',
@@ -332,9 +332,9 @@ const SKILLS = {
             x: 320,
             y: 1280,
         },
-        distancemodifier:300,
+        distancemodifier:500,
         basemodifier: 0.2,
-        masteredmodifier: 0.6,
+        masteredmodifier: 0.5,
         allowedClasses: ['Shotgun'],
     },
     Annihilation: {
@@ -363,8 +363,8 @@ const SKILLS = {
             x: 192,
             y: 1280,
         },
-        Unmarkmodifier: 0.025,
-        Markmodifier: 0.1,
+        Unmarkmodifier: 0.045,
+        Markmodifier: 0.12,
         directBasiced: true,
         allowedClasses: ['Pistol','Revolver'],
     },
@@ -454,70 +454,70 @@ const EDGE_DEPENDENT_SKILLS = [
 const ENEMIES = {
     swat: {
         displayName: 'SWAT',
-        health: 220,
-        armor: 150,
+        health: 350,
+        armor: 480,
         armorHardness: 1.5,
-        armorLayer: 4,
+        armorLayer: 6,
     },
     heavySwat: {
         displayName: 'Heavy SWAT',
-        health: 218,
-        armor: 230,
+        health: 490,
+        armor: 560,
         armorHardness: 1.5,
-        armorLayer: 5,
+        armorLayer: 7,
     },
     specials: {
         displayName: 'Specials',
-        health: 160*1.5,
-        armor: 270,
+        health: 700,
+        armor: 400,
         armorHardness: 2,
-        armorLayer: 6,
+        armorLayer: 5,
     },
     techies: {
         displayName: 'Techies',
-        health: 280,
-        armor: 90,
-        armorHardness: 1.5,
-        armorLayer: 2,  
+        health: 700,
+        armor: 400,
+        armorHardness: 2,
+        armorLayer: 5,
     },
     shield: {
         displayName: 'Shield',
-        health: 160*1.5,
-        armor: 270,
+        health: 350,
+        armor: 480,
         armorHardness: 2.5,
-        visorArmor: 240,
-        visorArmorHardness: 7,
+        visorArmor: 400,
+        visorArmorHardness: 5,
         armorLayer: 6,
     },
     bulldozer: {
         displayName: 'Bulldozer',
-        health: 320*3,
-        armor: 3600*5,
+        health: 2800,
+        armor: 9600,
         armorHardness: 4,
-        visorArmor: 2000,
-        visorArmorHardness: 4,
-        armorLayer: 35,
+        visorArmor: 3360,
+        visorArmorHardness: 42,
+        armorLayer: 120,
     },
     sniper: {
         displayName: 'Sniper',
-        health: 80*1.6,
+        health: 112,
         armor: 0,
         armorHardness: 0,
         armorLayer: 0,
     },
     cloaker: {
         displayName: 'Cloaker',
-        health: 140*1.6,
-        armor: 80,
+        health: 280,
+        armor: 0,
         armorHardness: 0,   
-        armorLayer: 2,
+        armorLayer: 0,
     },
     drone: {
         displayName: 'Drone',
-        health: 50,
-        armor: 50,
+        health: 140,
+        armor: 400,
         armorHardness: 2,
-        armorLayer: 2,
+        armorLayer: 5,
     },
 };
 
@@ -937,16 +937,16 @@ function convertAttributeModifier(attribute, modifier) {
  * @param {number} armorHardness The enemy's armor hardness stat
  * @returns The weapon's EAP against the enemy
  */
-function effectiveArmorPenetration(armorPenetration, armorHardness) {
+/*function effectiveArmorPenetration(armorPenetration, armorHardness) {
     return Math.max(0, Math.min(1, armorPenetration - armorHardness + 1));
-}
+}*/
 
 /**
  * Calculate how many shots it would take to defeat an enemy
  *
  * @param {number} weaponDamage The weapon's current damage
  * @param {number} weaponCritMultiplier The weapon's current crit multiplier
- * @param {number} effectiveArmorPenetration The weapon's EAP against the enemy
+
  * @param {number} enemyHealth The enemy's health stat
  * @param {number} enemyArmor The enemy's armor stat
  */
@@ -1037,8 +1037,21 @@ function weaponShotsToKillByArmorLayer(
     const requiredArmorDamage = layerArmorValue * layersToBreak;
     let healthDamage = weaponDamage;
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
-
-    let armorCritMultiplier = 1;
+    let armorDamagePerShot = 0;
+    if(weaponCritMultiplier !== 1){
+        armorDamagePerShot = weaponDamage+weaponDamage * weaponCritMultiplier*0.54
+    }else{
+        armorDamagePerShot = weaponDamage
+    }
+    const hgLevel = SKILL_VALUES.HeadGames ?? 1;
+    if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+        armorDamagePerShot *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if(weaponCritMultiplier !== 1&&isSkillEquipped('SkullTrauma')){
+        armorDamagePerShot *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
+    }else if(weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')){
+        armorDamagePerShot *= 1+(SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
+    }
+    /*let armorCritMultiplier = 1;
     const hgLevel = SKILL_VALUES.HeadGames ?? 1;
     if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
         armorCritMultiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
@@ -1055,7 +1068,7 @@ function weaponShotsToKillByArmorLayer(
         armorDamagePerShot = weaponDamage * armorCritMultiplier
     }else{
         armorDamagePerShot = weaponDamage
-    }
+    }*/
     if(isSkillEquipped('SMGAdept')) {
         const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
         armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
@@ -2454,16 +2467,25 @@ function updateWeaponStats(selectedWeapon) {
 function shotsToKillAtDistances(weapon, enemy, headshots) {
     const fireData = weapon.fireData;
 
-    const distanceArray = [
-        ...new Set([
-            ...fireData.damageDistanceArray.map(
-                (damageStep) => damageStep.distance
-            ),
-            ...fireData.criticalDamageMultiplierDistanceArray.map(
-                (critMultiplierStep) => critMultiplierStep.distance
-            ),
-        ]),
-    ].sort((a, b) => b - a);
+    // 当装备 CallingShotgun 时，只使用修改后的伤害距离数组，以避免使用未修改的距离数值
+    const distanceArray = isSkillEquipped('CallingShotgun')
+        ? [
+            ...new Set([
+                ...fireData.damageDistanceArray.map(
+                    (damageStep) => damageStep.distance
+                ),
+            ]),
+        ].sort((a, b) => b - a)
+        : [
+            ...new Set([
+                ...fireData.damageDistanceArray.map(
+                    (damageStep) => damageStep.distance
+                ),
+                ...fireData.criticalDamageMultiplierDistanceArray.map(
+                    (critMultiplierStep) => critMultiplierStep.distance
+                ),
+            ]),
+        ].sort((a, b) => b - a);
     
     let shotsToKillAtDistances = {},
         previous = {};

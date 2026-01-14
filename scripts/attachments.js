@@ -69,11 +69,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "A114_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -87,11 +87,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 120,
+            "ammoInventory": 80,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -105,11 +105,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -191,18 +191,18 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 9,
-                "max": 11
+                "min": 7,
+                "max": 9
             }
         }
     },
     "ATK7_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
                 "min": 7,
@@ -220,7 +220,7 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 40,
-            "ammoInventory": 240,
+            "ammoInventory": 160,
             "ammoInventoryMax": 240,
             "ammoPickup": {
                 "min": 7,
@@ -238,11 +238,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -943,22 +943,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 6,
+                "max": 8
             }
         }
     },
     "CAR4_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 8,
-                "max": 10
+                "min": 6,
+                "max": 8
             }
         }
     },
@@ -972,11 +972,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 45,
-            "ammoInventory": 270,
+            "ammoInventory": 180,
             "ammoInventoryMax": 270,
             "ammoPickup": {
-                "min": 8,
-                "max": 10
+                "min": 6,
+                "max": 8
             }
         }
     },
@@ -990,11 +990,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 8,
-                "max": 10
+                "min": 6,
+                "max": 8
             }
         }
     },
@@ -1062,22 +1062,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 500,
+            "ammoInventory": 400,
             "ammoInventoryMax": 500,
             "ammoPickup": {
-                "min": 9,
-                "max": 11
+                "min": 5,
+                "max": 7
             }
         }
     },
     "CHS3_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1091,11 +1091,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 42,
-            "ammoInventory": 252,
+            "ammoInventory": 168,
             "ammoInventoryMax": 252,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1109,11 +1109,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1292,22 +1292,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 11
             }
         }
     },
     "Commando_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1321,11 +1321,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 35,
-            "ammoInventory": 210,
+            "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1339,11 +1339,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1368,22 +1368,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 11
             }
         }
     },
     "Compact7_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1397,11 +1397,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 40,
-            "ammoInventory": 240,
+            "ammoInventory": 160,
             "ammoInventoryMax": 240,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1415,11 +1415,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
                 "min": 8,
-                "max": 10
+                "max": 11
             }
         }
     },
@@ -1486,22 +1486,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 9,
-                "max": 11
+                "min": 5,
+                "max": 7
             }
         }
     },
     "FIK22_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1515,11 +1515,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 35,
-            "ammoInventory": 210,
+            "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1533,11 +1533,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -1600,17 +1600,19 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 5,
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 2,
+                "max": 4
             }
         }
     },
     "FSA12_Mag_Default": {
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -1624,11 +1626,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 90,
+            "ammoInventory": 60,
             "ammoInventoryMax": 90,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -1641,9 +1643,10 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -1761,11 +1764,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "GarstiniViper_Mag_GarstiniViper_Mag_Standard": {
         "magazineData": {
             "ammoLoaded": 7,
-            "ammoInventory": 70,
+            "ammoInventory": 56,
             "ammoInventoryMax": 70,
             "ammoPickup": {
                 "min": 1,
-                "max": 3
+                "max": 2
             }
         }
     },
@@ -1778,11 +1781,11 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
-            "ammoInventory": 60,
+            "ammoInventory": 40,
             "ammoInventoryMax": 60,
             "ammoPickup": {
                 "min": 1,
-                "max": 3
+                "max": 2
             }
         }
     },
@@ -2084,22 +2087,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 8,
-                "max": 10
+                "min": 5,
+                "max": 6
             }
         }
     },
     "KU59_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 6
             }
         }
     },
@@ -2113,11 +2116,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 45,
-            "ammoInventory": 270,
+            "ammoInventory": 180,
             "ammoInventoryMax": 270,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 6
             }
         }
     },
@@ -2131,11 +2134,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 6
             }
         }
     },
@@ -2200,22 +2203,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 9,
-            "ammoInventory": 180,
+            "ammoInventory": 144,
             "ammoInventoryMax": 180,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 2,
+                "max": 4
             }
         }
     },
     "M7P_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -2229,11 +2232,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 21,
-            "ammoInventory": 126,
+            "ammoInventory": 84,
             "ammoInventoryMax": 126,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -2247,11 +2250,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -2332,11 +2335,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "MX63_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 100,
-            "ammoInventory": 500,
+            "ammoInventory": 400,
             "ammoInventoryMax": 500,
             "ammoPickup": {
-                "min": 8,
-                "max": 10
+                "min": 6,
+                "max": 8
             }
         }
     },
@@ -2479,22 +2482,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 12,
-                "max": 14
+                "min": 8,
+                "max": 10
             }
         }
     },
     "NWB9_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 10
             }
         }
     },
@@ -2508,11 +2511,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 45,
-            "ammoInventory": 270,
+            "ammoInventory": 180,
             "ammoInventoryMax": 270,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 10
             }
         }
     },
@@ -2526,11 +2529,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 10
             }
         }
     },
@@ -2556,21 +2559,21 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 400,
+            "ammoInventory": 320,
             "ammoInventoryMax": 400,
             "ammoPickup": {
-                "min": 11,
-                "max": 13
+                "min": 8,
+                "max": 11
             }
         }
     },
     "PC9_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 9,
+                "min": 8,
                 "max": 11
             }
         }
@@ -2585,10 +2588,10 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 35,
-            "ammoInventory": 210,
+            "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
-                "min": 9,
+                "min": 8,
                 "max": 11
             }
         }
@@ -2603,10 +2606,10 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 9,
+                "min": 8,
                 "max": 11
             }
         }
@@ -2673,11 +2676,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "PD5_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 150,
+            "ammoInventory": 120,
             "ammoInventoryMax": 150,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -2691,11 +2694,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 180,
+            "ammoInventory": 120,
             "ammoInventoryMax": 180,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -2709,11 +2712,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 150,
+            "ammoInventory": 120,
             "ammoInventoryMax": 150,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -2977,7 +2980,7 @@ const ATTACHMENT_DATA = Object.freeze({
     "R900S_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 5,
-            "ammoInventory": 50,
+            "ammoInventory": 40,
             "ammoInventoryMax": 50,
             "ammoPickup": {
                 "min": 1,
@@ -2994,7 +2997,7 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
-            "ammoInventory": 60,
+            "ammoInventory": 40,
             "ammoInventoryMax": 60,
             "ammoPickup": {
                 "min": 1,
@@ -3158,22 +3161,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 4,
+                "max": 6
             }
         }
     },
     "RG5_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3187,11 +3190,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 35,
-            "ammoInventory": 210,
+            "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3205,11 +3208,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3331,11 +3334,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "S403_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3349,11 +3352,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 21,
-            "ammoInventory": 126,
+            "ammoInventory": 84,
             "ammoInventoryMax": 126,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3367,11 +3370,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -3434,11 +3437,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "S40_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -3452,11 +3455,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 120,
+            "ammoInventory": 80,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -3470,11 +3473,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -3546,19 +3549,20 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 120,
+            "ammoInventory": 80,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
     "SE5_Mag_Standard": {
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -3571,9 +3575,10 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             }
         }
     },
@@ -3648,9 +3653,10 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "SPM11_Mag_Default": {
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 4
             }
         }
     },
@@ -3664,11 +3670,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 18,
-            "ammoInventory": 108,
+            "ammoInventory": 72,
             "ammoInventoryMax": 108,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 4
             }
         }
     },
@@ -3681,9 +3687,10 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 4
             }
         }
     },
@@ -4237,11 +4244,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 8,
-            "ammoInventory": 62,
+            "ammoInventory": 46,
             "ammoInventoryMax": 62,
             "ammoPickup": {
                 "min": 1,
-                "max": 3
+                "max": 2
             }
         }
     },
@@ -4402,11 +4409,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "Stryk7_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -4420,11 +4427,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 31,
-            "ammoInventory": 186,
+            "ammoInventory": 124,
             "ammoInventoryMax": 186,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -4438,11 +4445,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 5,
+                "max": 7
             }
         }
     },
@@ -4466,22 +4473,22 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 17,
-            "ammoInventory": 340,
+            "ammoInventory": 272,
             "ammoInventoryMax": 340,
             "ammoPickup": {
-                "min": 14,
-                "max": 16
+                "min": 9,
+                "max": 11
             }
         }
     },
     "T32_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 33,
-            "ammoInventory": 330,
+            "ammoInventory": 264,
             "ammoInventoryMax": 330,
             "ammoPickup": {
-                "min": 12,
-                "max": 14
+                "min": 9,
+                "max": 11
             }
         }
     },
@@ -4495,11 +4502,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 45,
-            "ammoInventory": 270,
+            "ammoInventory": 180,
             "ammoInventoryMax": 270,
             "ammoPickup": {
-                "min": 12,
-                "max": 14
+                "min": 9,
+                "max": 11
             }
         }
     },
@@ -4513,11 +4520,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 33,
-            "ammoInventory": 330,
+            "ammoInventory": 264,
             "ammoInventoryMax": 330,
             "ammoPickup": {
-                "min": 12,
-                "max": 14
+                "min": 9,
+                "max": 11
             }
         }
     },
@@ -4749,22 +4756,22 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "magazineData": {
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "min": 4,
+                "max": 6
             }
         }
     },
     "VF7S_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -4778,11 +4785,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 30,
-            "ammoInventory": 180,
+            "ammoInventory": 120,
             "ammoInventoryMax": 180,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -4796,11 +4803,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 4,
+                "max": 6
             }
         }
     },
@@ -4939,7 +4946,7 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 15,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
                 "min": 7,
@@ -4950,11 +4957,11 @@ const ATTACHMENT_DATA = Object.freeze({
     "WAR45_Mag_Default": {
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 7,
+                "max": 9
             }
         }
     },
@@ -4968,11 +4975,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 35,
-            "ammoInventory": 210,
+            "ammoInventory": 140,
             "ammoInventoryMax": 210,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 7,
+                "max": 9
             }
         }
     },
@@ -4986,11 +4993,11 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "magazineData": {
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 7,
+                "max": 9
             }
         }
     },

@@ -44,11 +44,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
                 "min": 3,
-                "max": 5
+                "max": 4
             },
             "armorPenetration": 3,
             "roundsPerMinute": 450
@@ -346,11 +346,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 9,
-                "max": 11
+                "min": 7,
+                "max": 9
             },
             "fireType": "Auto",
             "armorPenetration": 1.15,
@@ -630,11 +630,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 6,
-            "ammoInventory": 60,
+            "ammoInventory": 48,
             "ammoInventoryMax": 60,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             },
             "armorPenetration": 4,
             "roundsPerMinute": 400
@@ -824,19 +824,19 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 212,
+                    "damage": 260,
                     "distance": 1000
                 },
                 {
-                    "damage": 212,
-                    "distance": 1400
+                    "damage": 260,
+                    "distance": 1300
                 },
                 {
-                    "damage": 167,
+                    "damage": 180,
                     "distance": 1900
                 },
                 {
-                    "damage": 130,
+                    "damage": 145,
                     "distance": 2500
                 }
             ],
@@ -855,13 +855,13 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 5,
-            "ammoInventory": 50,
+            "ammoInventory": 40,
             "ammoInventoryMax": 50,
             "ammoPickup": {
                 "min": 1,
                 "max": 2
             },
-            "armorPenetration": 5,
+            "armorPenetration": 6,
             "roundsPerMinute": 75
         },
         "spreadData": {
@@ -1075,10 +1075,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 8
+                "min": 6,
+                "max": 8
             },
             "fireType": "Auto",
             "armorPenetration": 2,
@@ -1385,11 +1386,10 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "max": 7
             },
             "fireType": "Burst",
             "timeBetweenBursts": 0.2,
@@ -1694,11 +1694,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 6,
-            "ammoInventory": 60,
+            "ammoInventory": 48,
             "ammoInventoryMax": 60,
             "ammoPickup": {
                 "min": 2,
-                "max": 4
+                "max": 3
             },
             "armorPenetration": 2,
             "roundsPerMinute": 300
@@ -1950,11 +1950,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 11
             },
             "fireType": "Auto",
             "armorPenetration": 0.9,
@@ -2246,11 +2246,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 8,
+                "max": 11
             },
             "fireType": "Auto",
             "armorPenetration": 1.4,
@@ -2541,11 +2541,10 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "max": 7
             },
             "armorPenetration": 1.5,
             "roundsPerMinute": 900
@@ -2808,11 +2807,11 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 34.125,
+                    "damage": 44,
                     "distance": 200
                 },
                 {
-                    "damage": 34.125,
+                    "damage": 44,
                     "distance": 1300
                 },
                 {
@@ -2838,9 +2837,10 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 2900
                 }
             ],
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             },
             "projectilesPerFiredRound": 8,
             "roundsPerMinute": 300
@@ -3060,11 +3060,11 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 1500
                 },
                 {
-                    "damage": 56,
+                    "damage": 119,
                     "distance": 2000
                 },
                 {
-                    "damage": 42,
+                    "damage": 80,
                     "distance": 2600
                 }
             ],
@@ -3074,20 +3074,20 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 1000
                 },
                 {
-                    "multiplier": 5.6,
+                    "multiplier": 5,
                     "distance": 2000
                 },
                 {
-                    "multiplier": 1.8,
+                    "multiplier": 2.5,
                     "distance": 2600
                 }
             ],
             "ammoLoaded": 7,
-            "ammoInventory": 70,
+            "ammoInventory": 56,
             "ammoInventoryMax": 70,
             "ammoPickup": {
                 "min": 1,
-                "max": 3
+                "max": 2
             },
             "armorPenetration": 5,
             "roundsPerMinute": 275
@@ -3288,11 +3288,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 5,
-            "ammoInventory": 35,
+            "ammoInventory": 25,
             "ammoInventoryMax": 35,
             "ammoPickup": {
-                "min": 0.3,
-                "max": 0.7
+                "min": 1,
+                "max": 1
             },
             "projectilesPerFiredRound": 8,
             "roundsPerMinute": 500
@@ -3491,11 +3491,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 6
             },
             "fireType": "Auto",
             "armorPenetration": 1
@@ -3804,11 +3804,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             },
             "fireType": "Burst",
             "timeBetweenBursts": 0.175,
@@ -4013,10 +4013,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 100,
-            "ammoInventory": 500,
+            "ammoInventory": 400,
             "ammoInventoryMax": 500,
             "ammoPickup": {
-                "min": 8
+                "min": 7,
+                "max": 9
             },
             "fireType": "Auto",
             "armorPenetration": 1.5,
@@ -4403,11 +4404,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 2,
-            "ammoInventory": 40,
+            "ammoInventory": 32,
             "ammoInventoryMax": 40,
             "ammoPickup": {
                 "min": 1,
-                "max": 3
+                "max": 2
             },
             "projectilesPerFiredRound": 10,
             "maximumPenetrationCount": 2,
@@ -4602,11 +4603,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 10,
-                "max": 12
+                "min": 7,
+                "max": 9
             },
             "fireType": "Auto",
             "armorPenetration": 2.2,
@@ -4909,11 +4910,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 30,
-            "ammoInventory": 300,
+            "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 11,
-                "max": 13
+                "min": 8,
+                "max": 11
             },
             "fireType": "Auto",
             "armorPenetration": 1.3,
@@ -5223,11 +5224,10 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 15,
-            "ammoInventory": 150,
+            "ammoInventory": 120,
             "ammoInventoryMax": 150,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "max": 7
             },
             "fireType": "Burst",
             "timeBetweenBursts": 0.1,
@@ -5485,11 +5485,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 7,
-            "ammoInventory": 70,
+            "ammoInventory": 56,
             "ammoInventoryMax": 70,
             "ammoPickup": {
-                "min": 3,
-                "max": 5
+                "min": 2,
+                "max": 4
             },
             "fireType": "Pump",
             "projectilesPerFiredRound": 10,
@@ -5689,7 +5689,7 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 5,
-            "ammoInventory": 50,
+            "ammoInventory": 40,
             "ammoInventoryMax": 50,
             "ammoPickup": {
                 "min": 1,
@@ -5875,10 +5875,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "max": 7
+                "min": 4,
+                "max": 5
             },
             "fireType": "Auto",
             "armorPenetration": 2
@@ -6191,11 +6192,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 12,
-            "ammoInventory": 120,
+            "ammoInventory": 96,
             "ammoInventoryMax": 120,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 6
             },
             "armorPenetration": 1.6,
             "roundsPerMinute": 450
@@ -6451,11 +6452,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 6,
-                "max": 8
+                "min": 4,
+                "max": 7
             },
             "armorPenetration": 1.6,
             "roundsPerMinute": 375
@@ -6711,9 +6712,10 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 1800
                 }
             ],
+            "ammoInventory": 80,
             "ammoPickup": {
                 "min": 3,
-                "max": 5
+                "max": 4
             },
             "armorPenetration": 1.4,
             "roundsPerMinute": 400
@@ -6960,9 +6962,10 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 2300
                 }
             ],
+            "ammoInventory": 80,
             "ammoPickup": {
-                "min": 4,
-                "max": 6
+                "min": 3,
+                "max": 4
             },
             "armorPenetration": 2.1,
             "roundsPerMinute": 350
@@ -7227,7 +7230,7 @@ const WEAPON_DATA = Object.freeze({
             "ammoInventoryMax": 56,
             "ammoPickup": {
                 "min": 2,
-                "max": 4
+                "max": 3
             },
             "fireType": "Bolt",
             "maximumPenetrationCount": 1,
@@ -7526,11 +7529,10 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 17,
-            "ammoInventory": 170,
+            "ammoInventory": 136,
             "ammoInventoryMax": 170,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "max": 7
             },
             "armorPenetration": 1.8,
             "roundsPerMinute": 450
@@ -7774,11 +7776,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 33,
-            "ammoInventory": 330,
+            "ammoInventory": 264,
             "ammoInventoryMax": 330,
             "ammoPickup": {
-                "min": 12,
-                "max": 14
+                "min": 9,
+                "max": 11
             },
             "fireType": "Auto",
             "armorPenetration": 1.3,
@@ -8043,11 +8045,11 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 7,
-            "ammoInventory": 70,
+            "ammoInventory": 56,
             "ammoInventoryMax": 70,
             "ammoPickup": {
                 "min": 2,
-                "max": 4
+                "max": 3
             },
             "fireType": "Pump",
             "projectilesPerFiredRound": 10,
@@ -8219,33 +8221,34 @@ const WEAPON_DATA = Object.freeze({
                     "distance": 1500
                 },
                 {
-                    "damage": 78,
+                    "damage": 86,
                     "distance": 2500
                 },
                 {
-                    "damage": 69,
+                    "damage": 75,
                     "distance": 3500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
-                    "multiplier": 3,
+                    "multiplier": 4.6,
                     "distance": 1500
                 },
                 {
-                    "multiplier": 2.55,
+                    "multiplier": 4.1,
                     "distance": 2500
                 },
                 {
-                    "multiplier": 2.25,
+                    "multiplier": 3.4,
                     "distance": 3500
                 }
             ],
             "ammoLoaded": 20,
-            "ammoInventory": 200,
+            "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "max": 7
+                "min": 4,
+                "max": 5
             },
             "fireType": "Auto",
             "armorPenetration": 2.5,
@@ -8560,7 +8563,7 @@ const WEAPON_DATA = Object.freeze({
                 }
             ],
             "ammoLoaded": 25,
-            "ammoInventory": 250,
+            "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
                 "min": 7,
