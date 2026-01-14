@@ -1181,16 +1181,15 @@ function weaponShotsToKillByArmorLayer(
             baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
         }
         if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
-            overflowDamage *= baseCritMultiplier;
+            overflowDamage *= baseCritMultiplier*0.54;
         }else{
-            overflowDamage *= weaponCritMultiplier;
+            overflowDamage *= weaponCritMultiplier*0.54;
         }
     }
         if (isSkillEquipped('HollowPointRounds')) {
         const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
             ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
-            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15);    
-            overflowDamage *= (1 + HealBonus);
+            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15); 
             healthDamage *= (1 + HealBonus);
     }
     if (isSkillEquipped('Cracked')) {
