@@ -1020,7 +1020,7 @@ function weaponShotsToKillByArmorLayer(
     enemyArmor,
     armorlayer,
 ) {
-    if (weaponCritMultiplier < 1) weaponCritMultiplier = 1;
+    
     if (weaponDamage <= 0) {
         return {
             totalShotsNonCrit: Infinity,
@@ -1073,7 +1073,6 @@ function weaponShotsToKillByArmorLayer(
         const smgLevel = SKILL_VALUES.SMGAdept ?? 1;
         armorDamagePerShot *= (1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * smgLevel);
     }
-    armorDamagePerShot = Math.floor(armorDamagePerShot);
     // BreakingPoint behaviour (new): if equipped, each failed shot that does not
     // satisfy the penetration threshold will increase the weapon's armorPenetration
     // for the *next* shot by a fixed increment (base 0.05, mastered 0.15). We need
@@ -1182,6 +1181,8 @@ function weaponShotsToKillByArmorLayer(
         }
         if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
             overflowDamage *= baseCritMultiplier*0.54;
+        }else if(weaponCritMultiplier < 1){
+            overflowDamage *= 0.54;
         }else{
             overflowDamage *= weaponCritMultiplier*0.54;
         }
@@ -1198,20 +1199,29 @@ function weaponShotsToKillByArmorLayer(
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
-
     const fullCritHealthShots = Math.ceil(
         remainingHealthAfterOverflow / (healthDamage * weaponCritMultiplier)
     );
 
 
-    if (weaponCritMultiplier > 1) {
-        return {
+    if (weaponCritMultiplier !== 1) {
+        if(nonCritHealthShots > fullCritHealthShots){
+            return {
             armoredCrits: armorShots,
             armoredNonCrits: 0,
             unarmoredCrits: fullCritHealthShots,
             unarmoredNonCrits: 0,
             totalShots: armorShots + fullCritHealthShots,
-        };
+            };
+        } else {
+            return {
+            armoredCrits: armorShots,
+            armoredNonCrits: 0,
+            unarmoredCrits: 0,
+            unarmoredNonCrits: nonCritHealthShots,
+            totalShots: armorShots + nonCritHealthShots,
+            }
+        }
     }
 
     return {
