@@ -1019,6 +1019,7 @@ function weaponShotsToKillByArmorLayer(
     enemyHealth,
     enemyArmor,
     armorlayer,
+    enemyName = ''
 ) {
     
     if (weaponDamage <= 0) {
@@ -1028,8 +1029,9 @@ function weaponShotsToKillByArmorLayer(
         };
     }
 
-
-    
+    if (enemyName === 'Drone') {
+        weaponCritMultiplier = 1;
+    }
     armorlayer = Math.max(0, Math.floor(armorlayer || 0));
     const penetrationThreshold = Math.floor(armorPenetration || 0);
     const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
@@ -1182,7 +1184,7 @@ function weaponShotsToKillByArmorLayer(
         if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
             overflowDamage *= baseCritMultiplier*0.54;
         }else if(weaponCritMultiplier < 1){
-            overflowDamage *= 0.54;
+            overflowDamage *= (weaponCritMultiplier+0.22)*0.54;
         }else{
             overflowDamage *= weaponCritMultiplier*0.54;
         }
@@ -1205,7 +1207,6 @@ function weaponShotsToKillByArmorLayer(
 
 
     if (weaponCritMultiplier !== 1) {
-        if(nonCritHealthShots > fullCritHealthShots){
             return {
             armoredCrits: armorShots,
             armoredNonCrits: 0,
@@ -1213,15 +1214,7 @@ function weaponShotsToKillByArmorLayer(
             unarmoredNonCrits: 0,
             totalShots: armorShots + fullCritHealthShots,
             };
-        } else {
-            return {
-            armoredCrits: armorShots,
-            armoredNonCrits: 0,
-            unarmoredCrits: 0,
-            unarmoredNonCrits: nonCritHealthShots,
-            totalShots: armorShots + nonCritHealthShots,
-            }
-        }
+
     }
 
     return {
@@ -2552,7 +2545,8 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             fireData.armorPenetration,
             enemy.health,
             enemyArmor,
-            enemy.armorLayer
+            enemy.armorLayer,
+            enemy.displayName
         );
 
         if (enemy.displayName == 'Bulldozer' || enemy.displayName == 'Shield') {
