@@ -1045,6 +1045,7 @@ function weaponShotsToKillByArmorLayer(
     }else{
         armorDamagePerShot = weaponDamage
     }
+    let DamagePercent = weaponDamage/(weaponDamage+weaponDamage * weaponCritMultiplier*0.54);
     const hgLevel = SKILL_VALUES.HeadGames ?? 1;
     if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
         armorDamagePerShot *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel+(SKILLS.SkullTrauma?.modifier ?? 0.15);
@@ -1182,11 +1183,11 @@ function weaponShotsToKillByArmorLayer(
             baseCritMultiplier /= (1 + (SKILLS.HeadGames?.modifier ?? 0) * hgLevel);
         }
         if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')) {
-            overflowDamage *= baseCritMultiplier*0.54;
-        }else if(weaponCritMultiplier < 1){
-            overflowDamage *= (weaponCritMultiplier+0.22)*0.54;
+            overflowDamage *= baseCritMultiplier*DamagePercent;
+        }else if(weaponCritMultiplier !== 1&&isSkillEquipped('SkullTrauma')){
+            overflowDamage *= baseCritMultiplier*DamagePercent;
         }else{
-            overflowDamage *= weaponCritMultiplier*0.54;
+            overflowDamage *= weaponCritMultiplier*DamagePercent;
         }
     }
         if (isSkillEquipped('HollowPointRounds')) {
