@@ -1035,7 +1035,7 @@ function weaponShotsToKillByArmorLayer(
     armorlayer = Math.max(0, Math.floor(armorlayer || 0));
     const penetrationThreshold = Math.floor(armorPenetration || 0);
     const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
-    const layerArmorValue = armorlayer > 0 ? enemyArmor / armorlayer : 0;
+    const layerArmorValue = 80;
     const requiredArmorDamage = layerArmorValue * layersToBreak;
     let healthDamage = weaponDamage;
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
@@ -2519,15 +2519,16 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         }
 
         let enemyArmor = enemy.armor;
-
+        let enemyArmorLayer = enemy.armorLayer;
         if (enemy.displayName == 'Bulldozer' && headshots) enemyArmor = 0;
         if (
             isSkillMastered('Sunburn') &&
-            enemy.displayName != 'Bulldozer'&&
+            enemy.displayName != 'Bulldozer'&&enemy.displayName != 'Drone'&&
             enemy.armorLayer > 0
         ){
             let decreaselayer = Math.ceil(enemy.armorLayer/2);
-            enemyArmor *= decreaselayer/enemy.armorLayer;
+            enemyArmor -= (decreaselayer/enemy.armorLayer)*enemyArmor;
+            enemyArmorLayer -= decreaselayer;
         }
 
 //        const shotsToKill = weaponShotsToKill(
@@ -2546,7 +2547,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             fireData.armorPenetration,
             enemy.health,
             enemyArmor,
-            enemy.armorLayer,
+            enemyArmorLayer,
             enemy.displayName
         );
 
