@@ -233,7 +233,7 @@ const SKILLS = {
             x: 192,
             y: 1280,
         },
-        modifier: 0.1,
+        modifier: 0.075,
         allowedClasses: ['Marksman'],
     },
     SkullTrauma:{
@@ -1567,7 +1567,7 @@ function createPercentageCounter(selectableSkill, skillName, counterClass, value
         minus.addEventListener('click', (ev) => {
             stopEvent(ev);
             const cur = SKILL_VALUES[skillName] ?? 0;
-            const next = Math.max(0, cur - 10);
+            const next = Math.max(0, cur - 7.5);
             SKILL_VALUES[skillName] = next;
             valueSpan.textContent = next + '%';
             if (equippedSkills.includes('HeadGames')) {
@@ -1578,7 +1578,7 @@ function createPercentageCounter(selectableSkill, skillName, counterClass, value
         plus.addEventListener('click', (ev) => {
             stopEvent(ev);
             const cur = SKILL_VALUES[skillName] ?? 0;
-            const next = cur + 10;
+            const next = Math.min(75, cur + 7.5);
             SKILL_VALUES[skillName] = next;
             valueSpan.textContent = next + '%';
             if (equippedSkills.includes('HeadGames')) {
@@ -2558,7 +2558,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
                 : 1;
 
             const shotsToBreakVisor = enemy.displayName == 'Bulldozer'
-                ? Math.ceil(enemy.visorArmor / (damage * headshotBonus))
+                ? Math.ceil(enemy.visorArmor / ((damage+damage*multiplier*0.2) * headshotBonus))
                 : fireData.armorPenetration < enemy.visorArmorHardness - 0.99
                 ? Math.ceil(enemy.visorArmor / damage)
                 : 0;

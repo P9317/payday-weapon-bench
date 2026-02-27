@@ -1,7 +1,7 @@
 {
     "title": "Payday 3 Weapon Bench",
     "credits": "Made by Jade 🌺 ✦ Skill Icons by Sydch ✦ Special Thanks to Price9317 and Lunar Pearl",
-    "whats-new": "Updated to Shopping Spree",
+    "whats-new": "Updated to Update 3.2",
     "dlc-1": "Syntax Error",
     "dlc-2": "Boys in Blue",
     "dlc-3": "Houston Breakout",
@@ -15,7 +15,7 @@
     "skills-HollowPointRounds": "HOLLOW-POINT ROUNDS",
     "skills-HollowPointRounds-desc": "<b>BASE:</b>Assault Rifles and LMGs deal 15% more health damage.<br><b>ACE:</b>Raise your health damage bonus from Assault Rifles and LMGs to 40%.",
     "skills-HeadGames": "HEAD GAMES",
-    "skills-HeadGames-desc": "<b>BASE:</b>For every skill equipped in Longshot branch, your headshot multiplier with Sniper and Marksman rifles increases by 0.1.<br><b>ACE:</b>For each headshot you land with a Sniper or Marksman rifle, your next shot will deal 10% more damage.",
+    "skills-HeadGames-desc": "<b>BASE:</b>For every skill equipped in Longshot branch, your headshot multiplier with Sniper and Marksman rifles increases by 0.1.<br><b>ACE:</b>For each headshot you land with a Sniper or Marksman rifle, your next shot will deal 7.5% more damage.",
     "skills-SkullTrauma": "SKULL TRAUMA",
     "skills-SkullTrauma-desc": "<b>BASE:</b>Headshots with Sniper and Marksman rifles deal 15% more damage.<br><b>ACE:</b>Increase the reload speed of Sniper and Marksman rifles by 20%.",
     "skills-ArmorPiercing": "ARMOR-PIERCING",
