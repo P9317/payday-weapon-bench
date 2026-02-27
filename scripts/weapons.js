@@ -13,11 +13,11 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 96,
+                    "damage": 92,
                     "distance": 1000
                 },
                 {
-                    "damage": 96,
+                    "damage": 90,
                     "distance": 2000
                 },
                 {
@@ -31,15 +31,15 @@ const WEAPON_DATA = Object.freeze({
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
-                    "multiplier": 3,
+                    "multiplier": 2.5,
                     "distance": 2000
                 },
                 {
-                    "multiplier": 3.3,
+                    "multiplier": 2.2,
                     "distance": 2500
                 },
                 {
-                    "multiplier": 3.9,
+                    "multiplier": 2.2,
                     "distance": 3000
                 }
             ],
@@ -320,29 +320,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 79.2,
-                    "distance": 1400
+                    "distance": 1500
                 },
                 {
                     "damage": 38,
-                    "distance": 2200
+                    "distance": 2500
                 },
                 {
                     "damage": 28,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.25,
-                    "distance": 1400
+                    "distance": 1500
                 },
                 {
-                    "multiplier": 0.84,
-                    "distance": 2200
+                    "multiplier": 1.1,
+                    "distance": 2500
                 },
                 {
-                    "multiplier": 0.72,
-                    "distance": 2900
+                    "multiplier": 1,
+                    "distance": 3000
                 }
             ],
             "ammoLoaded": 30,
@@ -604,29 +604,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 155.6,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "damage": 81,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 58,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 6,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "multiplier": 4.2,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 3,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "ammoLoaded": 6,
@@ -1044,34 +1044,34 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 64.6,
+                    "damage": 90,
                     "distance": 200
                 },
                 {
-                    "damage": 64.6,
-                    "distance": 1700
+                    "damage": 90,
+                    "distance": 1500
                 },
                 {
-                    "damage": 50,
-                    "distance": 2700
+                    "damage": 85,
+                    "distance": 2500
                 },
                 {
-                    "damage": 43,
-                    "distance": 3700
+                    "damage": 80,
+                    "distance": 3500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3.7,
-                    "distance": 1700
+                    "distance": 1500
                 },
                 {
                     "multiplier": 2.96,
-                    "distance": 2700
+                    "distance": 2500
                 },
                 {
                     "multiplier": 2.59,
-                    "distance": 3700
+                    "distance": 3500
                 }
             ],
             "ammoLoaded": 30,
@@ -1082,7 +1082,7 @@ const WEAPON_DATA = Object.freeze({
                 "max": 8
             },
             "fireType": "Auto",
-            "armorPenetration": 2,
+            "armorPenetration": 2.8,
             "roundsPerMinute": 720
         },
         "spreadData": {
@@ -1355,19 +1355,19 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 67,
+                    "damage": 85,
                     "distance": 100
                 },
                 {
-                    "damage": 67,
+                    "damage": 85,
                     "distance": 1500
                 },
                 {
-                    "damage": 55,
+                    "damage": 80,
                     "distance": 2500
                 },
                 {
-                    "damage": 49,
+                    "damage": 70,
                     "distance": 3500
                 }
             ],
@@ -1393,7 +1393,7 @@ const WEAPON_DATA = Object.freeze({
             },
             "fireType": "Burst",
             "timeBetweenBursts": 0.2,
-            "armorPenetration": 2.4,
+            "armorPenetration": 2.8,
             "roundsPerMinute": 1000
         },
         "spreadData": {
@@ -1668,29 +1668,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 160.1,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 102,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "damage": 77,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 4,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 3.2,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "multiplier": 2.4,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "ammoLoaded": 6,
@@ -1920,15 +1920,15 @@ const WEAPON_DATA = Object.freeze({
             "damageDistanceArray": [
                 {
                     "damage": 60,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "damage": 55.2,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "damage": 42,
-                    "distance": 2800
+                    "distance": 3000
                 },
                 {
                     "damage": 36,
@@ -1938,14 +1938,14 @@ const WEAPON_DATA = Object.freeze({
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.3,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.91,
-                    "distance": 2800
+                    "multiplier": 1.15,
+                    "distance": 3000
                 },
                 {
-                    "multiplier": 0.78,
+                    "multiplier": 1,
                     "distance": 3500
                 }
             ],
@@ -1953,8 +1953,7 @@ const WEAPON_DATA = Object.freeze({
             "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 8,
-                "max": 11
+                "min": 8
             },
             "fireType": "Auto",
             "armorPenetration": 0.9,
@@ -2220,37 +2219,36 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 59.2,
-                    "distance": 2200
+                    "distance": 2000
                 },
                 {
                     "damage": 38,
-                    "distance": 2900
+                    "distance": 3000
                 },
                 {
                     "damage": 32,
-                    "distance": 3700
+                    "distance": 4000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.2,
-                    "distance": 2200
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.84,
-                    "distance": 2900
+                    "multiplier": 1.1,
+                    "distance": 3000
                 },
                 {
-                    "multiplier": 0.72,
-                    "distance": 3700
+                    "multiplier": 1,
+                    "distance": 4000
                 }
             ],
             "ammoLoaded": 30,
             "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 8,
-                "max": 11
+                "min": 8
             },
             "fireType": "Auto",
             "armorPenetration": 1.4,
@@ -2515,29 +2513,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 54,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "damage": 39,
-                    "distance": 2400
+                    "distance": 2500
                 },
                 {
                     "damage": 36,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3.8,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "multiplier": 4.2,
-                    "distance": 2400
+                    "distance": 2500
                 },
                 {
                     "multiplier": 4.76,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "ammoLoaded": 25,
@@ -2812,29 +2810,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 44,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "damage": 21,
-                    "distance": 2100
+                    "distance": 2000
                 },
                 {
                     "damage": 15,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.75,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "multiplier": 1.225,
-                    "distance": 2100
+                    "distance": 2000
                 },
                 {
                     "multiplier": 0.875,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "ammoInventory": 80,
@@ -3460,20 +3458,20 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 98.5,
-                    "distance": 500
+                    "damage": 120,
+                    "distance": 1000
                 },
                 {
-                    "damage": 98.5,
-                    "distance": 2000
-                },
-                {
-                    "damage": 68,
+                    "damage": 100,
                     "distance": 3000
                 },
                 {
-                    "damage": 58,
-                    "distance": 4000
+                    "damage": 90,
+                    "distance": 5000
+                },
+                {
+                    "damage": 80,
+                    "distance": 10000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
@@ -3498,7 +3496,7 @@ const WEAPON_DATA = Object.freeze({
                 "max": 6
             },
             "fireType": "Auto",
-            "armorPenetration": 1
+            "armorPenetration": 1.75
         },
         "spreadData": {
             "start": 0.25,
@@ -3778,11 +3776,11 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 43.6,
-                    "distance": 1200
+                    "distance": 1000
                 },
                 {
                     "damage": 22,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "damage": 18,
@@ -3792,14 +3790,14 @@ const WEAPON_DATA = Object.freeze({
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.5,
-                    "distance": 1200
+                    "distance": 1000
                 },
                 {
-                    "multiplier": 0.9,
-                    "distance": 1900
+                    "multiplier": 1.25,
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.75,
+                    "multiplier": 1.1,
                     "distance": 2500
                 }
             ],
@@ -3982,34 +3980,34 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 66.7,
+                    "damage": 101,
                     "distance": 700
                 },
                 {
-                    "damage": 66.7,
-                    "distance": 1200
+                    "damage": 95,
+                    "distance": 1000
                 },
                 {
-                    "damage": 43,
-                    "distance": 1900
+                    "damage": 90,
+                    "distance": 2000
                 },
                 {
-                    "damage": 31,
-                    "distance": 2900
+                    "damage": 80,
+                    "distance": 5000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 2,
-                    "distance": 1200
+                    "distance": 1000
                 },
                 {
                     "multiplier": 1.4,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "multiplier": 1,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "ammoLoaded": 100,
@@ -4378,29 +4376,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 67.125,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "damage": 42,
-                    "distance": 2100
+                    "distance": 2000
                 },
                 {
                     "damage": 30,
-                    "distance": 2900
+                    "distance": 3000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "multiplier": 2.1,
-                    "distance": 2100
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.88,
-                    "distance": 2900
+                    "multiplier": 1.1,
+                    "distance": 3000
                 }
             ],
             "ammoLoaded": 2,
@@ -4572,19 +4570,19 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 51.5,
+                    "damage": 70,
                     "distance": 500
                 },
                 {
-                    "damage": 51.5,
+                    "damage": 68,
                     "distance": 2000
                 },
                 {
-                    "damage": 35,
+                    "damage": 65,
                     "distance": 3000
                 },
                 {
-                    "damage": 30,
+                    "damage": 62,
                     "distance": 4000
                 }
             ],
@@ -4884,7 +4882,7 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 65.2,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "damage": 35,
@@ -4892,21 +4890,21 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 29,
-                    "distance": 3200
+                    "distance": 3500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.2,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.72,
+                    "multiplier": 1.1,
                     "distance": 2500
                 },
                 {
-                    "multiplier": 0.6,
-                    "distance": 3200
+                    "multiplier": 1,
+                    "distance": 3500
                 }
             ],
             "ammoLoaded": 30,
@@ -5198,29 +5196,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 76.6,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "damage": 39,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 28,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 1200
+                    "distance": 1000
                 },
                 {
                     "multiplier": 2.1,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "multiplier": 1.5,
-                    "distance": 2300
+                    "distance": 2000
                 }
             ],
             "ammoLoaded": 15,
@@ -5459,11 +5457,11 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 47.6,
-                    "distance": 1200
+                    "distance": 10000
                 },
                 {
                     "damage": 24,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "damage": 20,
@@ -5473,11 +5471,11 @@ const WEAPON_DATA = Object.freeze({
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 2.2,
-                    "distance": 1200
+                    "distance": 1000
                 },
                 {
                     "multiplier": 1.32,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "multiplier": 1.1,
@@ -5658,34 +5656,34 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 186,
+                    "damage": 280,
                     "distance": 1600
                 },
                 {
-                    "damage": 186,
-                    "distance": 2600
+                    "damage": 280,
+                    "distance": 2500
                 },
                 {
-                    "damage": 171,
-                    "distance": 3100
+                    "damage": 280,
+                    "distance": 3000
                 },
                 {
-                    "damage": 156,
-                    "distance": 3600
+                    "damage": 270,
+                    "distance": 4000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
-                    "multiplier": 5,
-                    "distance": 2600
+                    "multiplier": 2,
+                    "distance": 2500
                 },
                 {
-                    "multiplier": 6.5,
-                    "distance": 3100
+                    "multiplier": 2,
+                    "distance": 3000
                 },
                 {
-                    "multiplier": 7.5,
-                    "distance": 4100
+                    "multiplier": 2,
+                    "distance": 4000
                 }
             ],
             "ammoLoaded": 5,
@@ -5849,37 +5847,37 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 104.6,
-                    "distance": 1700
+                    "distance": 1500
                 },
                 {
-                    "damage": 82,
-                    "distance": 2700
+                    "damage": 100,
+                    "distance": 5000
                 },
                 {
-                    "damage": 71,
-                    "distance": 3700
+                    "damage": 95,
+                    "distance": 10000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
-                    "multiplier": 2,
-                    "distance": 1700
+                    "multiplier": 4.2,
+                    "distance": 1500
                 },
                 {
-                    "multiplier": 1.6,
-                    "distance": 2700
+                    "multiplier": 4.1,
+                    "distance": 3000
                 },
                 {
-                    "multiplier": 1.4,
-                    "distance": 3700
+                    "multiplier": 4,
+                    "distance": 4000
                 }
             ],
             "ammoLoaded": 20,
             "ammoInventory": 160,
             "ammoInventoryMax": 200,
             "ammoPickup": {
-                "min": 4,
-                "max": 5
+                "min": 3,
+                "max": 4
             },
             "fireType": "Auto",
             "armorPenetration": 2
@@ -6166,29 +6164,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 90.1,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 56,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "damage": 42,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 2.4,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "multiplier": 1.8,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "ammoLoaded": 12,
@@ -6687,29 +6685,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 100.6,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "damage": 52,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 37,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "multiplier": 2.1,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 1.5,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "ammoInventory": 80,
@@ -6937,29 +6935,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 116.1,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 80,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "damage": 60,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 5,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 4,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "multiplier": 3,
-                    "distance": 2300
+                    "distance": 2500
                 }
             ],
             "ammoInventory": 80,
@@ -7195,34 +7193,34 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 134,
+                    "damage": 100,
                     "distance": 900
                 },
                 {
-                    "damage": 134,
-                    "distance": 1900
+                    "damage": 95,
+                    "distance": 2000
                 },
                 {
-                    "damage": 123,
-                    "distance": 2400
+                    "damage": 95,
+                    "distance": 2500
                 },
                 {
-                    "damage": 112.5,
-                    "distance": 2900
+                    "damage": 90,
+                    "distance": 3000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 4.5,
-                    "distance": 2400
+                    "multiplier": 2.8,
+                    "distance": 2500
                 },
                 {
-                    "multiplier": 5.1,
-                    "distance": 2900
+                    "multiplier": 2.2,
+                    "distance": 3000
                 }
             ],
             "ammoLoaded": 8,
@@ -7503,29 +7501,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 60.6,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "damage": 30,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "damage": 22,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 3,
-                    "distance": 700
+                    "distance": 1000
                 },
                 {
                     "multiplier": 2.1,
-                    "distance": 1200
+                    "distance": 1500
                 },
                 {
                     "multiplier": 1.4,
-                    "distance": 1800
+                    "distance": 2000
                 }
             ],
             "ammoLoaded": 17,
@@ -7750,29 +7748,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 49.3,
-                    "distance": 800
+                    "distance": 1000
                 },
                 {
                     "damage": 30,
-                    "distance": 1300
+                    "distance": 1500
                 },
                 {
                     "damage": 22,
-                    "distance": 2100
+                    "distance": 2500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 2.5,
-                    "distance": 800
+                    "distance": 1000
                 },
                 {
                     "multiplier": 1.75,
-                    "distance": 1100
+                    "distance": 1500
                 },
                 {
                     "multiplier": 1.25,
-                    "distance": 2100
+                    "distance": 2500
                 }
             ],
             "ammoLoaded": 33,
@@ -8019,29 +8017,29 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 52,
-                    "distance": 1100
+                    "distance": 1000
                 },
                 {
                     "damage": 22,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "damage": 18,
-                    "distance": 2200
+                    "distance": 2500
                 }
             ],
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 2,
-                    "distance": 1100
+                    "distance": 1000
                 },
                 {
                     "multiplier": 1,
-                    "distance": 1700
+                    "distance": 2000
                 },
                 {
                     "multiplier": 0.8,
-                    "distance": 2200
+                    "distance": 2500
                 }
             ],
             "ammoLoaded": 7,
@@ -8213,19 +8211,19 @@ const WEAPON_DATA = Object.freeze({
         "fireData": {
             "damageDistanceArray": [
                 {
-                    "damage": 92,
+                    "damage": 130,
                     "distance": 100
                 },
                 {
-                    "damage": 92,
+                    "damage": 130,
                     "distance": 1500
                 },
                 {
-                    "damage": 86,
+                    "damage": 120,
                     "distance": 2500
                 },
                 {
-                    "damage": 75,
+                    "damage": 110,
                     "distance": 3500
                 }
             ],
@@ -8537,11 +8535,11 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 86.4,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
                     "damage": 51,
-                    "distance": 2800
+                    "distance": 3000
                 },
                 {
                     "damage": 43,
@@ -8551,14 +8549,14 @@ const WEAPON_DATA = Object.freeze({
             "criticalDamageMultiplierDistanceArray": [
                 {
                     "multiplier": 1.1,
-                    "distance": 1900
+                    "distance": 2000
                 },
                 {
-                    "multiplier": 0.66,
-                    "distance": 2800
+                    "multiplier": 1.05,
+                    "distance": 3000
                 },
                 {
-                    "multiplier": 0.55,
+                    "multiplier": 1,
                     "distance": 3500
                 }
             ],
@@ -8566,8 +8564,7 @@ const WEAPON_DATA = Object.freeze({
             "ammoInventory": 200,
             "ammoInventoryMax": 250,
             "ammoPickup": {
-                "min": 7,
-                "max": 9
+                "max": 7
             },
             "fireType": "Auto",
             "armorPenetration": 0.9,

@@ -3910,8 +3910,8 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ],
         "targetingData": {
-            "targetingMagnification": 1.5,
-            "targetingOnTopMagnification": 2.3
+            "targetingMagnification": 1.2,
+            "targetingOnTopMagnification": 1.2
         }
     },
     "Sight_Sheath": {
