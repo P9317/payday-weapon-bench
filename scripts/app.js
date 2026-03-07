@@ -233,7 +233,7 @@ const SKILLS = {
             x: 192,
             y: 1280,
         },
-        modifier: 0.075,
+        modifier: 0.1,
         allowedClasses: ['Marksman'],
     },
     SkullTrauma:{
@@ -647,7 +647,7 @@ function applyLoadout(weapon, skills, attachments) {
             ){const pointBlankModifier = isSkillMastered('PointBlank') 
                 ? SKILLS['PointBlank'].masteredmodifier 
                 : SKILLS['PointBlank'].basemodifier;
-                damage *= damageModifier + pointBlankModifier;
+                damage *= (damageModifier + pointBlankModifier);
             }else damage *= damageModifier;
             if(isSkillEquipped('CallingShotgun')){
                 const CSvalue = SKILL_VALUES.CallingShotgun ?? 1;
@@ -1028,7 +1028,9 @@ function weaponShotsToKillByArmorLayer(
             totalShotsFullCrit: Infinity,
         };
     }
-
+    if(enemyName ==='Bulldozer'&&isSkillEquipped('Sunburn')){
+        weaponDamage/=(1+(SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1))
+    }
     if (enemyName === 'Drone') {
         weaponCritMultiplier = 1;
     }
@@ -1037,7 +1039,6 @@ function weaponShotsToKillByArmorLayer(
     const layersToBreak = Math.max(armorlayer - penetrationThreshold, 0);
     const layerArmorValue = 80;
     const requiredArmorDamage = layerArmorValue * layersToBreak;
-    let healthDamage = weaponDamage;
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
     let armorDamagePerShot = 0;
     if(weaponCritMultiplier !== 1){
@@ -1190,6 +1191,7 @@ function weaponShotsToKillByArmorLayer(
             overflowDamage *= weaponCritMultiplier*DamagePercent;
         }
     }
+    let healthDamage = weaponDamage;
         if (isSkillEquipped('HollowPointRounds')) {
         const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
             ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
@@ -2520,7 +2522,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
 
         let enemyArmor = enemy.armor;
         let enemyArmorLayer = enemy.armorLayer;
-        if (enemy.displayName == 'Bulldozer' && headshots) enemyArmor = 0;
+        if (enemy.displayName == 'Bulldozer' && headshots) enemyArmor = enemyArmorLayer = 0;
         if (
             isSkillMastered('Sunburn') &&
             enemy.displayName != 'Bulldozer'&&enemy.displayName != 'Drone'&&
@@ -2550,17 +2552,20 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             enemyArmorLayer,
             enemy.displayName
         );
-
+        let damagetoVisor = damage;
         if (enemy.displayName == 'Bulldozer' || enemy.displayName == 'Shield') {
+            if(isSkillEquipped('Sunburn')){
+                damagetoVisor = damage/(1+(SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1));
+            }
             const headshotBonus = headshots && (isSkillEquipped('HeadGames') || isSkillEquipped('SkullTrauma'))
                 ? (1 + (isSkillEquipped('HeadGames') ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0) +
                    (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0))
                 : 1;
 
             const shotsToBreakVisor = enemy.displayName == 'Bulldozer'
-                ? Math.ceil(enemy.visorArmor / ((damage+damage*multiplier*0.2) * headshotBonus))
+                ? Math.ceil(enemy.visorArmor / ((damagetoVisor+damagetoVisor*multiplier*0.2) * headshotBonus))
                 : fireData.armorPenetration < enemy.visorArmorHardness - 0.99
-                ? Math.ceil(enemy.visorArmor / damage)
+                ? Math.ceil(enemy.visorArmor / damagetoVisor)
                 : 0;
 
             shotsToKill.visorShots = shotsToBreakVisor;

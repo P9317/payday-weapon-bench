@@ -2,6 +2,7 @@ const defaultLocale = 'en';
 
 const supportedLocales = {
     en: 'English',
+	fr: 'Français',
     cn: '简体中文',
     tr: 'Türkçe',
     ru: 'Русский',
