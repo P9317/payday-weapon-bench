@@ -1,12 +1,13 @@
 {
     "title": "Payday 3 Weapon Bench",
     "credits": "Made by Jade 🌺 ✦ Skill Icons by Sydch ✦ Special Thanks to Price9317 and Lunar Pearl",
-    "whats-new": "Updated to Update 3.2",
+    "whats-new": "Updated to Update 3.5",
     "dlc-1": "Syntax Error",
     "dlc-2": "Boys in Blue",
     "dlc-3": "Houston Breakout",
     "dlc-4": "Fear & Greed",
     "dlc-5": "Party Powder",
+    "dlc-6": "Swedish Weapon",
 
     "skills-Rifleman":"RIFLEMAN",
     "skills-Rifleman-desc":"<b>BASE:</b>For every skill equipped in Commando branch, Assault Rifles and LMGs gain an additional 0.1 Armor Penetration.<br><b>ACE:</b>Assault Rifle and LMG reload speed increases by 2.5% for every skill equipped in Commando branch.",
@@ -38,6 +39,8 @@
     "skills-CheapTrick-desc": "<b>BASE:</b>While you are holding a human shield and wielding a Handgun, take 40% less damage.<br><b>ACE:</b>Shooting stunned enemies with a Handgun deals double damage.",
     "skills-Sunburn": "SUNBURN",
     "skills-Sunburn-desc": "<b>BASE:</b>Enemies affected by your Flashbang Grenades take 10% more damage for every skill equipped in Flashpoint branch.<br><b>ACE:</b>Enemies affected by your Flashbang Grenades will lose half their armor layers.",
+    "skills-ElecTenderizer": "ELECTRIC TENDERIZER",
+    "skills-ElecTenderizer-desc": "<b>BASE:</b>For each time a Shock Grenade blast hits the same enemy, that enemy will take 10% additional damage from all sources.<br><b>ACE:</b>The damage bonus Shock Grenades inflict on enemies increases to 25%.",
     "skills-HulkOut": "SEEING RED",
     "skills-HulkOut-desc": "<b>BASE:</b>While you have Adrenaline, gain a 2% damage bonus for every skill equipped in Imposter branch.<br><b>ACE:</b>Your Adrenaline damage bonus increases by 5%.",
     "skills-BulletFrenzy": "BULLET FRENZY",
@@ -126,6 +129,9 @@
     "Voyeur Scope":"Voyeur Scope",
     "Trench Iron":"Trench Iron",
     "Snapshot Clear-Tag":"Snapshot Clear-Tag",
+    "Lucid RDS":"Lucid RDS",
+    "SM-2 Sight":"SM-2 Sight",
+    "Targeter Optic":"Targeter Optic",
 
     "Quick-Pull Mag":"Quick-Pull Mag",
     "Quick-Pull Magazine":"Quick-Pull Mag",
@@ -135,6 +141,7 @@
     "Compact Magazine":"Compact Mag",
     "Standard":"Default",
     "Unfluted Cylinder":"Unfluted Cylinder",
+    "Speed Mag":"Speed Mag",
 
     "Beveled Silencer":"Beveled Silencer",
     "Express Muzzle Break":"Express Muzzle Break",
@@ -161,9 +168,11 @@
     "Vent Catch IDM2":"Vent Catch IDM2",
     "Crated Muzzle":"Crated Muzzle",
     "Whisper Wrap Silencer":"Whisper Wrap Silencer",
+    "Lo-Pan Suppressor":"Lo-Pan Suppressor",
 
     "CQC Barrel":"CQC Barrel",
     "Ranged Barrel":"Ranged Barrel",
+    "Ultralight Barrel":"Ultralight Barrel",
     "Rail Barrel":"Rail Barrel",
     "Trad Grip Barrel":"Trad Grip Barrel",
     "Comp Barrel":"Comp Barrel",
@@ -176,6 +185,7 @@
     "S-Ballers":"S-Ballers",
     "Tac Barrel":"Tac Barrel",
     "Tactical Barrel":"Tactical Barrel",
+    "Extended Barrel":"Extended Barrel",
 
     "Cylinder Grip":"Cylinder Grip",
     "Angled Ghost Grip":"Angled Ghost Grip",
@@ -183,6 +193,9 @@
     "Quick Hold Grip":"Quick Hold Grip",
     "Rigger Handstop":"Rigger Handstop",
     "Flat-Side STAB Grip":"Flat-Side STAB Grip",
+    "AG-9 Cylinder Grip":"AG-9 Cylinder Grip",
+    "Qin Frame Stock":"Qin Frame Stock",
+    "Shen Retracted Stock":"Shen Retracted Stock",
 
     "Biofit Grip":"Biofit Grip",
     "Tac Grip":"Tac Grip",
@@ -212,6 +225,13 @@
     "Strafed Handle ":"Strafed Handle",
     "Shock Panel":"Shock Panel",
     "Tac Grip ":"Tac Grip",
+    "Revenant Grip":"Revenant Grip",
+    "Lined Grip":"Lined Grip",
+    "Bound Grip":"Bound Grip",
+    "Custom Grip":"Custom Grip",
+    "Optimal Grip":"Optimal Grip",
+    "Polymer Vertical Grip":"Polymer Vertical Grip",
+    "Biofit Vertical Grip":"Biofit Vertical Grip",
 
     "Slitted Rail Guard":"Slitted Rail Guard",
     "Vented Rail Guard":"Vented Rail Guard",
@@ -242,6 +262,9 @@
     "Minimized Hook Stock":"Minimized Hook Stock",
     "Hollow Frame":"Hollow Frame",
     "Rubber Framed Stock":"Rubber Framed Stock",
+    "Campaigner Stock":"Campaigner Stock",
+    "Primus Stock":"Primus Stock",
+    "Adaptable Stock":"Adaptable Stock",
 
     "× Magnification":"× Magnification",
     " Magazine Size":" Magazine Size",
@@ -266,7 +289,8 @@
     "Vertical Recoil":"Vertical Recoil",
     "Vertical Gunkick":"Vertical Gunkick",
     "Vertical Spread Radius":"Vertical Spread Radius",
-    "View Kick Recovery Speed":"View Kick Recovery Speed"
+    "View Kick Recovery Speed":"View Kick Recovery Speed",
+    "Critical Damage Multiplier Distance":"Critical Damage Multiplier Distance"
 
 
 

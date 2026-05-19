@@ -10,7 +10,10 @@ const weaponCategories = [
     'SMG',
     'LMG',
 ];
-
+const AMMO_PICKUP_PRESETS = {
+    min: 5,
+    max: 10
+};
 const weaponOutput = {};
 const attachmentOutput = {};
 
@@ -142,10 +145,10 @@ try {
                 ammoLoaded: fireData.AmmoLoaded,
                 ammoInventory: fireData.AmmoInventory,
                 ammoInventoryMax: fireData.AmmoInventoryMax,
-                ammoPickup: {
+                ammoPickup: fireData.AmmoPickup ?{
                     min: fireData.AmmoPickup.Min,
                     max: fireData.AmmoPickup.Max,
-                },
+                } : AMMO_PICKUP_PRESETS,
                 fireType: fireData.FireType?.split('::')[1],
                 timeBetweenBursts: fireData.TimeBetweenBurstsSeconds,
                 projectilesPerFiredRound: fireData.ProjectilesPerFiredRound,

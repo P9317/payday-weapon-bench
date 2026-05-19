@@ -172,7 +172,9 @@ const SKILL_ICONS_TO_PRELOAD = [
         'images/payday/Skills2_Conman_Casing_Hulk_Out_ACED.png',
         'images/payday/Skills2_Hacking_Flashbang_Flashbang_Master.png',
         'images/payday/Skills2_Hacking_Flashbang_Flashbang_Master_ACED.png',
-];
+        'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser.png',
+        'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser_ACED.png'
+        ];
 
 const SKILLS = {
     
@@ -389,6 +391,17 @@ const SKILLS = {
         modifier: 0.1,
         allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
     },
+    ElecTenderizer:{
+        name: 'skills-ElecTenderizer',
+        description: 'skills-ElecTenderizer-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser_ACED.png',
+        },
+        basemodifier: 0.1,
+        masteredmodifier: 0.25,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
+    },
     HulkOut:{
         name: 'skills-HulkOut',
         description: 'skills-HulkOut-desc',
@@ -584,6 +597,10 @@ function applyLoadout(weapon, skills, attachments) {
             'DamageDistance',
             attributeModifiers['DamageDistance']
         );
+        critrangeModifier = convertAttributeModifier(
+            'CriticalDamageMultiplierDistance',
+            attributeModifiers['CriticalDamageMultiplierDistance']
+        );
 
     // Precision Shot sets the base damage modifier
     // to the current scope's magnification
@@ -633,6 +650,11 @@ function applyLoadout(weapon, skills, attachments) {
     if(isSkillEquipped('Sunburn')){
         damageModifier *= (1+SKILLS['Sunburn'].modifier * (SKILL_VALUES['Sunburn'] ?? 1));
     }
+    if(isSkillMastered('ElecTenderizer')){
+        damageModifier += SKILLS['ElecTenderizer'].masteredmodifier * (SKILL_VALUES['ElecTenderizer'] ?? 1);
+    }else if(isSkillEquipped('ElecTenderizer')){
+        damageModifier += SKILLS['ElecTenderizer'].basemodifier * (SKILL_VALUES['ElecTenderizer'] ?? 1);
+    }
     if(isSkillMastered('HeadGames')){
         damageModifier += SKILL_VALUES.HeadGamesPercentage/100;
     }
@@ -659,6 +681,7 @@ function applyLoadout(weapon, skills, attachments) {
             };
         }
     )
+
         .filter((item, index, array) => {
         // Find all items with the same damage value
         const sameDamageItems = array.filter(x => x.damage === item.damage);
@@ -708,7 +731,14 @@ function applyLoadout(weapon, skills, attachments) {
         }
         
     }
-
+    fireData.criticalDamageMultiplierDistanceArray = fireData.criticalDamageMultiplierDistanceArray.map(
+        (critStep) => {
+            return {
+                multiplier: critStep.multiplier,
+                distance: critStep.distance + critrangeModifier,
+            };
+        }
+    );
     // Long shot removes distance penalties on critical multipliers
     if (skills.includes('longShot')) {
         fireData.criticalDamageMultiplierDistanceArray = [
@@ -718,7 +748,7 @@ function applyLoadout(weapon, skills, attachments) {
                         .multiplier,
                 distance:
                     fireData.criticalDamageMultiplierDistanceArray.reverse()[0]
-                        .distance,
+                        .distance + critrangeModifier,
             },
         ];
     }
@@ -1718,6 +1748,9 @@ function populateSkills(weaponClass = 'Assault Rifle') {
         if (skill === 'Sunburn') {
             createSkillCounter(selectableSkill, 'Sunburn', 'Sunburn-counter', 'Sunburn-value', 'Sunburn-minus', 'Sunburn-plus');
         }
+        if (skill === 'ElecTenderizer') {
+            createSkillCounter(selectableSkill, 'ElecTenderizer', 'ElecTenderizer-counter', 'ElecTenderizer-value', 'ElecTenderizer-minus', 'ElecTenderizer-plus',1,5);
+        }
         if (skill === 'HulkOut') {
             createSkillCounter(selectableSkill, 'HulkOut', 'HulkOut-counter', 'HulkOut-value', 'HulkOut-minus', 'HulkOut-plus');
         }
@@ -2185,7 +2218,7 @@ function updateWeaponStats(selectedWeapon) {
     baseMultiplierRange.setAttribute(
         'data-localisation-var',
         `{"distance":"${
-            fireData.criticalDamageMultiplierDistanceArray[0].distance / 100
+            ((fireData.criticalDamageMultiplierDistanceArray[0].distance) / 100).toFixed(2)
         }"}`
     );
 

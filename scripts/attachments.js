@@ -1825,6 +1825,23 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ]
     },
+    "Grip_Revenant": {
+        "displayName": "Revenant Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 10
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -10
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 5
+            }
+        ]
+    },
     "Grip_Tac": {
         "displayName": "Tac Grip",
         "attributeModifierMap": [
@@ -1860,6 +1877,241 @@ const ATTACHMENT_DATA = Object.freeze({
         }
     },
     "HET5_Stock_Default": {},
+    "Julius_BarrelExtension_Standard": {},
+    "Julius_Barrel_Ranged": {
+        "displayName": "Ranged Barrel",
+        "attributeModifierMap": [
+            {
+                "attribute": "DamageDistance",
+                "value": 30
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": 15
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": -15
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": -15
+            }
+        ]
+    },
+    "Julius_Barrel_Standard": {},
+    "Julius_Barrel_Ultralight": {
+        "displayName": "Ultralight Barrel",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallGunkick",
+                "value": 30
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 15
+            },
+            {
+                "attribute": "DamageDistance",
+                "value": -15
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": -15
+            }
+        ]
+    },
+    "Julius_Body_Standard": {},
+    "Julius_Bolt_Standard": {},
+    "Julius_ChargingHandle_Standard": {},
+    "Julius_Charm_Sling": {},
+    "Julius_ForeGrip_Standard": {},
+    "Julius_FrontSight_Standard": {},
+    "Julius_Grip_Grained": {
+        "displayName": "Grained Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallRecoil",
+                "value": 15
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": 15
+            },
+            {
+                "attribute": "HipfireSpread",
+                "value": -15
+            }
+        ]
+    },
+    "Julius_Grip_Saw": {
+        "displayName": "Lined Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "VerticalRecoil",
+                "value": 30
+            },
+            {
+                "attribute": "VerticalGunkick",
+                "value": 15
+            },
+            {
+                "attribute": "HorizontalRecoil",
+                "value": -15
+            }
+        ]
+    },
+    "Julius_Grip_Standard": {},
+    "Julius_Grip_Wrapped": {
+        "displayName": "Bound Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 15
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": 15
+            },
+            {
+                "attribute": "GunKickBackDistance",
+                "value": -15
+            }
+        ]
+    },
+    "Julius_Mag_Compact": {
+        "displayName": "Compact Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": 5
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 20,
+            "ammoInventory": 400,
+            "ammoInventoryMax": 400,
+            "ammoPickup": {
+                "min": 10,
+                "max": 12
+            }
+        }
+    },
+    "Julius_Mag_Extended": {
+        "displayName": "Extended Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": -10
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 40,
+            "ammoInventory": 240,
+            "ammoInventoryMax": 360,
+            "ammoPickup": {
+                "min": 5,
+                "max": 9
+            }
+        }
+    },
+    "Julius_Mag_Quick": {
+        "displayName": "Speed Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": 10
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 30,
+            "ammoInventory": 240,
+            "ammoInventoryMax": 360,
+            "ammoPickup": {
+                "min": 5,
+                "max": 9
+            }
+        }
+    },
+    "Julius_Mag_Standard": {
+        "magazineData": {
+            "ammoLoaded": 30,
+            "ammoInventory": 240,
+            "ammoInventoryMax": 360,
+            "ammoPickup": {
+                "min": 5,
+                "max": 9
+            }
+        }
+    },
+    "Julius_RearSight_Standard": {},
+    "Julius_SightMount_Standard": {},
+    "Julius_StockAdapter_Standard": {},
+    "Julius_StockMount_Standard": {},
+    "Julius_Stock_Albert": {
+        "displayName": "Campaigner Stock",
+        "attributeModifierMap": [
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 30
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": 30
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": -15
+            },
+            {
+                "attribute": "HipfireSpread",
+                "value": -30
+            }
+        ]
+    },
+    "Julius_Stock_Reinforced": {
+        "displayName": "Primus Stock",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallRecoil",
+                "value": 30
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 30
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": -30
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -30
+            }
+        ]
+    },
+    "Julius_Stock_Standard": {},
+    "Julius_VerticalGrip_Standard": {
+        "displayName": "AG-9 Cylinder Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "HipfireSpread",
+                "value": 5
+            },
+            {
+                "attribute": "VerticalRecoil",
+                "value": 15
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -10
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -10
+            }
+        ]
+    },
     "Justicar_Barrel_Default": {},
     "Justicar_Barrel_Extended": {
         "displayName": "Potshot Barrel",
@@ -2775,6 +3027,69 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ]
     },
+    "PFLK_Ammo_Default": {},
+    "PFLK_BarrelExtension_Standard": {},
+    "PFLK_Barrel_Standard": {},
+    "PFLK_Bolt_Standard": {},
+    "PFLK_ForeGrip_Sport_Alt": {
+        "displayName": "Custom Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -5
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 5
+            }
+        ]
+    },
+    "PFLK_ForeGrip_Sport_Naked": {
+        "displayName": "Optimal Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": 5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": -5
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 10
+            }
+        ]
+    },
+    "PFLK_ForeGrip_Standard": {},
+    "PFLK_FrontSight_Standard": {},
+    "PFLK_Grip_Standard": {},
+    "PFLK_Mag_Standard": {},
+    "PFLK_RearSight_Standard": {},
+    "PFLK_Receiver_Standard": {},
+    "PFLK_StockAdapter_Standard": {},
+    "PFLK_Stock_Robust": {
+        "displayName": "Adaptable Stock",
+        "attributeModifierMap": [
+            {
+                "attribute": "VerticalRecoil",
+                "value": 20
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 10
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -15
+            }
+        ]
+    },
+    "PFLK_Stock_Standard": {},
     "R880_Ammo_Default": {},
     "R880_Barrel_CQC": {
         "displayName": "CQC Barrel",
@@ -3872,6 +4187,22 @@ const ATTACHMENT_DATA = Object.freeze({
             "targetingOnTopMagnification": 6
         }
     },
+    "Sight_LucidRDS": {
+        "displayName": "Lucid RDS",
+        "attributeModifierMap": [
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 5
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -5
+            }
+        ],
+        "targetingData": {
+            "targetingMagnification": 1.1
+        }
+    },
     "Sight_Primed": {
         "displayName": "Primed Marksman Scope",
         "attributeModifierMap": [
@@ -3912,6 +4243,23 @@ const ATTACHMENT_DATA = Object.freeze({
         "targetingData": {
             "targetingMagnification": 1.2,
             "targetingOnTopMagnification": 1.2
+        }
+    },
+    "Sight_Seymour": {
+        "displayName": "SM-2 Sight",
+        "attributeModifierMap": [
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 10
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -10
+            }
+        ],
+        "targetingData": {
+            "targetingMagnification": 1.15,
+            "targetingOnTopMagnification": 1.15
         }
     },
     "Sight_Sheath": {
@@ -4023,6 +4371,27 @@ const ATTACHMENT_DATA = Object.freeze({
         ],
         "targetingData": {
             "targetingMagnification": 1.15
+        }
+    },
+    "Sight_TargeterOptic": {
+        "displayName": "Targeter Optic",
+        "attributeModifierMap": [
+            {
+                "attribute": "InitialRecoil",
+                "value": 15
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": 30
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -30
+            }
+        ],
+        "targetingData": {
+            "targetingMagnification": 1.2,
+            "targetingOnTopMagnification": 1.2
         }
     },
     "Sight_ViewPoint": {
@@ -4530,6 +4899,7 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "T32_RearSight_Default": {},
     "T32_SightMount_Default": {},
+    "T32_StockMount_Default": {},
     "T32_Stock_NoStock": {},
     "T32_Stock_Overline": {
         "displayName": "Overline Stock",
@@ -5003,5 +5373,196 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "WAR45_RearSight_Default": {},
     "WAR45_StockMount_Default": {},
-    "WAR45_Stock_Default": {}
+    "WAR45_Stock_Default": {},
+    "Yates_BarrelExtension_Standard": {},
+    "Yates_BarrelExtension_Suppressor": {
+        "displayName": "Lo-Pan Suppressor",
+        "attributeModifierMap": [
+            {
+                "attribute": "DamageDistance",
+                "value": -15
+            },
+            {
+                "attribute": "CriticalDamageMultiplierDistance",
+                "value": -5
+            }
+        ]
+    },
+    "Yates_Barrel_Long": {
+        "displayName": "Extended Barrel",
+        "attributeModifierMap": [
+            {
+                "attribute": "DamageDistance",
+                "value": 25
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -20
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": -20
+            },
+            {
+                "attribute": "CriticalDamageMultiplierDistance",
+                "value": 25
+            }
+        ]
+    },
+    "Yates_Barrel_Medium": {
+        "displayName": "Ranged Barrel",
+        "attributeModifierMap": [
+            {
+                "attribute": "DamageDistance",
+                "value": 15
+            },
+            {
+                "attribute": "CriticalDamageMultiplierDistance",
+                "value": 15
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -10
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -10
+            }
+        ]
+    },
+    "Yates_Barrel_Standard": {},
+    "Yates_Body_Standard": {},
+    "Yates_ChargingHandle_Standard": {},
+    "Yates_Mag_Extended": {
+        "displayName": "Extended Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": -10
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 40,
+            "ammoInventory": 200,
+            "ammoInventoryMax": 260,
+            "ammoPickup": {
+                "min": 5,
+                "max": 10
+            }
+        }
+    },
+    "Yates_Mag_Short": {
+        "displayName": "Compact Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": 5
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 20,
+            "ammoInventory": 260,
+            "ammoInventoryMax": 360,
+            "ammoPickup": {
+                "min": 5,
+                "max": 10
+            }
+        }
+    },
+    "Yates_Mag_Speedpull": {
+        "displayName": "Quick-Pull Mag",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallReloadPlayRate",
+                "value": 15
+            }
+        ],
+        "magazineData": {
+            "ammoLoaded": 30,
+            "ammoInventory": 240,
+            "ammoInventoryMax": 300,
+            "ammoPickup": {
+                "min": 5,
+                "max": 10
+            }
+        }
+    },
+    "Yates_Mag_Standard": {
+        "magazineData": {
+            "ammoLoaded": 32,
+            "ammoInventory": 192,
+            "ammoInventoryMax": 320,
+            "ammoPickup": {
+                "min": 5,
+                "max": 10
+            }
+        }
+    },
+    "Yates_RearSight_Default": {},
+    "Yates_SightMount_Default": {},
+    "Yates_StockMount_Standard": {},
+    "Yates_Stock_Frame": {
+        "displayName": "Qin Frame Stock",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallGunkick",
+                "value": 15
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": 5
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -10
+            }
+        ]
+    },
+    "Yates_Stock_Retracted": {
+        "displayName": "Shen Retracted Stock",
+        "attributeModifierMap": [
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 10
+            }
+        ]
+    },
+    "Yates_VerticalGrip_Polymer": {
+        "displayName": "Polymer Vertical Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallSpread",
+                "value": 10
+            },
+            {
+                "attribute": "VerticalRecoil",
+                "value": -10
+            },
+            {
+                "attribute": "HorizontalRecoil",
+                "value": 20
+            }
+        ]
+    },
+    "Yates_VerticalGrip_Tommy": {
+        "displayName": "Biofit Vertical Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "HipfireSpread",
+                "value": 30
+            },
+            {
+                "attribute": "VerticalRecoil",
+                "value": 20
+            },
+            {
+                "attribute": "HorizontalRecoil",
+                "value": -10
+            }
+        ]
+    }
 });
