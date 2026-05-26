@@ -1227,7 +1227,10 @@ function weaponShotsToKillByArmorLayer(
             ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
             : (SKILLS.HollowPointRounds.basemodifier ?? 0.15); 
             healthDamage *= (1 + HealBonus);
-    }
+            if (overflowDamage > 0) {
+                overflowDamage *= (1 + HealBonus);
+            }
+        }
     if (isSkillEquipped('Cracked')) {
         healthDamage *= (1 + CrackedBonus ?? 0);
     }

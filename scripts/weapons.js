@@ -6090,7 +6090,7 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 47.6,
-                    "distance": 10000
+                    "distance": 1000
                 },
                 {
                     "damage": 24,
