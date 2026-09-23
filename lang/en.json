@@ -94,6 +94,8 @@
     },
     "enemy-swat": "SWAT",
     "enemy-heavy-swat": "Heavy SWAT",
+    "enemy-grenadier": "Grenadier",
+    "enemy-taser": "Taser",
     "enemy-specials": "Specials",
     "enemy-shield": "Shield",
     "enemy-bulldozer": "Bulldozer",

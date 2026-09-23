@@ -48,6 +48,8 @@
     "stats-shots": "{{count}} 发",
     "enemy-swat": "特警",
     "enemy-heavy-swat": "重型特警",
+    "enemy-grenadier": "掷弹特警",
+    "enemy-taser": "电击特警",
     "enemy-specials": "特种特警",
     "enemy-shield": "盾牌特警",
     "enemy-bulldozer": "防爆特警",

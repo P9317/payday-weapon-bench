@@ -468,45 +468,52 @@ const EDGE_DEPENDENT_SKILLS = [
 const ENEMIES = {
     swat: {
         displayName: 'SWAT',
-        health: 350,
-        armor: 480,
+        health: 250,
+        armor: 150,
         armorHardness: 1.5,
-        armorLayer: 6,
+        armorLayer: 3,
     },
     heavySwat: {
         displayName: 'Heavy SWAT',
-        health: 490,
-        armor: 560,
+        health: 350,
+        armor: 200,
         armorHardness: 1.5,
-        armorLayer: 7,
+        armorLayer: 4,
     },
-    specials: {
-        displayName: 'Specials',
-        health: 700,
-        armor: 400,
+    grenadier: {
+        displayName: 'Grenadier',
+        health: 500,
+        armor: 300,
         armorHardness: 2,
-        armorLayer: 5,
+        armorLayer: 4,
+    },
+    taser: {
+        displayName: 'Taser',
+        health: 500,
+        armor: 100,
+        armorHardness: 2,
+        armorLayer: 2,
     },
     techies: {
         displayName: 'Techies',
-        health: 700,
-        armor: 400,
+        health: 500,
+        armor: 100,
         armorHardness: 2,
-        armorLayer: 5,
+        armorLayer: 2,
     },
     shield: {
         displayName: 'Shield',
-        health: 350,
-        armor: 480,
+        health: 250,
+        armor: 150,
         armorHardness: 2.5,
         visorArmor: 400,
         visorArmorHardness: 5,
-        armorLayer: 6,
+        armorLayer: 3,
     },
     bulldozer: {
         displayName: 'Bulldozer',
-        health: 2800,
-        armor: 9600,
+        health: 2000,
+        armor: 6000,
         armorHardness: 4,
         visorArmor: 5000,
         visorArmorHardness: 42,
@@ -514,24 +521,50 @@ const ENEMIES = {
     },
     sniper: {
         displayName: 'Sniper',
-        health: 112,
+        health: 80,
         armor: 0,
         armorHardness: 0,
         armorLayer: 0,
     },
     cloaker: {
         displayName: 'Cloaker',
-        health: 280,
+        health: 200,
         armor: 0,
         armorHardness: 0,   
         armorLayer: 0,
     },
     drone: {
         displayName: 'Drone',
-        health: 140,
-        armor: 400,
+        // Moon omits InitialHealthV2; 100 preserves the existing Overkill value of 140.
+        health: 100,
+        armor: 100,
         armorHardness: 2,
-        armorLayer: 5,
+        armorLayer: 2,
+    },
+};
+
+// Each ability data file gives multipliers for difficulty indices 1–3.
+// A missing entry keeps the normal value (for example, Dozer armor on Hard).
+const ENEMY_DIFFICULTY_MULTIPLIERS = {
+    swat: { armor: [1, 1.3, 1.6, 3.2], armorLayer: [1, 1.3, 1.6, 2] },
+    heavySwat: { armor: [1, 1.25, 1.5, 2.8], armorLayer: [1, 1.25, 1.5, 1.75] },
+    grenadier: { armor: [1, 1.5, 2, 4], armorLayer: [1, 1.5, 2, 2.5] },
+    taser: { armor: [1, 1.5, 2, 4], armorLayer: [1, 1.5, 2, 2.5] },
+    techies: { armor: [1, 1.5, 2, 4], armorLayer: [1, 1.5, 2, 2.5] },
+    shield: { armor: [1, 1.3, 1.6, 3.2], armorLayer: [1, 1.3, 1.6, 2] },
+    bulldozer: { armor: [1, 1, 1, 1.6] },
+    drone: { armor: [1, 1.5, 2, 4], armorLayer: [1, 1.5, 2, 2.5] },
+};
+
+// Visor values are supplied separately for each difficulty by the character assets.
+const ENEMY_VISOR_STATS = {
+    shield: {
+        armor: [100, 150, 200, 400],
+        hardness: [2, 3, 4, 5],
+    },
+    bulldozer: {
+        armor: [3000, 3300, 3750, 5000],
+        hardness: [30, 33, 37, 42],
     },
 };
 
@@ -2687,10 +2720,42 @@ const enemyDifficulties = JSON.parse(
     localStorage.getItem('enemyDifficulties') || '{}'
 );
 
+if (enemyDifficulties.specials) {
+    enemyDifficulties.grenadier ??= enemyDifficulties.specials;
+    enemyDifficulties.taser ??= enemyDifficulties.specials;
+    delete enemyDifficulties.specials;
+    localStorage.setItem('enemyDifficulties', JSON.stringify(enemyDifficulties));
+}
+
+function scaleEnemyStat(value, multiplier) {
+    // Avoid rounding an exact integer up because of floating-point noise.
+    return Math.ceil(Number((value * multiplier).toFixed(6)));
+}
+
+function getEnemyData(enemy) {
+    const base = ENEMIES[enemy];
+    const difficulty = ['normal', 'hard', 'veryHard', 'overkill']
+        .indexOf(enemyDifficulties[enemy] || 'overkill');
+    const index = difficulty < 0 ? 3 : difficulty;
+    const multipliers = ENEMY_DIFFICULTY_MULTIPLIERS[enemy];
+    const visor = ENEMY_VISOR_STATS[enemy];
+
+    return {
+        ...base,
+        health: scaleEnemyStat(base.health, [1, 1.1, 1.25, 1.4][index]),
+        armor: scaleEnemyStat(base.armor, multipliers?.armor?.[index] ?? 1),
+        armorLayer: scaleEnemyStat(base.armorLayer, multipliers?.armorLayer?.[index] ?? 1),
+        ...(visor && {
+            visorArmor: visor.armor[index],
+            visorArmorHardness: visor.hardness[index],
+        }),
+    };
+}
+
 function updateDamageStats(selectedWeapon) {
     document.querySelector('#damage-stats').innerHTML = '';
 
-    for (enemy in ENEMIES) {
+    for (const enemy in ENEMIES) {
         const filteredSkills = equippedSkills.filter((skill) => {
             return (
                 // In normal gameplay dozers cannot be stunned
@@ -2704,7 +2769,7 @@ function updateDamageStats(selectedWeapon) {
             equippedAttachments
         );
 
-        const enemyData = ENEMIES[enemy];
+        const enemyData = getEnemyData(enemy);
 
         const damageStats = document
             .querySelector('#damage-stats')
@@ -2735,11 +2800,12 @@ function updateDamageStats(selectedWeapon) {
         `;
         difficultySelect.value = enemyDifficulties[enemy] || 'overkill';
         difficultySelect.onchange = (event) => {
-            enemyDifficulties[enemy] = event.target.value;
+            enemyDifficulties[event.target.dataset.enemy] = event.target.value;
             localStorage.setItem(
                 'enemyDifficulties',
                 JSON.stringify(enemyDifficulties)
             );
+            updateDamageStats(selectedWeapon);
         };
 
         if (enemyData.armor) {
