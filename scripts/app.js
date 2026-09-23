@@ -403,6 +403,16 @@ const SKILLS = {
         masteredmodifier: 0.25,
         allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
     },
+    HighlyConductive: {
+        name: 'skills-HighlyConductive',
+        description: 'skills-HighlyConductive-desc',
+        icons: {
+            base: 'images/Skills2.0/Skills2_Mechanic_Shock_Armor_Conductor.png',
+            mastered: 'images/Skills2.0/Skills2_Mechanic_Shock_Armor_Conductor_ACED.png',
+        },
+        directBasiced: true,
+        allowedClasses: ['Assault Rifle','Marksman','Shotgun','Pistol','Revolver','SMG','LMG'],
+    },
     HulkOut:{
         name: 'skills-HulkOut',
         description: 'skills-HulkOut-desc',
@@ -455,7 +465,10 @@ const SKILL_VALUES = {
     CallingShotgun: 1,
     Bullseye: 1,
     BullseyeMode: 'Unmarkmodifier',
+    HighlyConductive: 1,
 };
+
+const MAX_SHOCK_GRENADE_HITS = 5;
 
 const EDGE_DEPENDENT_SKILLS = [
     'longShot',
@@ -1791,7 +1804,10 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             createSkillCounter(selectableSkill, 'Sunburn', 'Sunburn-counter', 'Sunburn-value', 'Sunburn-minus', 'Sunburn-plus');
         }
         if (skill === 'ElecTenderizer') {
-            createSkillCounter(selectableSkill, 'ElecTenderizer', 'ElecTenderizer-counter', 'ElecTenderizer-value', 'ElecTenderizer-minus', 'ElecTenderizer-plus',1,5);
+            createSkillCounter(selectableSkill, 'ElecTenderizer', 'ElecTenderizer-counter', 'ElecTenderizer-value', 'ElecTenderizer-minus', 'ElecTenderizer-plus', 1, MAX_SHOCK_GRENADE_HITS);
+        }
+        if (skill === 'HighlyConductive') {
+            createSkillCounter(selectableSkill, 'HighlyConductive', 'HighlyConductive-counter', 'HighlyConductive-value', 'HighlyConductive-minus', 'HighlyConductive-plus', 1, MAX_SHOCK_GRENADE_HITS);
         }
         if (skill === 'HulkOut') {
             createSkillCounter(selectableSkill, 'HulkOut', 'HulkOut-counter', 'HulkOut-value', 'HulkOut-minus', 'HulkOut-plus');
@@ -2607,6 +2623,17 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             let decreaselayer = Math.ceil(enemy.armorLayer/2);
             enemyArmor -= (decreaselayer/enemy.armorLayer)*enemyArmor;
             enemyArmorLayer -= decreaselayer;
+        }
+        if (
+            isSkillEquipped('HighlyConductive') &&
+            enemy.displayName != 'Bulldozer' && enemy.displayName != 'Drone' &&
+            enemyArmorLayer > 0
+        ) {
+            const hits = Math.min(MAX_SHOCK_GRENADE_HITS,
+                Math.max(1, Math.floor(SKILL_VALUES.HighlyConductive ?? 1)));
+            const lostLayers = Math.min(enemyArmorLayer, hits);
+            enemyArmor -= (lostLayers / enemyArmorLayer) * enemyArmor;
+            enemyArmorLayer -= lostLayers;
         }
 
 //        const shotsToKill = weaponShotsToKill(

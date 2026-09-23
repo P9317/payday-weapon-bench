@@ -1,7 +1,7 @@
 {
     "title": "Payday 3 Weapon Bench",
     "credits": "Made by Jade 🌺 ✦ Skill Icons by Sydch ✦ Special Thanks to Price9317 and Lunar Pearl",
-    "whats-new": "Updated to Update 3.5",
+    "whats-new": "Updated to Update 3.9",
     "dlc-1": "Syntax Error",
     "dlc-2": "Boys in Blue",
     "dlc-3": "Houston Breakout",
@@ -48,6 +48,8 @@
     "skills-BulletFrenzy-desc": "<b>BASE:</b>Once a heister interacts with your Ammo Bag, they deal 20% more damage with primary and secondary weapons, as well as their next throwable.<br><b>ACE:</b>Raise the damage bonus from your Ammo Bags to 50%.",
     "skills-PremiumBag": "PREMIUM BAG",
     "skills-PremiumBag-desc": "<b>BASE:</b>When you deploy an Ammo Bag, all heisters within 5 meters regain 2 throwables.<br><b>ACE:</b>Once a heister interacts with your Ammo Bag, they gain 2 Armor Penetration on the next magazine of their primary and secondary weapons.",
+    "skills-HighlyConductive": "HIGHLY CONDUCTIVE",
+    "skills-HighlyConductive-desc": "<b>BASE:</b>Each time a Shock Grenade blast hits an enemy, they lose 1 layer of armor for as long as they are stunned.<br><b>ACE:</b>Enemies killed while affected by your Shock Grenade will emit an electric blast.",
 
     "weapon-class-assault-rifle": "Assault Rifle",
     "weapon-class-marksman": "Marksman Rifle",
