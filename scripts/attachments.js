@@ -241,8 +241,8 @@ const ATTACHMENT_DATA = Object.freeze({
             "ammoInventory": 240,
             "ammoInventoryMax": 300,
             "ammoPickup": {
-                "min": 5,
-                "max": 7
+                "min": 7,
+                "max": 9
             }
         }
     },
@@ -298,6 +298,7 @@ const ATTACHMENT_DATA = Object.freeze({
     "Ammo_44magnum": {},
     "Ammo_500Magnum": {},
     "Ammo_50AE": {},
+    "Ammo_5_56_Nato": {},
     "Ammo_9mm": {},
     "BarrelExt_12GCoronetMuzzle": {
         "displayName": "Coronet Muzzle",
@@ -329,6 +330,23 @@ const ATTACHMENT_DATA = Object.freeze({
             }
         ]
     },
+    "BarrelExt_12GTorqued": {
+        "displayName": "Torqued Choke",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallSpread",
+                "value": 5
+            },
+            {
+                "attribute": "DamageDistance",
+                "value": 5
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": -5
+            }
+        ]
+    },
     "BarrelExt_12GVentComp": {
         "displayName": "12G Vent Compensator",
         "attributeModifierMap": [
@@ -355,6 +373,27 @@ const ATTACHMENT_DATA = Object.freeze({
             },
             {
                 "attribute": "TargetingTransitionTime",
+                "value": -5
+            }
+        ]
+    },
+    "BarrelExt_Breacher": {
+        "displayName": "Breacher Muzzle ",
+        "attributeModifierMap": [
+            {
+                "attribute": "HorizontalRecoil",
+                "value": 10
+            },
+            {
+                "attribute": "HorizontalGunkick",
+                "value": 5
+            },
+            {
+                "attribute": "EquipPlayRate",
+                "value": -5
+            },
+            {
+                "attribute": "ViewKickRecoveryDelay",
                 "value": -5
             }
         ]
@@ -407,7 +446,7 @@ const ATTACHMENT_DATA = Object.freeze({
         ]
     },
     "BarrelExt_Express": {
-        "displayName": "Express Muzzle Break",
+        "displayName": "Express Muzzle Brake",
         "attributeModifierMap": [
             {
                 "attribute": "HorizontalGunkick",
@@ -3090,6 +3129,211 @@ const ATTACHMENT_DATA = Object.freeze({
         ]
     },
     "PFLK_Stock_Standard": {},
+    "Perk_Assassin": {
+        "displayName": "Assassin"
+    },
+    "Perk_Bite": {
+        "displayName": "Hot Lead"
+    },
+    "Perk_Bleed": {
+        "displayName": "Bleed"
+    },
+    "Perk_Bulky": {
+        "displayName": "Bulky"
+    },
+    "Perk_ChainReact": {
+        "displayName": "Domino Effect"
+    },
+    "Perk_Critter": {
+        "displayName": "Luck of the Draw"
+    },
+    "Perk_EdgeCrit": {
+        "displayName": "Bleeding Edge"
+    },
+    "Perk_Final": {
+        "displayName": "Final Tap"
+    },
+    "Perk_Fool": {
+        "displayName": "Trigger Happy"
+    },
+    "Perk_Glass": {
+        "displayName": "Glass Cannon"
+    },
+    "Perk_GritPlate": {
+        "displayName": "Battle Grit"
+    },
+    "Perk_LeadFed": {
+        "displayName": "Ammo Feed"
+    },
+    "Perk_LuckyShot": {
+        "displayName": "Spray & Pray"
+    },
+    "Perk_PinPuller": {
+        "displayName": "Pin Puller"
+    },
+    "Perk_Quickshot": {
+        "displayName": "Quickshot"
+    },
+    "Perk_Resilient": {
+        "displayName": "Resilient"
+    },
+    "Perk_Runner": {
+        "displayName": "Run & Gun"
+    },
+    "Perk_RushSlide": {
+        "displayName": "Accelerator"
+    },
+    "Perk_Sabot": {
+        "displayName": "Hard Cast"
+    },
+    "Perk_Sharpshooter": {
+        "displayName": "Sharpshooter"
+    },
+    "Perk_Slap": {
+        "displayName": "Haymaker"
+    },
+    "Perk_Smith": {
+        "displayName": "Midas Touch"
+    },
+    "Perk_Superstar": {
+        "displayName": "Target Practice"
+    },
+    "Perk_Threat": {
+        "displayName": "Browbeater"
+    },
+    "Perk_Trip": {
+        "displayName": "Knockback"
+    },
+    "Perk_Vampire": {
+        "displayName": "Vampire"
+    },
+    "Perk_Veteran": {
+        "displayName": "Veteran"
+    },
+    "Perk_WestWood": {
+        "displayName": "Fog of War"
+    },
+    "Pocket_Barrel_Standard": {},
+    "Pocket_Body_Standard": {},
+    "Pocket_Bolt_Standard": {},
+    "Pocket_ChargingHandle_Standard": {},
+    "Pocket_Mag_Standard": {},
+    "Pocket_StockAdapter_Light": {
+        "displayName": "Light Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": 15
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": 10
+            },
+            {
+                "attribute": "OverallRecoil",
+                "value": -10
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": -10
+            }
+        ]
+    },
+    "Pocket_StockAdapter_Molded": {
+        "displayName": "Molded Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallRecoil",
+                "value": 5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": 10
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": -5
+            },
+            {
+                "attribute": "ViewKickRecoverySpeed",
+                "value": -5
+            }
+        ]
+    },
+    "Pocket_StockAdapter_Raised": {
+        "displayName": "Raised Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallRecoil",
+                "value": 10
+            },
+            {
+                "attribute": "ViewKickRecoverySpeed",
+                "value": 5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": -5
+            },
+            {
+                "attribute": "SprintExitPlayRate",
+                "value": -5
+            }
+        ]
+    },
+    "Pocket_StockAdapter_Standard": {},
+    "Pocket_VerticalGrip_Biofit": {
+        "displayName": "Biofit Vertical Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "VerticalRecoil",
+                "value": 5
+            },
+            {
+                "attribute": "EndCycleReloadPlayRate",
+                "value": 5
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": -5
+            }
+        ]
+    },
+    "Pocket_VerticalGrip_Skeletal": {
+        "displayName": "Skeletal Vertical Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": 15
+            },
+            {
+                "attribute": "TargetingTransitionTime",
+                "value": 5
+            },
+            {
+                "attribute": "OverallGunkick",
+                "value": -10
+            },
+            {
+                "attribute": "SpreadIncrement",
+                "value": -5
+            }
+        ]
+    },
+    "Pocket_VerticalGrip_Slim": {
+        "displayName": "Slim Vertical Grip",
+        "attributeModifierMap": [
+            {
+                "attribute": "EndCycleReloadPlayRate",
+                "value": 10
+            },
+            {
+                "attribute": "OverallSwapSpeed",
+                "value": -5
+            }
+        ]
+    },
+    "Pocket_VerticalGrip_Standard": {},
     "R880_Ammo_Default": {},
     "R880_Barrel_CQC": {
         "displayName": "CQC Barrel",

@@ -54,18 +54,40 @@ async function fetchLocalisation(locale) {
 function localise(element) {
     const key = element.getAttribute('data-localisation-key');
 
-    let localisation = getLocalisation(key) || '';
+    let localisation = getLocalisation(key);
 
-    if (typeof localisation == 'object')
+    // 找不到翻译时，保留当前显示文本
+    // 不要把它替换为空字符串
+    if (
+        localisation === undefined ||
+        localisation === null ||
+        localisation === ''
+    ) {
+        return element.innerText;
+    }
+
+    if (typeof localisation === 'object') {
         localisation = getPluralForm(
             localisation,
             element.getAttribute('data-localisation-count')
         );
+    }
 
-    const variables = JSON.parse(element.getAttribute('data-localisation-var'));
-    localisation = interpolateLocalisation(localisation, variables);
+    const localisationVar =
+        element.getAttribute('data-localisation-var');
 
-    return (element.innerText = localisation);
+    const variables = localisationVar
+        ? JSON.parse(localisationVar)
+        : {};
+
+    localisation = interpolateLocalisation(
+        localisation,
+        variables
+    );
+
+    element.innerText = localisation;
+
+    return localisation;
 }
 
 function getLocalisation(key) {

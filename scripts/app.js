@@ -172,8 +172,8 @@ const SKILL_ICONS_TO_PRELOAD = [
         'images/payday/Skills2_Conman_Casing_Hulk_Out_ACED.png',
         'images/payday/Skills2_Hacking_Flashbang_Flashbang_Master.png',
         'images/payday/Skills2_Hacking_Flashbang_Flashbang_Master_ACED.png',
-        'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser.png',
-        'images/Skills2.0/Skills2_Mechanic_Shock_Electric_Tenderiser_ACED.png'
+        'images/payday/Skills2_Mechanic_Shock_Electric_Tenderiser.png',
+        'images/payday/Skills2_Mechanic_Shock_Electric_Tenderiser_ACED.png'
         ];
 
 const SKILLS = {
@@ -508,7 +508,7 @@ const ENEMIES = {
         health: 2800,
         armor: 9600,
         armorHardness: 4,
-        visorArmor: 3360,
+        visorArmor: 5000,
         visorArmorHardness: 42,
         armorLayer: 120,
     },
@@ -1948,6 +1948,7 @@ const attachmentTemplate = document
 document.querySelector('template.attachment').remove();
 
 const attachmentSlots = [
+    'perk1',
     'sight',
     'mag',
     'barrelExtension',
@@ -2682,6 +2683,10 @@ const damageStatTemplate = document
     .cloneNode(true);
 document.querySelector('template.damage-stat-container').remove();
 
+const enemyDifficulties = JSON.parse(
+    localStorage.getItem('enemyDifficulties') || '{}'
+);
+
 function updateDamageStats(selectedWeapon) {
     document.querySelector('#damage-stats').innerHTML = '';
 
@@ -2716,6 +2721,26 @@ function updateDamageStats(selectedWeapon) {
             'data-localisation-key',
             'enemy-' + enemyData.displayName.toLowerCase().replace(' ', '-')
         );
+
+        const difficultySelect = enemyInfo.appendChild(
+            document.createElement('select')
+        );
+        difficultySelect.classList = ['enemy-difficulty'];
+        difficultySelect.dataset.enemy = enemy;
+        difficultySelect.innerHTML = `
+            <option value="normal">Normal</option>
+            <option value="hard">Hard</option>
+            <option value="veryHard">Very Hard</option>
+            <option value="overkill">Overkill</option>
+        `;
+        difficultySelect.value = enemyDifficulties[enemy] || 'overkill';
+        difficultySelect.onchange = (event) => {
+            enemyDifficulties[enemy] = event.target.value;
+            localStorage.setItem(
+                'enemyDifficulties',
+                JSON.stringify(enemyDifficulties)
+            );
+        };
 
         if (enemyData.armor) {
             const enemyArmor = enemyInfo.appendChild(

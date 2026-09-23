@@ -285,7 +285,8 @@ h1 {
     height: 2em;
 }
 
-#options select {
+#options select,
+.enemy-difficulty {
     height: 2.618em;
 
     padding: 0.25em 1em;
@@ -376,7 +377,7 @@ h1 {
     }
     
     h1 { font-size: 2em; }
-    #options select { height: 2em; }
+    #options select, .enemy-difficulty { height: 2em; }
     #options svg { height: 1.618em; }
 
     #loadout h2 { font-size: 4.236em; }

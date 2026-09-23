@@ -25,6 +25,7 @@
     "attachment-category-fore-grip": "前握把",
     "attachment-category-grip": "握把",
     "attachment-category-stock": "枪托",
+    "attachment-category-perk-1": "天赋",
     "stats-damage": "伤害",
     "stats-critical-multiplier": "爆头倍率",
     "stats-armor-penetration": "穿甲系数",
@@ -95,7 +96,7 @@
     "Unfluted Cylinder":"无槽弹巢",
 
     "Beveled Silencer":"斜角消音器",
-    "Express Muzzle Break":"特快制退器",
+    "Express Muzzle Brake":"特快制退器",
     "Hybrid Muzzle Break":"混合制退器",
     "Indent Compensator":"凹型补偿器",
     "Cylindric Silencer":"柱状消音器",

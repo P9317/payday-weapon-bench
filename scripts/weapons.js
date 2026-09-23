@@ -232,18 +232,25 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "A114_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_Torque",
-                    "BarrelExt_Ridged",
+                    "BarrelExt_BeveledSilencer",
                     "BarrelExt_Express",
                     "BarrelExt_HybridMB",
-                    "BarrelExt_IndentComp"
+                    "BarrelExt_IndentComp",
+                    "BarrelExt_CylindricSilencer",
+                    "BarrelExt_PipedSilencer",
+                    "BarrelExt_Torque",
+                    "BarrelExt_Ridged"
                 ]
             },
             "sight": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "Sight_ViewPoint",
                     "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO",
                     "Sight_Fluted",
                     "Sight_Primed"
                 ]
@@ -274,7 +281,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "stock": {
@@ -283,7 +292,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "stockMount": {
@@ -293,6 +303,16 @@ const WEAPON_DATA = Object.freeze({
             "trigger": {
                 "defaultPart": "A114_Trigger_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_EdgeCrit",
+                    "Perk_Bleed",
+                    "Perk_Sharpshooter",
+                    "Perk_Glass",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.40000004,
@@ -497,11 +517,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "ATK7_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_SnubSilencer",
                     "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -541,7 +564,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -565,9 +590,11 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection"
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
                 ]
             },
             "foreGrip": {
@@ -577,6 +604,14 @@ const WEAPON_DATA = Object.freeze({
             "sightMount": {
                 "defaultPart": "ATK7_SightMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.40000004,
@@ -764,7 +799,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -802,6 +839,16 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_SkeletonizedComp",
                     "BarrelExt_PartedComp"
                 ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Final",
+                    "Perk_Assassin",
+                    "Perk_Bulky",
+                    "Perk_Glass",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.5,
@@ -809,226 +856,6 @@ const WEAPON_DATA = Object.freeze({
         "sprintExitTime": 0.29999998,
         "reloadTime": 3.1666665,
         "reloadEmptyTime": 3.1666665
-    },
-    "Bullkick500": {
-        "displayName": "Bullkick 500",
-        "class": "Revolver",
-        "dlc": "2",
-        "displayIcon": {
-            "offset": {
-                "x": 0,
-                "y": 128
-            },
-            "source": "SS_UI_WeaponsPrimary_00010-DLCHEIST0002.png"
-        },
-        "fireData": {
-            "damageDistanceArray": [
-                {
-                    "damage": 260,
-                    "distance": 1000
-                },
-                {
-                    "damage": 260,
-                    "distance": 1300
-                },
-                {
-                    "damage": 180,
-                    "distance": 1900
-                },
-                {
-                    "damage": 145,
-                    "distance": 2500
-                }
-            ],
-            "criticalDamageMultiplierDistanceArray": [
-                {
-                    "multiplier": 5,
-                    "distance": 1400
-                },
-                {
-                    "multiplier": 4.5,
-                    "distance": 1900
-                },
-                {
-                    "multiplier": 3.5,
-                    "distance": 2600
-                }
-            ],
-            "ammoLoaded": 5,
-            "ammoInventory": 40,
-            "ammoInventoryMax": 50,
-            "ammoPickup": {
-                "min": 1,
-                "max": 2
-            },
-            "armorPenetration": 6,
-            "roundsPerMinute": 75
-        },
-        "spreadData": {
-            "start": 2,
-            "increase": 2,
-            "resetTime": 0.65,
-            "decayRate": 0,
-            "cap": 5,
-            "stanceMultipliers": {
-                "stand": {
-                    "spread": 1.2,
-                    "cap": 4,
-                    "increment": 0.85
-                },
-                "standMove": {
-                    "spread": 2,
-                    "cap": 5
-                },
-                "crouch": {
-                    "cap": 3.5,
-                    "increment": 0.6
-                },
-                "crouchMove": {
-                    "spread": 1.4,
-                    "cap": 4,
-                    "increment": 0.7
-                },
-                "target": {
-                    "spread": 0
-                },
-                "targetMove": {
-                    "spread": 0.25
-                }
-            },
-            "radiusMultipliers": {}
-        },
-        "recoilData": {
-            "viewKick": {
-                "recoverSpeed": 12,
-                "recoverWaitTime": 0.3,
-                "recoilPattern": [
-                    {
-                        "x": -1.125,
-                        "y": 4.5
-                    },
-                    {
-                        "x": 1.6500001,
-                        "y": 9.375
-                    },
-                    {
-                        "x": -0.75,
-                        "y": 16.875
-                    },
-                    {
-                        "x": 2.25,
-                        "y": 21.75
-                    },
-                    {
-                        "x": -1.2,
-                        "y": 27
-                    },
-                    {
-                        "x": 1.5,
-                        "y": 36
-                    },
-                    {
-                        "x": 0,
-                        "y": 39
-                    }
-                ],
-                "resetTime": 1.3,
-                "loopStart": 4,
-                "initialNum": 0,
-                "hipfireMultiplier": 1.1
-            },
-            "gunKick": {
-                "deflectSpeed": 100,
-                "recoverSpeed": 50,
-                "verticalTop": {
-                    "max": 1
-                },
-                "verticalBottom": {},
-                "verticalMultiplier": {},
-                "horizontalRight": {
-                    "min": 0.2,
-                    "max": 0.8
-                },
-                "horizontalLeft": {
-                    "min": 0.2,
-                    "max": 0.8
-                },
-                "horizontalMultiplier": {}
-            }
-        },
-        "modularConfiguration": {
-            "barrel": {
-                "defaultPart": "Bullkick500_Barrel_Default",
-                "uniqueParts": [
-                    "Bullkick500_Barrel_Ranged",
-                    "Bullkick500_Barrel_CQC",
-                    "Bullkick500_Barrel_Tactical"
-                ]
-            },
-            "bolt": {
-                "defaultPart": "Bullkick500_Bolt_Default",
-                "uniqueParts": []
-            },
-            "body": {
-                "defaultPart": "Bullkick500_Body_Default",
-                "uniqueParts": []
-            },
-            "frontSight": {
-                "defaultPart": "Bullkick500_FrontSight_Default",
-                "uniqueParts": []
-            },
-            "mag": {
-                "defaultPart": "Bullkick500_Mag_Default",
-                "uniqueParts": [
-                    "Bullkick500_Mag_Unfluted"
-                ]
-            },
-            "rearSight": {
-                "defaultPart": "Bullkick500_RearSight_Default",
-                "uniqueParts": []
-            },
-            "sight": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "Sight_Box",
-                    "Sight_Snapshot",
-                    "Sight_Tactical"
-                ]
-            },
-            "ammo": {
-                "defaultPart": "Ammo_500Magnum",
-                "uniqueParts": []
-            },
-            "speedloader": {
-                "defaultPart": "Bullkick500_Speedloader_Default",
-                "uniqueParts": []
-            },
-            "grip": {
-                "defaultPart": "Bullkick500_Grip_Default",
-                "uniqueParts": [
-                    "Bullkick500_Grip_Biofit",
-                    "Bullkick500_Grip_Tac",
-                    "Bullkick500_Grip_Hardwood"
-                ]
-            },
-            "barrelExtension": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "BarrelExt_CompactComp",
-                    "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
-                ]
-            },
-            "sightMount": {
-                "defaultPart": "Bullkick500_SightMount_Default",
-                "uniqueParts": []
-            }
-        },
-        "equipTime": 0.5,
-        "unequipTime": 0.6666667,
-        "sprintExitTime": 0.29999998,
-        "reloadTime": 2.8333333,
-        "reloadEmptyTime": 2.8333333
     },
     "CAR4": {
         "displayName": "CAR-4",
@@ -1243,11 +1070,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "barrelExtension": {
@@ -1306,7 +1139,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -1323,7 +1157,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -1333,6 +1169,16 @@ const WEAPON_DATA = Object.freeze({
             "stockMount": {
                 "defaultPart": "CAR4_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.40000004,
@@ -1340,314 +1186,6 @@ const WEAPON_DATA = Object.freeze({
         "sprintExitTime": 0.3333333,
         "reloadTime": 2.3333333,
         "reloadEmptyTime": 2.6666667
-    },
-    "CHS3": {
-        "displayName": "Chanit S3",
-        "class": "Assault Rifle",
-        "dlc": "3",
-        "displayIcon": {
-            "offset": {
-                "x": 0,
-                "y": 0
-            },
-            "source": "SS_UI_Weapons_00030-DLC0003.png"
-        },
-        "fireData": {
-            "damageDistanceArray": [
-                {
-                    "damage": 85,
-                    "distance": 100
-                },
-                {
-                    "damage": 85,
-                    "distance": 1500
-                },
-                {
-                    "damage": 80,
-                    "distance": 2500
-                },
-                {
-                    "damage": 70,
-                    "distance": 3500
-                }
-            ],
-            "criticalDamageMultiplierDistanceArray": [
-                {
-                    "multiplier": 4.3,
-                    "distance": 1500
-                },
-                {
-                    "multiplier": 3.655,
-                    "distance": 2500
-                },
-                {
-                    "multiplier": 3,
-                    "distance": 3500
-                }
-            ],
-            "ammoLoaded": 30,
-            "ammoInventory": 240,
-            "ammoInventoryMax": 300,
-            "ammoPickup": {
-                "max": 7
-            },
-            "fireType": "Burst",
-            "timeBetweenBursts": 0.2,
-            "armorPenetration": 2.8,
-            "roundsPerMinute": 1000
-        },
-        "spreadData": {
-            "start": 0.5,
-            "increase": 0.45,
-            "resetTime": 0.2,
-            "cap": 5,
-            "stanceMultipliers": {
-                "stand": {},
-                "standMove": {
-                    "start": 1.5,
-                    "cap": 1.5,
-                    "increment": 1.5
-                },
-                "crouch": {
-                    "start": 0.5,
-                    "cap": 0.5,
-                    "increment": 0.5
-                },
-                "crouchMove": {
-                    "start": 0.75,
-                    "cap": 0.75,
-                    "increment": 0.75
-                },
-                "target": {
-                    "spread": 0
-                },
-                "targetMove": {
-                    "start": 0.25,
-                    "cap": 0.25,
-                    "increment": 0.25
-                }
-            },
-            "radiusMultipliers": {}
-        },
-        "recoilData": {
-            "viewKick": {
-                "deflectSpeed": 50,
-                "recoverSpeed": 30,
-                "recoverWaitTime": 0.075,
-                "recoilPattern": [
-                    {
-                        "x": -0.0375,
-                        "y": 0.075
-                    },
-                    {
-                        "x": 0.075,
-                        "y": 0.2625
-                    },
-                    {
-                        "x": 0.0375,
-                        "y": 0.4875
-                    },
-                    {
-                        "x": 0.15,
-                        "y": 0.675
-                    },
-                    {
-                        "x": -0.112500004,
-                        "y": 0.7875
-                    },
-                    {
-                        "x": 0.0375,
-                        "y": 1.0125
-                    },
-                    {
-                        "x": -0.2625,
-                        "y": 1.5
-                    },
-                    {
-                        "x": -0.41250002,
-                        "y": 2
-                    },
-                    {
-                        "x": -0.63750005,
-                        "y": 2.33
-                    },
-                    {
-                        "x": -0.82500005,
-                        "y": 2.55
-                    },
-                    {
-                        "x": -1.125,
-                        "y": 3.0625
-                    },
-                    {
-                        "x": -0.97499996,
-                        "y": 4.375
-                    },
-                    {
-                        "x": -1.1624999,
-                        "y": 4.8125
-                    },
-                    {
-                        "x": -1.2750001,
-                        "y": 5.359375
-                    },
-                    {
-                        "x": -1.0875001,
-                        "y": 6.625
-                    },
-                    {
-                        "x": -1.2750001,
-                        "y": 7.125166
-                    },
-                    {
-                        "x": -1.5,
-                        "y": 8.7
-                    },
-                    {
-                        "x": -1.3875,
-                        "y": 9.6
-                    },
-                    {
-                        "x": -1.6500001,
-                        "y": 10.05
-                    },
-                    {
-                        "x": -1.5374999,
-                        "y": 10.95
-                    }
-                ],
-                "resetTime": 0.5,
-                "loopStart": 12,
-                "initialNum": 0,
-                "hipfireMultiplier": 1.5
-            },
-            "gunKick": {
-                "deflectSpeed": 15,
-                "recoverSpeed": 7.5,
-                "verticalTop": {
-                    "min": 0.1,
-                    "max": 0.4
-                },
-                "verticalBottom": {
-                    "min": 0.1,
-                    "max": 0.4
-                },
-                "verticalMultiplier": {
-                    "start": 0.3,
-                    "max": 1.2,
-                    "threshold": 1.2
-                },
-                "horizontalRight": {
-                    "min": 0.1,
-                    "max": 0.3
-                },
-                "horizontalLeft": {
-                    "min": 0.1,
-                    "max": 0.3
-                },
-                "horizontalMultiplier": {
-                    "start": 0.3,
-                    "max": 1.2,
-                    "threshold": 1.2
-                }
-            }
-        },
-        "modularConfiguration": {
-            "sight": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "Sight_ClassicRDS",
-                    "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection",
-                    "Sight_Tactical",
-                    "Sight_Sheath",
-                    "Sight_SquareClaim"
-                ]
-            },
-            "barrelExtension": {
-                "defaultPart": "CHS3_BarrelExt_Default",
-                "uniqueParts": [
-                    "BarrelExt_BeveledSilencer",
-                    "BarrelExt_Express",
-                    "BarrelExt_HybridMB",
-                    "BarrelExt_IndentComp",
-                    "BarrelExt_CylindricSilencer",
-                    "BarrelExt_PipedSilencer"
-                ]
-            },
-            "barrel": {
-                "defaultPart": "CHS3_Barrel_Default",
-                "uniqueParts": [
-                    "CHS3_Barrel_CQC",
-                    "CHS3_Barrel_Ranged"
-                ]
-            },
-            "body": {
-                "defaultPart": "CHS3_Body_Default",
-                "uniqueParts": []
-            },
-            "bolt": {
-                "defaultPart": "CHS3_Bolt_Default",
-                "uniqueParts": []
-            },
-            "foreGrip": {
-                "defaultPart": "CHS3_Foregrip_Default",
-                "uniqueParts": []
-            },
-            "grip": {
-                "defaultPart": "CHS3_Grip_Default",
-                "uniqueParts": [
-                    "Grip_Perforated"
-                ]
-            },
-            "mag": {
-                "defaultPart": "CHS3_Mag_Default",
-                "uniqueParts": [
-                    "CHS3_Mag_Quick",
-                    "CHS3_Mag_Compact",
-                    "CHS3_Mag_Extended"
-                ]
-            },
-            "stock": {
-                "defaultPart": "CHS3_Stock_Default",
-                "uniqueParts": [
-                    "CHS3_Stock_Refined",
-                    "CHS3_Stock_Fortified"
-                ]
-            },
-            "rearSight": {
-                "defaultPart": "CHS3_RearSight_Default",
-                "uniqueParts": []
-            },
-            "frontSight": {
-                "defaultPart": "CHS3_FrontSight_Default",
-                "uniqueParts": []
-            },
-            "verticalGrip": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "VerticalGrip_Cylinder",
-                    "VerticalGrip_AngledGhost",
-                    "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
-                ]
-            },
-            "ammo": {
-                "defaultPart": "CHS3_Ammo_Default",
-                "uniqueParts": []
-            },
-            "chargingHandle": {
-                "defaultPart": "CHS3_ChargingHandle_Default",
-                "uniqueParts": []
-            }
-        },
-        "equipTime": 0.46666664,
-        "unequipTime": 0.6666667,
-        "sprintExitTime": 0.3333333,
-        "reloadTime": 2.6666665,
-        "reloadEmptyTime": 2.8333333
     },
     "Castigo44": {
         "displayName": "J&M Castigo 44",
@@ -1867,7 +1405,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -1897,6 +1437,16 @@ const WEAPON_DATA = Object.freeze({
             "sightMount": {
                 "defaultPart": "Castigo44_SightMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Final",
+                    "Perk_Assassin",
+                    "Perk_Bulky",
+                    "Perk_Glass",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.466667,
@@ -2120,17 +1670,22 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -2162,8 +1717,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Stock_PaddedTube",
                     "Stock_TQ",
+                    "Stock_LightFrame",
                     "Stock_HQ",
-                    "Stock_LightFrame"
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -2185,13 +1741,23 @@ const WEAPON_DATA = Object.freeze({
             "verticalGrip": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
-                    "VerticalGrip_Stub"
+                    "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide"
                 ]
             },
             "ammo": {
                 "defaultPart": "Commando_Ammo_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.16666666,
@@ -2418,17 +1984,22 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "barrelExtension": {
                 "defaultPart": "Compact7_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -2461,7 +2032,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -2479,13 +2051,23 @@ const WEAPON_DATA = Object.freeze({
             "verticalGrip": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "VerticalGrip_Cylinder",
+                    "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_AngledGhost"
+                    "VerticalGrip_FlatSide"
                 ]
             },
             "ammo": {
                 "defaultPart": "Compact7_Ammo_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.26666665,
@@ -2732,7 +2314,10 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "ammo": {
@@ -2757,7 +2342,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "stockMount": {
@@ -2770,7 +2356,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "sight": {
@@ -2779,9 +2367,26 @@ const WEAPON_DATA = Object.freeze({
                     "Sight_ClassicRDS",
                     "Sight_Compact",
                     "Sight_Sheath",
-                    "Sight_Tactical",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
                     "Sight_Lined",
-                    "Sight_LightHolographic"
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_EdgeCrit",
+                    "Perk_Bleed",
+                    "Perk_Sharpshooter",
+                    "Perk_Glass",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -2791,7 +2396,7 @@ const WEAPON_DATA = Object.freeze({
         "reloadTime": 2.333333,
         "reloadEmptyTime": 2.666667
     },
-    "FSA12": {
+    "Fsa12": {
         "displayName": "FSA-12G",
         "class": "Shotgun",
         "dlc": "1",
@@ -2977,7 +2582,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "stockMount": {
@@ -2989,9 +2595,12 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_Projection",
                     "Sight_Sheath",
-                    "Sight_Tagged"
+                    "Sight_Projection",
+                    "Sight_Tagged",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
                 ]
             },
             "ammo": {
@@ -3004,7 +2613,12 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_12GObelisk",
                     "BarrelExt_SedimentChoke",
                     "BarrelExt_12GVentComp",
-                    "BarrelExt_JawChoke"
+                    "BarrelExt_JawChoke",
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
                 ]
             },
             "chargingHandle": {
@@ -3025,8 +2639,19 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide",
                     "VerticalGrip_QuickHold",
-                    "VerticalGrip_FlatSide"
+                    "VerticalGrip_RiggerHandstop"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -3220,10 +2845,17 @@ const WEAPON_DATA = Object.freeze({
             "sight": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "Sight_Slate",
                     "Sight_Box",
-                    "Sight_Voyeur",
                     "Sight_LED",
-                    "Sight_Slate"
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "sightMount": {
@@ -3233,6 +2865,15 @@ const WEAPON_DATA = Object.freeze({
             "ammo": {
                 "defaultPart": "Ammo_50AE",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
+                ]
             }
         },
         "equipTime": 0.5,
@@ -3457,6 +3098,7 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "Julius_BarrelExtension_Standard",
                 "uniqueParts": [
+                    "BarrelExt_BeveledSilencer",
                     "BarrelExt_Express",
                     "BarrelExt_HybridMB",
                     "BarrelExt_IndentComp",
@@ -3507,12 +3149,13 @@ const WEAPON_DATA = Object.freeze({
             "stock": {
                 "defaultPart": "Julius_Stock_Standard",
                 "uniqueParts": [
+                    "Julius_Stock_Albert",
+                    "Julius_Stock_Reinforced",
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
                     "Stock_HQ",
-                    "Julius_Stock_Albert",
-                    "Julius_Stock_Reinforced"
+                    "Stock_Minimized"
                 ]
             },
             "stockAdapter": {
@@ -3526,11 +3169,13 @@ const WEAPON_DATA = Object.freeze({
             "verticalGrip": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "Julius_VerticalGrip_Standard",
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide",
                     "VerticalGrip_QuickHold",
-                    "Julius_VerticalGrip_Standard"
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "sight": {
@@ -3538,12 +3183,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection",
-                    "Sight_Tactical",
                     "Sight_Sheath",
-                    "Sight_TargeterOptic"
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "rearSight": {
@@ -3557,6 +3207,16 @@ const WEAPON_DATA = Object.freeze({
             "aux00": {
                 "defaultPart": "Julius_Charm_Sling",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.46666664,
@@ -3568,7 +3228,7 @@ const WEAPON_DATA = Object.freeze({
     "Justicar": {
         "displayName": "Justicar",
         "class": "Shotgun",
-        "dlc": "2",
+        "dlc": null,
         "displayIcon": {
             "offset": {
                 "x": 0,
@@ -3742,11 +3402,15 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_SilentKiller",
                     "BarrelExt_12GObelisk",
                     "BarrelExt_SedimentChoke",
                     "BarrelExt_12GVentComp",
-                    "BarrelExt_JawChoke"
+                    "BarrelExt_JawChoke",
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
                 ]
             },
             "sight": {
@@ -3754,12 +3418,24 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "trigger": {
                 "defaultPart": null,
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.39999998,
@@ -4021,7 +3697,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "KU59_Grip_Biofit",
                     "KU59_Grip_Tac",
-                    "KU59_Grip_Perforated"
+                    "KU59_Grip_Perforated",
+                    "Grip_Revenant"
                 ]
             },
             "mag": {
@@ -4038,7 +3715,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -4054,11 +3732,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "verticalGrip": {
@@ -4067,12 +3751,24 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
                 "defaultPart": "KU59_Ammo_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.40000004,
@@ -4080,215 +3776,6 @@ const WEAPON_DATA = Object.freeze({
         "sprintExitTime": 0.3333333,
         "reloadTime": 2.3333335,
         "reloadEmptyTime": 2.8350124
-    },
-    "M7P": {
-        "displayName": "M7 Pursuivant",
-        "class": "Shotgun",
-        "dlc": "3",
-        "displayIcon": {
-            "offset": {
-                "x": 256,
-                "y": 0
-            },
-            "source": "SS_UI_Weapons_00030-DLC0003.png"
-        },
-        "fireData": {
-            "damageDistanceArray": [
-                {
-                    "damage": 43.6,
-                    "distance": 200
-                },
-                {
-                    "damage": 43.6,
-                    "distance": 1000
-                },
-                {
-                    "damage": 22,
-                    "distance": 2000
-                },
-                {
-                    "damage": 18,
-                    "distance": 2500
-                }
-            ],
-            "criticalDamageMultiplierDistanceArray": [
-                {
-                    "multiplier": 1.5,
-                    "distance": 1000
-                },
-                {
-                    "multiplier": 1.25,
-                    "distance": 2000
-                },
-                {
-                    "multiplier": 1.1,
-                    "distance": 2500
-                }
-            ],
-            "ammoLoaded": 12,
-            "ammoInventory": 96,
-            "ammoInventoryMax": 120,
-            "ammoPickup": {
-                "min": 2,
-                "max": 4
-            },
-            "fireType": "Burst",
-            "timeBetweenBursts": 0.175,
-            "projectilesPerFiredRound": 10,
-            "roundsPerMinute": 450
-        },
-        "spreadData": {
-            "increase": 0.133333,
-            "resetTime": 0.25,
-            "stanceMultipliers": {
-                "stand": {
-                    "spread": 3
-                },
-                "standMove": {
-                    "spread": 3.5
-                },
-                "crouch": {
-                    "spread": 2.5
-                },
-                "crouchMove": {
-                    "spread": 3
-                },
-                "target": {
-                    "spread": 2
-                },
-                "targetMove": {
-                    "spread": 2
-                }
-            },
-            "radiusMultipliers": {}
-        },
-        "recoilData": {
-            "viewKick": {
-                "deflectSpeed": 125,
-                "recoverSpeed": 50,
-                "recoverWaitTime": 0.1,
-                "recoilPattern": [
-                    {
-                        "x": 1,
-                        "y": 1.5
-                    },
-                    {
-                        "x": 0.75,
-                        "y": 2.5
-                    },
-                    {
-                        "x": -0.25,
-                        "y": 3.5
-                    },
-                    {
-                        "x": 0.15,
-                        "y": 4.5
-                    }
-                ],
-                "resetTime": 0.3,
-                "loopStart": 1,
-                "initialNum": 1,
-                "hipfireMultiplier": 2.1
-            },
-            "gunKick": {
-                "verticalTop": {},
-                "verticalBottom": {},
-                "verticalMultiplier": {},
-                "horizontalRight": {},
-                "horizontalLeft": {},
-                "horizontalMultiplier": {}
-            }
-        },
-        "modularConfiguration": {
-            "barrel": {
-                "defaultPart": "M7P_Barrel_Default",
-                "uniqueParts": [
-                    "M7P_Barrel_CQC",
-                    "M7P_Barrel_Ranged"
-                ]
-            },
-            "rearSight": {
-                "defaultPart": "M7P_RearSight_Default",
-                "uniqueParts": []
-            },
-            "body": {
-                "defaultPart": "M7P_Body_Default",
-                "uniqueParts": []
-            },
-            "foreGrip": {
-                "defaultPart": "M7P_Foregrip_Default",
-                "uniqueParts": []
-            },
-            "frontSight": {
-                "defaultPart": "M7P_FrontSight_Default",
-                "uniqueParts": []
-            },
-            "mag": {
-                "defaultPart": "M7P_Mag_Default",
-                "uniqueParts": [
-                    "M7P_Mag_Extended",
-                    "M7P_Mag_Compact",
-                    "M7P_Mag_Quick"
-                ]
-            },
-            "stock": {
-                "defaultPart": "M7P_Stock_Default",
-                "uniqueParts": [
-                    "M7P_Stock_Bolstered"
-                ]
-            },
-            "sight": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "Sight_ClassicRDS",
-                    "Sight_Compact",
-                    "Sight_Projection",
-                    "Sight_Sheath"
-                ]
-            },
-            "ammo": {
-                "defaultPart": "M7P_Ammo_Default",
-                "uniqueParts": []
-            },
-            "barrelExtension": {
-                "defaultPart": "M7P_BarrelExt_Default",
-                "uniqueParts": [
-                    "BarrelExt_12GObelisk",
-                    "BarrelExt_SedimentChoke",
-                    "BarrelExt_12GVentComp",
-                    "BarrelExt_JawChoke",
-                    "BarrelExt_Ridgecyl"
-                ]
-            },
-            "chargingHandle": {
-                "defaultPart": "M7P_ChargingHandle_Default",
-                "uniqueParts": []
-            },
-            "grip": {
-                "defaultPart": "M7P_Grip_Default",
-                "uniqueParts": [
-                    "Grip_Perforated"
-                ]
-            },
-            "verticalGrip": {
-                "defaultPart": null,
-                "uniqueParts": [
-                    "VerticalGrip_Cylinder",
-                    "VerticalGrip_AngledGhost",
-                    "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
-                ]
-            },
-            "bolt": {
-                "defaultPart": "M7P_Bolt_Default",
-                "uniqueParts": []
-            }
-        },
-        "equipTime": 0.46666664,
-        "unequipTime": 0.6666667,
-        "sprintExitTime": 0.3333333,
-        "reloadTime": 2.3999999,
-        "reloadEmptyTime": 2.6666667
     },
     "MX63": {
         "displayName": "Blyspruta MX63",
@@ -4587,11 +4074,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "barrelExtension": {
@@ -4642,7 +4135,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -4659,7 +4153,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -4673,6 +4169,14 @@ const WEAPON_DATA = Object.freeze({
             "stockMount": {
                 "defaultPart": "MX63_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_ChainReact",
+                    "Perk_Threat",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.46666664,
@@ -4845,7 +4349,12 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_Tagged"
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_Tagged",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
                 ]
             },
             "ammo": {
@@ -4870,7 +4379,19 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -5092,11 +4613,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "barrelExtension": {
@@ -5152,7 +4679,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -5169,7 +4697,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -5179,6 +4709,16 @@ const WEAPON_DATA = Object.freeze({
             "stockMount": {
                 "defaultPart": "NWB9_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.26666665,
@@ -5409,19 +4949,24 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection"
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
                 ]
             },
             "barrelExtension": {
                 "defaultPart": "PC9_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -5453,8 +4998,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Stock_PaddedTube",
                     "Stock_TQ",
+                    "Stock_LightFrame",
                     "Stock_HQ",
-                    "Stock_LightFrame"
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -5468,10 +5014,12 @@ const WEAPON_DATA = Object.freeze({
             "verticalGrip": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold",
                     "VerticalGrip_Cylinder",
-                    "VerticalGrip_AngledGhost"
+                    "VerticalGrip_AngledGhost",
+                    "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "grip": {
@@ -5493,6 +5041,14 @@ const WEAPON_DATA = Object.freeze({
             "bolt": {
                 "defaultPart": "PC9_Bolt_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.26666665,
@@ -5716,20 +5272,24 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "PD5_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
                     "BarrelExt_PartedComp",
-                    "BarrelExt_IDM2"
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "sight": {
                 "defaultPart": null,
                 "uniqueParts": [
                     "Sight_Slate",
+                    "Sight_Box",
                     "Sight_LED",
-                    "Sight_Box"
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -5754,6 +5314,15 @@ const WEAPON_DATA = Object.freeze({
             "stockMount": {
                 "defaultPart": "PD5_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
+                ]
             }
         },
         "equipTime": 0.16666666,
@@ -6019,11 +5588,12 @@ const WEAPON_DATA = Object.freeze({
             "stock": {
                 "defaultPart": "PFLK_Stock_Standard",
                 "uniqueParts": [
+                    "PFLK_Stock_Robust",
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
                     "Stock_HQ",
-                    "PFLK_Stock_Robust"
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -6044,7 +5614,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -6056,12 +5628,25 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection",
-                    "Sight_Tactical",
                     "Sight_Sheath",
-                    "Sight_Seymour"
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_ChainReact",
+                    "Perk_Threat",
+                    "Perk_Glass"
                 ]
             }
         },
@@ -6070,6 +5655,213 @@ const WEAPON_DATA = Object.freeze({
         "sprintExitTime": 0.3333333,
         "reloadTime": 2.8417866,
         "reloadEmptyTime": 4.3477507
+    },
+    "Pocket": {
+        "displayName": "Locomotive 12G",
+        "class": "Shotgun",
+        "dlc": "7",
+        "displayIcon": {
+            "offset": {
+                "x": 0,
+                "y": 0
+            },
+            "source": "SS_UI_WeaponsSecondary_WPN_SECO_Pocket.png"
+        },
+        "fireData": {
+            "damageDistanceArray": [
+                {
+                    "damage": 55,
+                    "distance": 1000
+                },
+                {
+                    "damage": 45,
+                    "distance": 1500
+                },
+                {
+                    "damage": 16,
+                    "distance": 10000
+                }
+            ],
+            "criticalDamageMultiplierDistanceArray": [
+                {
+                    "multiplier": 3,
+                    "distance": 1000
+                },
+                {
+                    "multiplier": 2,
+                    "distance": 1500
+                },
+                {
+                    "multiplier": 1.75,
+                    "distance": 2000
+                },
+                {
+                    "multiplier": 1.1,
+                    "distance": 10000
+                }
+            ],
+            "ammoLoaded": 3,
+            "ammoInventory": 24,
+            "ammoInventoryMax": 31,
+            "ammoPickup": {
+                "min": 1,
+                "max": 2
+            },
+            "fireType": "Pump",
+            "projectilesPerFiredRound": 10,
+            "roundsPerMinute": 100
+        },
+        "spreadData": {
+            "start": 1.65,
+            "increase": 0.45,
+            "resetTime": 0.65,
+            "decayRate": 0,
+            "cap": 4,
+            "stanceMultipliers": {
+                "stand": {
+                    "spread": 2.1
+                },
+                "standMove": {
+                    "spread": 2.1
+                },
+                "crouch": {
+                    "spread": 1.85
+                },
+                "crouchMove": {
+                    "spread": 1.85
+                },
+                "target": {
+                    "spread": 1.75
+                },
+                "targetMove": {
+                    "spread": 1.75
+                }
+            },
+            "radiusMultipliers": {}
+        },
+        "recoilData": {
+            "viewKick": {
+                "deflectSpeed": 90,
+                "recoverSpeed": 32.5,
+                "recoverWaitTime": 0.32,
+                "recoilPattern": [
+                    {
+                        "x": 2.2,
+                        "y": 4
+                    },
+                    {
+                        "x": 1.4,
+                        "y": 8
+                    },
+                    {
+                        "x": 2.6,
+                        "y": 10.4
+                    },
+                    {
+                        "x": 3.3,
+                        "y": 12
+                    }
+                ],
+                "resetTime": 0.7,
+                "loopStart": 2,
+                "initialNum": 2,
+                "hipfireMultiplier": 1.65
+            },
+            "gunKick": {
+                "deflectSpeed": 50,
+                "recoverSpeed": 35,
+                "verticalTop": {},
+                "verticalBottom": {},
+                "verticalMultiplier": {
+                    "start": 2,
+                    "max": 2
+                },
+                "horizontalRight": {},
+                "horizontalLeft": {},
+                "horizontalMultiplier": {
+                    "start": 2,
+                    "max": 2
+                }
+            }
+        },
+        "modularConfiguration": {
+            "body": {
+                "defaultPart": "Pocket_Body_Standard",
+                "uniqueParts": []
+            },
+            "barrel": {
+                "defaultPart": "Pocket_Barrel_Standard",
+                "uniqueParts": []
+            },
+            "bolt": {
+                "defaultPart": "Pocket_Bolt_Standard",
+                "uniqueParts": []
+            },
+            "chargingHandle": {
+                "defaultPart": "Pocket_ChargingHandle_Standard",
+                "uniqueParts": []
+            },
+            "grip": {
+                "defaultPart": "Pocket_StockAdapter_Standard",
+                "uniqueParts": [
+                    "Pocket_StockAdapter_Light",
+                    "Pocket_StockAdapter_Molded",
+                    "Pocket_StockAdapter_Raised"
+                ]
+            },
+            "mag": {
+                "defaultPart": "Pocket_Mag_Standard",
+                "uniqueParts": []
+            },
+            "barrelExtension": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "BarrelExt_12GObelisk",
+                    "BarrelExt_SedimentChoke",
+                    "BarrelExt_12GVentComp",
+                    "BarrelExt_JawChoke",
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
+                ]
+            },
+            "verticalGrip": {
+                "defaultPart": "Pocket_VerticalGrip_Standard",
+                "uniqueParts": [
+                    "Pocket_VerticalGrip_Biofit",
+                    "Pocket_VerticalGrip_Skeletal",
+                    "Pocket_VerticalGrip_Slim"
+                ]
+            },
+            "sight": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Sight_ClassicRDS",
+                    "Sight_Compact",
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
+                ]
+            },
+            "ammo": {
+                "defaultPart": "Ammo_12gauge",
+                "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
+                ]
+            }
+        }
     },
     "R880": {
         "displayName": "Reinfeld 880",
@@ -6090,7 +5882,7 @@ const WEAPON_DATA = Object.freeze({
                 },
                 {
                     "damage": 47.6,
-                    "distance": 1000
+                    "distance": 10000
                 },
                 {
                     "damage": 24,
@@ -6250,9 +6042,12 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_Projection",
                     "Sight_Sheath",
-                    "Sight_Tagged"
+                    "Sight_Projection",
+                    "Sight_Tagged",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
                 ]
             },
             "ammo": {
@@ -6265,7 +6060,22 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_12GObelisk",
                     "BarrelExt_SedimentChoke",
                     "BarrelExt_12GVentComp",
-                    "BarrelExt_JawChoke"
+                    "BarrelExt_JawChoke",
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -6390,8 +6200,12 @@ const WEAPON_DATA = Object.freeze({
             "sight": {
                 "defaultPart": "Sight_Long6X",
                 "uniqueParts": [
-                    "Sight_ViewPoint",
                     "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO",
                     "Sight_Fluted",
                     "Sight_Primed"
                 ]
@@ -6447,11 +6261,24 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "BarrelExt_BeveledSilencer",
                     "BarrelExt_Express",
                     "BarrelExt_HybridMB",
                     "BarrelExt_IndentComp",
+                    "BarrelExt_CylindricSilencer",
+                    "BarrelExt_PipedSilencer",
                     "BarrelExt_Torque",
                     "BarrelExt_Ridged"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_EdgeCrit",
+                    "Perk_Bleed",
+                    "Perk_Sharpshooter",
+                    "Perk_Glass",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -6677,16 +6504,23 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "barrelExtension": {
                 "defaultPart": "RG5_BarrelExt_Default",
                 "uniqueParts": [
+                    "BarrelExt_BeveledSilencer",
                     "BarrelExt_Express",
                     "BarrelExt_HybridMB",
                     "BarrelExt_IndentComp",
@@ -6751,6 +6585,7 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide",
                     "VerticalGrip_QuickHold",
                     "VerticalGrip_RiggerHandstop"
                 ]
@@ -6770,6 +6605,16 @@ const WEAPON_DATA = Object.freeze({
             "chargingHandle": {
                 "defaultPart": "RG5_ChargingHandle_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.46666664,
@@ -7000,19 +6845,24 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "sight": {
                 "defaultPart": null,
                 "uniqueParts": [
                     "Sight_Slate",
+                    "Sight_Box",
                     "Sight_LED",
-                    "Sight_Box"
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -7029,6 +6879,15 @@ const WEAPON_DATA = Object.freeze({
                     "S40_Grip_Hardwood",
                     "S40_Grip_Embossed",
                     "S40_Grip_Tac"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -7261,11 +7120,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "sight": {
@@ -7273,7 +7135,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -7290,6 +7154,15 @@ const WEAPON_DATA = Object.freeze({
                     "S403_Grip_Friction",
                     "S403_Grip_Ribbed",
                     "S403_Grip_Grained"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -7525,11 +7398,13 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
                     "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
                     "BarrelExt_CratedMuzzle"
                 ]
             },
@@ -7538,8 +7413,19 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "SE5_Sight_Custom",
                     "Sight_Slate",
+                    "Sight_Box",
                     "Sight_LED",
-                    "Sight_Box"
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -7774,11 +7660,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "sight": {
@@ -7786,7 +7675,9 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -7803,6 +7694,15 @@ const WEAPON_DATA = Object.freeze({
                     "SPM11_Grip_Checkered",
                     "SPM11_Grip_Embossed",
                     "SPM11_Grip_Tac"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -8075,13 +7975,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "Spearfish_BarrelExtension_Default",
                 "uniqueParts": [
-                    "BarrelExt_Torque",
-                    "BarrelExt_Ridged",
+                    "BarrelExt_BeveledSilencer",
                     "BarrelExt_Express",
                     "BarrelExt_HybridMB",
                     "BarrelExt_IndentComp",
+                    "BarrelExt_CylindricSilencer",
                     "BarrelExt_PipedSilencer",
-                    "BarrelExt_CylindricSilencer"
+                    "BarrelExt_Torque",
+                    "BarrelExt_Ridged"
                 ]
             },
             "verticalGrip": {
@@ -8090,7 +7991,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "sight": {
@@ -8099,13 +8002,26 @@ const WEAPON_DATA = Object.freeze({
                     "Sight_ClassicRDS",
                     "Sight_Compact",
                     "Sight_Sheath",
-                    "Sight_Tactical",
-                    "Sight_Lined",
-                    "Sight_Fluted",
-                    "Sight_Primed",
-                    "Sight_LPVO",
                     "Sight_Projection",
-                    "Sight_ViewPoint"
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_EdgeCrit",
+                    "Perk_Bleed",
+                    "Perk_Sharpshooter",
+                    "Perk_Glass",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -8324,19 +8240,24 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": null,
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "sight": {
                 "defaultPart": null,
                 "uniqueParts": [
                     "Sight_Slate",
+                    "Sight_Box",
                     "Sight_LED",
-                    "Sight_Box"
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "ammo": {
@@ -8353,6 +8274,15 @@ const WEAPON_DATA = Object.freeze({
                     "Stryk7_Grip_Ribbed",
                     "Stryk7_Grip_Friction",
                     "Stryk7_Grip_Grained"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -8571,11 +8501,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "T32_BarrelExtension_Default",
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "body": {
@@ -8626,12 +8559,23 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_Slate",
                     "Sight_Box",
-                    "Sight_LED"
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
                 ]
             },
             "stockMount": {
                 "defaultPart": "T32_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_PinPuller",
+                    "Perk_Glass",
+                    "Perk_Runner",
+                    "Perk_Slap"
+                ]
             }
         }
     },
@@ -8772,7 +8716,11 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_SedimentChoke",
                     "BarrelExt_12GVentComp",
                     "BarrelExt_JawChoke",
-                    "BarrelExt_12GCoronetMuzzle"
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
                 ]
             },
             "body": {
@@ -8823,8 +8771,21 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
+                    "Sight_Sheath",
                     "Sight_Projection",
-                    "Sight_Sheath"
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
                 ]
             }
         },
@@ -9059,11 +9020,17 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
+                    "Sight_Sheath",
                     "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
                     "Sight_Tactical",
-                    "Sight_Sheath"
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
                 ]
             },
             "barrelExtension": {
@@ -9118,7 +9085,8 @@ const WEAPON_DATA = Object.freeze({
                     "Stock_PaddedTube",
                     "Stock_TQ",
                     "Stock_LightFrame",
-                    "Stock_HQ"
+                    "Stock_HQ",
+                    "Stock_Minimized"
                 ]
             },
             "rearSight": {
@@ -9135,7 +9103,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -9145,6 +9115,16 @@ const WEAPON_DATA = Object.freeze({
             "stockMount": {
                 "defaultPart": "VF7S_StockMount_Default",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
             }
         },
         "equipTime": 0.46666664,
@@ -9153,7 +9133,7 @@ const WEAPON_DATA = Object.freeze({
         "reloadTime": 2.8333335,
         "reloadEmptyTime": 3.1666665
     },
-    "WAR45": {
+    "War45": {
         "displayName": "WAR-45",
         "class": "SMG",
         "dlc": "1",
@@ -9355,11 +9335,14 @@ const WEAPON_DATA = Object.freeze({
             "barrelExtension": {
                 "defaultPart": "WAR45_BarrelExt_Default",
                 "uniqueParts": [
-                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_SnubSilencer",
+                    "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -9410,7 +9393,9 @@ const WEAPON_DATA = Object.freeze({
                     "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "VerticalGrip_QuickHold"
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
                 ]
             },
             "ammo": {
@@ -9434,9 +9419,19 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Sight_ClassicRDS",
                     "Sight_Compact",
-                    "Sight_ViewPoint",
-                    "Sight_Lined",
-                    "Sight_Projection"
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
+                ]
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
                 ]
             }
         },
@@ -9662,10 +9657,12 @@ const WEAPON_DATA = Object.freeze({
             "verticalGrip": {
                 "defaultPart": null,
                 "uniqueParts": [
+                    "Yates_VerticalGrip_Polymer",
+                    "Yates_VerticalGrip_Tommy",
+                    "VerticalGrip_Cylinder",
                     "VerticalGrip_AngledGhost",
                     "VerticalGrip_Stub",
-                    "Yates_VerticalGrip_Polymer",
-                    "Yates_VerticalGrip_Tommy"
+                    "VerticalGrip_FlatSide"
                 ]
             },
             "stock": {
@@ -9683,7 +9680,10 @@ const WEAPON_DATA = Object.freeze({
                     "BarrelExt_ObeliskSilencer",
                     "BarrelExt_CompactComp",
                     "BarrelExt_SkeletonizedComp",
-                    "BarrelExt_PartedComp"
+                    "BarrelExt_PartedComp",
+                    "BarrelExt_WhisperWrap",
+                    "BarrelExt_IDM2",
+                    "BarrelExt_CratedMuzzle"
                 ]
             },
             "barrel": {
@@ -9703,6 +9703,7 @@ const WEAPON_DATA = Object.freeze({
                     "Sight_Slate",
                     "Sight_Box",
                     "Sight_LED",
+                    "Sight_Snapshot",
                     "Sight_LucidRDS"
                 ]
             },
@@ -9713,6 +9714,14 @@ const WEAPON_DATA = Object.freeze({
             "ammo": {
                 "defaultPart": "Ammo_9mm",
                 "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Vampire",
+                    "Perk_Runner",
+                    "Perk_Glass"
+                ]
             }
         },
         "equipTime": 0.16666666,
@@ -9720,5 +9729,795 @@ const WEAPON_DATA = Object.freeze({
         "sprintExitTime": 0.19951761,
         "reloadTime": 2.0327303,
         "reloadEmptyTime": 2.8289037
+    },
+    "bullkick500": {
+        "displayName": "Bullkick 500",
+        "class": "Revolver",
+        "dlc": "2",
+        "displayIcon": {
+            "offset": {
+                "x": 0,
+                "y": 128
+            },
+            "source": "SS_UI_WeaponsPrimary_00010-DLCHEIST0002.png"
+        },
+        "fireData": {
+            "damageDistanceArray": [
+                {
+                    "damage": 260,
+                    "distance": 1000
+                },
+                {
+                    "damage": 260,
+                    "distance": 1300
+                },
+                {
+                    "damage": 180,
+                    "distance": 1900
+                },
+                {
+                    "damage": 145,
+                    "distance": 2500
+                }
+            ],
+            "criticalDamageMultiplierDistanceArray": [
+                {
+                    "multiplier": 5,
+                    "distance": 1400
+                },
+                {
+                    "multiplier": 4.5,
+                    "distance": 1900
+                },
+                {
+                    "multiplier": 3.5,
+                    "distance": 2600
+                }
+            ],
+            "ammoLoaded": 5,
+            "ammoInventory": 40,
+            "ammoInventoryMax": 50,
+            "ammoPickup": {
+                "min": 1,
+                "max": 2
+            },
+            "armorPenetration": 6,
+            "roundsPerMinute": 75
+        },
+        "spreadData": {
+            "start": 2,
+            "increase": 2,
+            "resetTime": 0.65,
+            "decayRate": 0,
+            "cap": 5,
+            "stanceMultipliers": {
+                "stand": {
+                    "spread": 1.2,
+                    "cap": 4,
+                    "increment": 0.85
+                },
+                "standMove": {
+                    "spread": 2,
+                    "cap": 5
+                },
+                "crouch": {
+                    "cap": 3.5,
+                    "increment": 0.6
+                },
+                "crouchMove": {
+                    "spread": 1.4,
+                    "cap": 4,
+                    "increment": 0.7
+                },
+                "target": {
+                    "spread": 0
+                },
+                "targetMove": {
+                    "spread": 0.25
+                }
+            },
+            "radiusMultipliers": {}
+        },
+        "recoilData": {
+            "viewKick": {
+                "recoverSpeed": 12,
+                "recoverWaitTime": 0.3,
+                "recoilPattern": [
+                    {
+                        "x": -1.125,
+                        "y": 4.5
+                    },
+                    {
+                        "x": 1.6500001,
+                        "y": 9.375
+                    },
+                    {
+                        "x": -0.75,
+                        "y": 16.875
+                    },
+                    {
+                        "x": 2.25,
+                        "y": 21.75
+                    },
+                    {
+                        "x": -1.2,
+                        "y": 27
+                    },
+                    {
+                        "x": 1.5,
+                        "y": 36
+                    },
+                    {
+                        "x": 0,
+                        "y": 39
+                    }
+                ],
+                "resetTime": 1.3,
+                "loopStart": 4,
+                "initialNum": 0,
+                "hipfireMultiplier": 1.1
+            },
+            "gunKick": {
+                "deflectSpeed": 100,
+                "recoverSpeed": 50,
+                "verticalTop": {
+                    "max": 1
+                },
+                "verticalBottom": {},
+                "verticalMultiplier": {},
+                "horizontalRight": {
+                    "min": 0.2,
+                    "max": 0.8
+                },
+                "horizontalLeft": {
+                    "min": 0.2,
+                    "max": 0.8
+                },
+                "horizontalMultiplier": {}
+            }
+        },
+        "modularConfiguration": {
+            "barrel": {
+                "defaultPart": "Bullkick500_Barrel_Default",
+                "uniqueParts": [
+                    "Bullkick500_Barrel_Ranged",
+                    "Bullkick500_Barrel_CQC",
+                    "Bullkick500_Barrel_Tactical"
+                ]
+            },
+            "bolt": {
+                "defaultPart": "Bullkick500_Bolt_Default",
+                "uniqueParts": []
+            },
+            "body": {
+                "defaultPart": "Bullkick500_Body_Default",
+                "uniqueParts": []
+            },
+            "frontSight": {
+                "defaultPart": "Bullkick500_FrontSight_Default",
+                "uniqueParts": []
+            },
+            "mag": {
+                "defaultPart": "Bullkick500_Mag_Default",
+                "uniqueParts": [
+                    "Bullkick500_Mag_Unfluted"
+                ]
+            },
+            "rearSight": {
+                "defaultPart": "Bullkick500_RearSight_Default",
+                "uniqueParts": []
+            },
+            "sight": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Sight_Tactical",
+                    "Sight_Slate",
+                    "Sight_Box",
+                    "Sight_LED",
+                    "Sight_Snapshot",
+                    "Sight_LucidRDS"
+                ]
+            },
+            "ammo": {
+                "defaultPart": "Ammo_500Magnum",
+                "uniqueParts": []
+            },
+            "speedloader": {
+                "defaultPart": "Bullkick500_Speedloader_Default",
+                "uniqueParts": []
+            },
+            "grip": {
+                "defaultPart": "Bullkick500_Grip_Default",
+                "uniqueParts": [
+                    "Bullkick500_Grip_Biofit",
+                    "Bullkick500_Grip_Tac",
+                    "Bullkick500_Grip_Hardwood"
+                ]
+            },
+            "barrelExtension": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "BarrelExt_CompactComp",
+                    "BarrelExt_SkeletonizedComp",
+                    "BarrelExt_PartedComp"
+                ]
+            },
+            "sightMount": {
+                "defaultPart": "Bullkick500_SightMount_Default",
+                "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Final",
+                    "Perk_Assassin",
+                    "Perk_Bulky",
+                    "Perk_Glass",
+                    "Perk_Critter"
+                ]
+            }
+        },
+        "equipTime": 0.5,
+        "unequipTime": 0.6666667,
+        "sprintExitTime": 0.29999998,
+        "reloadTime": 2.8333333,
+        "reloadEmptyTime": 2.8333333
+    },
+    "chs3": {
+        "displayName": "Chanit S3",
+        "class": "Assault Rifle",
+        "dlc": "3",
+        "displayIcon": {
+            "offset": {
+                "x": 0,
+                "y": 0
+            },
+            "source": "SS_UI_Weapons_00030-DLC0003.png"
+        },
+        "fireData": {
+            "damageDistanceArray": [
+                {
+                    "damage": 85,
+                    "distance": 100
+                },
+                {
+                    "damage": 85,
+                    "distance": 1500
+                },
+                {
+                    "damage": 80,
+                    "distance": 2500
+                },
+                {
+                    "damage": 70,
+                    "distance": 3500
+                }
+            ],
+            "criticalDamageMultiplierDistanceArray": [
+                {
+                    "multiplier": 4.3,
+                    "distance": 1500
+                },
+                {
+                    "multiplier": 3.655,
+                    "distance": 2500
+                },
+                {
+                    "multiplier": 3,
+                    "distance": 3500
+                }
+            ],
+            "ammoLoaded": 30,
+            "ammoInventory": 240,
+            "ammoInventoryMax": 300,
+            "ammoPickup": {
+                "max": 7
+            },
+            "fireType": "Burst",
+            "timeBetweenBursts": 0.2,
+            "armorPenetration": 2.8,
+            "roundsPerMinute": 1000
+        },
+        "spreadData": {
+            "start": 0.5,
+            "increase": 0.45,
+            "resetTime": 0.2,
+            "cap": 5,
+            "stanceMultipliers": {
+                "stand": {},
+                "standMove": {
+                    "start": 1.5,
+                    "cap": 1.5,
+                    "increment": 1.5
+                },
+                "crouch": {
+                    "start": 0.5,
+                    "cap": 0.5,
+                    "increment": 0.5
+                },
+                "crouchMove": {
+                    "start": 0.75,
+                    "cap": 0.75,
+                    "increment": 0.75
+                },
+                "target": {
+                    "spread": 0
+                },
+                "targetMove": {
+                    "start": 0.25,
+                    "cap": 0.25,
+                    "increment": 0.25
+                }
+            },
+            "radiusMultipliers": {}
+        },
+        "recoilData": {
+            "viewKick": {
+                "deflectSpeed": 50,
+                "recoverSpeed": 30,
+                "recoverWaitTime": 0.075,
+                "recoilPattern": [
+                    {
+                        "x": -0.0375,
+                        "y": 0.075
+                    },
+                    {
+                        "x": 0.075,
+                        "y": 0.2625
+                    },
+                    {
+                        "x": 0.0375,
+                        "y": 0.4875
+                    },
+                    {
+                        "x": 0.15,
+                        "y": 0.675
+                    },
+                    {
+                        "x": -0.112500004,
+                        "y": 0.7875
+                    },
+                    {
+                        "x": 0.0375,
+                        "y": 1.0125
+                    },
+                    {
+                        "x": -0.2625,
+                        "y": 1.5
+                    },
+                    {
+                        "x": -0.41250002,
+                        "y": 2
+                    },
+                    {
+                        "x": -0.63750005,
+                        "y": 2.33
+                    },
+                    {
+                        "x": -0.82500005,
+                        "y": 2.55
+                    },
+                    {
+                        "x": -1.125,
+                        "y": 3.0625
+                    },
+                    {
+                        "x": -0.97499996,
+                        "y": 4.375
+                    },
+                    {
+                        "x": -1.1624999,
+                        "y": 4.8125
+                    },
+                    {
+                        "x": -1.2750001,
+                        "y": 5.359375
+                    },
+                    {
+                        "x": -1.0875001,
+                        "y": 6.625
+                    },
+                    {
+                        "x": -1.2750001,
+                        "y": 7.125166
+                    },
+                    {
+                        "x": -1.5,
+                        "y": 8.7
+                    },
+                    {
+                        "x": -1.3875,
+                        "y": 9.6
+                    },
+                    {
+                        "x": -1.6500001,
+                        "y": 10.05
+                    },
+                    {
+                        "x": -1.5374999,
+                        "y": 10.95
+                    }
+                ],
+                "resetTime": 0.5,
+                "loopStart": 12,
+                "initialNum": 0,
+                "hipfireMultiplier": 1.5
+            },
+            "gunKick": {
+                "deflectSpeed": 15,
+                "recoverSpeed": 7.5,
+                "verticalTop": {
+                    "min": 0.1,
+                    "max": 0.4
+                },
+                "verticalBottom": {
+                    "min": 0.1,
+                    "max": 0.4
+                },
+                "verticalMultiplier": {
+                    "start": 0.3,
+                    "max": 1.2,
+                    "threshold": 1.2
+                },
+                "horizontalRight": {
+                    "min": 0.1,
+                    "max": 0.3
+                },
+                "horizontalLeft": {
+                    "min": 0.1,
+                    "max": 0.3
+                },
+                "horizontalMultiplier": {
+                    "start": 0.3,
+                    "max": 1.2,
+                    "threshold": 1.2
+                }
+            }
+        },
+        "modularConfiguration": {
+            "sight": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Sight_ClassicRDS",
+                    "Sight_Compact",
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour",
+                    "Sight_Lined",
+                    "Sight_ViewPoint",
+                    "Sight_Tactical",
+                    "Sight_Voyeur",
+                    "Sight_TargeterOptic",
+                    "Sight_LPVO"
+                ]
+            },
+            "barrelExtension": {
+                "defaultPart": "CHS3_BarrelExt_Default",
+                "uniqueParts": [
+                    "BarrelExt_BeveledSilencer",
+                    "BarrelExt_Express",
+                    "BarrelExt_HybridMB",
+                    "BarrelExt_IndentComp",
+                    "BarrelExt_CylindricSilencer",
+                    "BarrelExt_PipedSilencer"
+                ]
+            },
+            "barrel": {
+                "defaultPart": "CHS3_Barrel_Default",
+                "uniqueParts": [
+                    "CHS3_Barrel_CQC",
+                    "CHS3_Barrel_Ranged"
+                ]
+            },
+            "body": {
+                "defaultPart": "CHS3_Body_Default",
+                "uniqueParts": []
+            },
+            "bolt": {
+                "defaultPart": "CHS3_Bolt_Default",
+                "uniqueParts": []
+            },
+            "foreGrip": {
+                "defaultPart": "CHS3_Foregrip_Default",
+                "uniqueParts": []
+            },
+            "grip": {
+                "defaultPart": "CHS3_Grip_Default",
+                "uniqueParts": [
+                    "Grip_Biofit",
+                    "Grip_Tac",
+                    "Grip_Perforated"
+                ]
+            },
+            "mag": {
+                "defaultPart": "CHS3_Mag_Default",
+                "uniqueParts": [
+                    "CHS3_Mag_Quick",
+                    "CHS3_Mag_Compact",
+                    "CHS3_Mag_Extended"
+                ]
+            },
+            "stock": {
+                "defaultPart": "CHS3_Stock_Default",
+                "uniqueParts": [
+                    "CHS3_Stock_Refined",
+                    "CHS3_Stock_Fortified"
+                ]
+            },
+            "rearSight": {
+                "defaultPart": "CHS3_RearSight_Default",
+                "uniqueParts": []
+            },
+            "frontSight": {
+                "defaultPart": "CHS3_FrontSight_Default",
+                "uniqueParts": []
+            },
+            "verticalGrip": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop",
+                    "VerticalGrip_Cylinder",
+                    "VerticalGrip_AngledGhost",
+                    "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide"
+                ]
+            },
+            "ammo": {
+                "defaultPart": "CHS3_Ammo_Default",
+                "uniqueParts": []
+            },
+            "chargingHandle": {
+                "defaultPart": "CHS3_ChargingHandle_Default",
+                "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Sabot",
+                    "Perk_LeadFed",
+                    "Perk_GritPlate",
+                    "Perk_Runner",
+                    "Perk_Critter"
+                ]
+            }
+        },
+        "equipTime": 0.46666664,
+        "unequipTime": 0.6666667,
+        "sprintExitTime": 0.3333333,
+        "reloadTime": 2.6666665,
+        "reloadEmptyTime": 2.8333333
+    },
+    "m7p": {
+        "displayName": "M7 Pursuivant",
+        "class": "Shotgun",
+        "dlc": "3",
+        "displayIcon": {
+            "offset": {
+                "x": 256,
+                "y": 0
+            },
+            "source": "SS_UI_Weapons_00030-DLC0003.png"
+        },
+        "fireData": {
+            "damageDistanceArray": [
+                {
+                    "damage": 43.6,
+                    "distance": 200
+                },
+                {
+                    "damage": 43.6,
+                    "distance": 1000
+                },
+                {
+                    "damage": 22,
+                    "distance": 2000
+                },
+                {
+                    "damage": 18,
+                    "distance": 2500
+                }
+            ],
+            "criticalDamageMultiplierDistanceArray": [
+                {
+                    "multiplier": 1.5,
+                    "distance": 1000
+                },
+                {
+                    "multiplier": 1.25,
+                    "distance": 2000
+                },
+                {
+                    "multiplier": 1.1,
+                    "distance": 2500
+                }
+            ],
+            "ammoLoaded": 12,
+            "ammoInventory": 96,
+            "ammoInventoryMax": 120,
+            "ammoPickup": {
+                "min": 2,
+                "max": 4
+            },
+            "fireType": "Burst",
+            "timeBetweenBursts": 0.175,
+            "projectilesPerFiredRound": 10,
+            "roundsPerMinute": 450
+        },
+        "spreadData": {
+            "increase": 0.133333,
+            "resetTime": 0.25,
+            "stanceMultipliers": {
+                "stand": {
+                    "spread": 3
+                },
+                "standMove": {
+                    "spread": 3.5
+                },
+                "crouch": {
+                    "spread": 2.5
+                },
+                "crouchMove": {
+                    "spread": 3
+                },
+                "target": {
+                    "spread": 2
+                },
+                "targetMove": {
+                    "spread": 2
+                }
+            },
+            "radiusMultipliers": {}
+        },
+        "recoilData": {
+            "viewKick": {
+                "deflectSpeed": 125,
+                "recoverSpeed": 50,
+                "recoverWaitTime": 0.1,
+                "recoilPattern": [
+                    {
+                        "x": 1,
+                        "y": 1.5
+                    },
+                    {
+                        "x": 0.75,
+                        "y": 2.5
+                    },
+                    {
+                        "x": -0.25,
+                        "y": 3.5
+                    },
+                    {
+                        "x": 0.15,
+                        "y": 4.5
+                    }
+                ],
+                "resetTime": 0.3,
+                "loopStart": 1,
+                "initialNum": 1,
+                "hipfireMultiplier": 2.1
+            },
+            "gunKick": {
+                "verticalTop": {},
+                "verticalBottom": {},
+                "verticalMultiplier": {},
+                "horizontalRight": {},
+                "horizontalLeft": {},
+                "horizontalMultiplier": {}
+            }
+        },
+        "modularConfiguration": {
+            "barrel": {
+                "defaultPart": "M7P_Barrel_Default",
+                "uniqueParts": [
+                    "M7P_Barrel_CQC",
+                    "M7P_Barrel_Ranged"
+                ]
+            },
+            "rearSight": {
+                "defaultPart": "M7P_RearSight_Default",
+                "uniqueParts": []
+            },
+            "body": {
+                "defaultPart": "M7P_Body_Default",
+                "uniqueParts": []
+            },
+            "foreGrip": {
+                "defaultPart": "M7P_Foregrip_Default",
+                "uniqueParts": []
+            },
+            "frontSight": {
+                "defaultPart": "M7P_FrontSight_Default",
+                "uniqueParts": []
+            },
+            "mag": {
+                "defaultPart": "M7P_Mag_Default",
+                "uniqueParts": [
+                    "M7P_Mag_Extended",
+                    "M7P_Mag_Compact",
+                    "M7P_Mag_Quick"
+                ]
+            },
+            "stock": {
+                "defaultPart": "M7P_Stock_Default",
+                "uniqueParts": [
+                    "M7P_Stock_Bolstered"
+                ]
+            },
+            "sight": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Sight_ClassicRDS",
+                    "Sight_Compact",
+                    "Sight_Sheath",
+                    "Sight_Projection",
+                    "Sight_LightHolographic",
+                    "Sight_SquareClaim",
+                    "Sight_Seymour"
+                ]
+            },
+            "ammo": {
+                "defaultPart": "M7P_Ammo_Default",
+                "uniqueParts": []
+            },
+            "barrelExtension": {
+                "defaultPart": "M7P_BarrelExt_Default",
+                "uniqueParts": [
+                    "BarrelExt_12GObelisk",
+                    "BarrelExt_SedimentChoke",
+                    "BarrelExt_12GVentComp",
+                    "BarrelExt_JawChoke",
+                    "BarrelExt_Ridgecyl",
+                    "BarrelExt_12GCoronetMuzzle",
+                    "BarrelExt_SilentKiller",
+                    "BarrelExt_Breacher",
+                    "BarrelExt_12GTorqued"
+                ]
+            },
+            "chargingHandle": {
+                "defaultPart": "M7P_ChargingHandle_Default",
+                "uniqueParts": []
+            },
+            "grip": {
+                "defaultPart": "M7P_Grip_Default",
+                "uniqueParts": [
+                    "Grip_Biofit",
+                    "Grip_Tac",
+                    "Grip_Perforated"
+                ]
+            },
+            "verticalGrip": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "VerticalGrip_Cylinder",
+                    "VerticalGrip_AngledGhost",
+                    "VerticalGrip_Stub",
+                    "VerticalGrip_FlatSide",
+                    "VerticalGrip_QuickHold",
+                    "VerticalGrip_RiggerHandstop"
+                ]
+            },
+            "bolt": {
+                "defaultPart": "M7P_Bolt_Default",
+                "uniqueParts": []
+            },
+            "perk1": {
+                "defaultPart": null,
+                "uniqueParts": [
+                    "Perk_Trip",
+                    "Perk_RushSlide",
+                    "Perk_Runner",
+                    "Perk_Resilient",
+                    "Perk_Critter"
+                ]
+            }
+        },
+        "equipTime": 0.46666664,
+        "unequipTime": 0.6666667,
+        "sprintExitTime": 0.3333333,
+        "reloadTime": 2.3999999,
+        "reloadEmptyTime": 2.6666667
     }
 });

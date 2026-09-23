@@ -8,6 +8,7 @@
     "dlc-4": "Fear & Greed",
     "dlc-5": "Party Powder",
     "dlc-6": "Swedish Weapon",
+    "dlc-7": "Brute Force",
 
     "skills-Rifleman":"RIFLEMAN",
     "skills-Rifleman-desc":"<b>BASE:</b>For every skill equipped in Commando branch, Assault Rifles and LMGs gain an additional 0.1 Armor Penetration.<br><b>ACE:</b>Assault Rifle and LMG reload speed increases by 2.5% for every skill equipped in Commando branch.",
@@ -63,6 +64,7 @@
     "attachment-category-fore-grip": "Fore Grip",
     "attachment-category-grip": "Grip",
     "attachment-category-stock": "Stock",
+    "attachment-category-perk-1": "Perk",
     "stats-damage": "Damage",
     "stats-critical-multiplier": "Multiplier",
     "stats-armor-penetration": "Armor Pen",
@@ -144,7 +146,7 @@
     "Speed Mag":"Speed Mag",
 
     "Beveled Silencer":"Beveled Silencer",
-    "Express Muzzle Break":"Express Muzzle Break",
+    "Express Muzzle Brake":"Express Muzzle Break",
     "Hybrid Muzzle Break":"Hybrid Muzzle Break",
     "Indent Compensator":"Indent Compensator",
     "Cylindric Silencer":"Cylindric Silencer",
