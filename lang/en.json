@@ -296,8 +296,34 @@
     "Vertical Gunkick":"Vertical Gunkick",
     "Vertical Spread Radius":"Vertical Spread Radius",
     "View Kick Recovery Speed":"View Kick Recovery Speed",
-    "Critical Damage Multiplier Distance":"Critical Damage Multiplier Distance"
+    "Critical Damage Multiplier Distance":"Critical Damage Multiplier Distance",
 
-
-
+    "perk-Perk_Assassin-desc": "Shots from this weapon are treated as silent",
+    "perk-Perk_Bite-desc": "Whenever you do a critical hit, reduce the weapon's armor penetration by 10% of its base (down to 0%) but increase damage with 15% (max 150%) for 7 seconds. Critical hits refresh the timer.",
+    "perk-Perk_Bleed-desc": "When you do health damage to an enemy you have 25% chance to affect them with bleed, causing them to take 50 damage every 2 seconds for 6 seconds.",
+    "perk-Perk_Bulky-desc": "You carry and start the game with 25% less ammo for your primary and your secondary weapon, but have 10% increased armor damage resistance.",
+    "perk-Perk_ChainReact-desc": "When you kill a specialist with this weapon, it triggers their equipment destruction effect. You are immune to that effect.",
+    "perk-Perk_Critter-desc": "Each shot has a 2% chance to do 50% extra damage.",
+    "perk-Perk_EdgeCrit-desc": "When you kill an enemy with a critical hit, you gain EDGE: deal 10% extra damage for 20s.",
+    "perk-Perk_Final-desc": "The last shot in the mag deals 300% additional damage.",
+    "perk-Perk_Fool-desc": "For every shot you fire, your damage increases by 4% until you stop firing.",
+    "perk-Perk_Glass-desc": "You deal 15% additional base damage but take 10% increased incoming damage to your armor.",
+    "perk-Perk_GritPlate-desc": "When you lose an armor plate, you gain GRIT: take 10% less damage for 20s.",
+    "perk-Perk_LeadFed-desc": "Whenever you pick up ammo, you gain 10% increased damage up to maximum 25%. This effect lasts 5 seconds. The timer refreshes on ammo pickup.",
+    "perk-Perk_LuckyShot-desc": "Every {PenetrationCount}th shot deals critical hit damage.",
+    "perk-Perk_PinPuller-desc": "When you use a SWAT as a human shield and shove them away, the SWAT’s smoke grenade triggers when they land. Only one grenade per SWAT can be triggered. This ability goes on a cooldown for 20 seconds.",
+    "perk-Perk_Quickshot-desc": "When you kill an enemy with a critical hit, you don’t have to cycle the weapon to fire the next shot in the magazine. Reload cancels the free cycle.",
+    "perk-Perk_Resilient-desc": "You take 10% less incoming damage to your armor, but deal 15% less base damage from all sources.",
+    "perk-Perk_Runner-desc": "You can shoot and reload your weapons while sprinting or sliding.",
+    "perk-Perk_RushSlide-desc": "When you slide, you gain RUSH: move 10% faster for 20s.",
+    "perk-Perk_Sabot-desc": "15% of damage dealt to armor is dealt directly to the enemy's HP.",
+    "perk-Perk_Sharpshooter-desc": "Each critical hit increases the damage of the next shot with 15%. This effect stacks up to a maximum of 200%. If you miss a shot or hit a body part, the effect ends.",
+    "perk-Perk_Slap-desc": "Meleeing a SWAT or Heavy SWAT allows you to take them as a human shield.",
+    "perk-Perk_Smith-desc": "For each critical hit, gain 0.4 armor penetration until you reload the weapon (Max: 5). Each Critical Hit that penetrates armor breaks one armor layer.",
+    "perk-Perk_Superstar-desc": "When you kill an enemy with a critical hit, this weapon deals 25% extra damage for 5 seconds.",
+    "perk-Perk_Threat-desc": "Shooting an unsilenced weapon will shout all civilians down within 10 meter radius. Civilians are shouted down 50% longer.",
+    "perk-Perk_Trip-desc": "Every shot has 50% higher chance to trigger a Stunning/medium hurt reaction. Every shot has a minimum chance of 10% to trigger a stunning hurt reaction.",
+    "perk-Perk_Vampire-desc": "When you deal damage with this weapon you recover 0.5% of your health. This also gives you adrenaline.",
+    "perk-Perk_Veteran-desc": "When you kill an enemy, you have 15% chance to immediately add the dropped ammo into the magazine. Excess ammo goes into the ammo inventory.",
+    "perk-Perk_WestWood-desc": "When killing an enemy, other enemies within 3 meters of that enemy lose 15% accuracy for 3s. This effect stacks to a maximum of 90%."
 }

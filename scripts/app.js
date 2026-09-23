@@ -1122,6 +1122,8 @@ function weaponShotsToKillByArmorLayer(
     const layerArmorValue = 80;
     const requiredArmorDamage = layerArmorValue * layersToBreak;
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
+    const hardCastEquipped = equippedAttachments?.includes('Perk_Sabot');
+    let hardCastKillShot = 0;
     let armorDamagePerShot = 0;
     if(weaponCritMultiplier !== 1){
         armorDamagePerShot = weaponDamage+weaponDamage * weaponCritMultiplier*0.54
@@ -1208,6 +1210,10 @@ function weaponShotsToKillByArmorLayer(
                         DamagetoArmor += Math.floor(layerValue)
                     }
                 }
+                if (hardCastEquipped && Math.min(enemyArmor, DamagetoArmor) * 0.15 >= enemyHealth) {
+                    hardCastKillShot = shots;
+                    break;
+                }
                 // After a shot that did not penetrate, BreakingPoint increases
                 // the effective penetration for the *next* shot
                 if(isSkillEquipped('BreakingPoint')) {
@@ -1236,6 +1242,21 @@ function weaponShotsToKillByArmorLayer(
     } else {
         armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
         DamagetoArmor = armorDamagePerShot * armorShots;
+        if (hardCastEquipped && enemyHealth > 0 && armorDamagePerShot > 0) {
+            const killShot = Math.ceil(enemyHealth / (armorDamagePerShot * 0.15));
+            if (killShot <= armorShots && Math.min(enemyArmor, killShot * armorDamagePerShot) * 0.15 >= enemyHealth) {
+                hardCastKillShot = killShot;
+            }
+        }
+    }
+    if (hardCastKillShot > 0) {
+        return {
+            armoredCrits: weaponCritMultiplier !== 1 ? hardCastKillShot : 0,
+            armoredNonCrits: weaponCritMultiplier === 1 ? hardCastKillShot : 0,
+            unarmoredCrits: 0,
+            unarmoredNonCrits: 0,
+            totalShots: hardCastKillShot,
+        };
     }
 
     // If BreakingPoint was used we may have computed armorShots using an effective
@@ -1286,7 +1307,10 @@ function weaponShotsToKillByArmorLayer(
     if (isSkillEquipped('Cracked')) {
         healthDamage *= (1 + CrackedBonus ?? 0);
     }
-    const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage);
+    const hardCastHealthDamage = hardCastEquipped
+        ? Math.min(enemyArmor, DamagetoArmor) * 0.15
+        : 0;
+    const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage - hardCastHealthDamage);
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
     const fullCritHealthShots = Math.ceil(
@@ -2168,6 +2192,16 @@ function populateLoadout(selectedWeapon) {
                         attachmentStats.push(getLocalisation(attribute) + ' ' + value);
                         //attachmentStats.push(attribute + ' ' + value);
                     });
+
+                    if (attachmentData.description) {
+                        const descriptionKey = `perk-${attachment}-desc`;
+                        const description = getLocalisation(descriptionKey) ?? attachmentData.description;
+                        attachmentStats.push(
+                            attachment === 'Perk_Sabot'
+                                ? description.replaceAll('{ArmorPassthrough}', '15%')
+                                : description
+                        );
+                    }
 
                     if (attachmentStats.length == 0) return;
 
