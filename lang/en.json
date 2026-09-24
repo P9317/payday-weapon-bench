@@ -310,7 +310,7 @@
     "perk-Perk_Glass-desc": "You deal 15% additional base damage but take 10% increased incoming damage to your armor.",
     "perk-Perk_GritPlate-desc": "When you lose an armor plate, you gain GRIT: take 10% less damage for 20s.",
     "perk-Perk_LeadFed-desc": "Whenever you pick up ammo, you gain 10% increased damage up to maximum 25%. This effect lasts 5 seconds. The timer refreshes on ammo pickup.",
-    "perk-Perk_LuckyShot-desc": "Every {PenetrationCount}th shot deals critical hit damage.",
+    "perk-Perk_LuckyShot-desc": "Every 4th shot deals critical hit damage.",
     "perk-Perk_PinPuller-desc": "When you use a SWAT as a human shield and shove them away, the SWAT’s smoke grenade triggers when they land. Only one grenade per SWAT can be triggered. This ability goes on a cooldown for 20 seconds.",
     "perk-Perk_Quickshot-desc": "When you kill an enemy with a critical hit, you don’t have to cycle the weapon to fire the next shot in the magazine. Reload cancels the free cycle.",
     "perk-Perk_Resilient-desc": "You take 10% less incoming damage to your armor, but deal 15% less base damage from all sources.",
