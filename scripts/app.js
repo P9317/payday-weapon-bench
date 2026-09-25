@@ -471,6 +471,7 @@ const SKILL_VALUES = {
 const MAX_SHOCK_GRENADE_HITS = 5;
 let ammoFeedPickups = 0;
 let luckOfDrawTriggered = false;
+let sharpshooterCrits = 0;
 
 const EDGE_DEPENDENT_SKILLS = [
     'longShot',
@@ -660,6 +661,7 @@ function applyLoadout(weapon, skills, attachments) {
         damageModifier = equippedSight.targetingData.targetingMagnification;
     if (attachments.includes('Perk_Glass')) damageModifier += 0.15;
     if (attachments.includes('Perk_Resilient')) damageModifier -= 0.15;
+    if (attachments.includes('Perk_EdgeCrit')) damageModifier += 0.1;
     if (attachments.includes('Perk_LeadFed')) {
         damageModifier += Math.min(0.25, ammoFeedPickups * 0.1);
     }
@@ -794,6 +796,13 @@ function applyLoadout(weapon, skills, attachments) {
         fireData.damageDistanceArray = fireData.damageDistanceArray.map((step) => ({
             ...step,
             damage: step.damage * 1.5,
+        }));
+    }
+    if (attachments.includes('Perk_Sharpshooter') && sharpshooterCrits > 0) {
+        const bonus = Math.min(2, sharpshooterCrits * 0.15);
+        fireData.damageDistanceArray = fireData.damageDistanceArray.map((step) => ({
+            ...step,
+            damage: step.damage * (1 + bonus),
         }));
     }
     fireData.criticalDamageMultiplierDistanceArray = fireData.criticalDamageMultiplierDistanceArray.map(
@@ -2049,6 +2058,7 @@ function populateLoadout(selectedWeapon) {
     const weapon = WEAPON_DATA[selectedWeapon];
     ammoFeedPickups = 0;
     luckOfDrawTriggered = false;
+    sharpshooterCrits = 0;
 
     populateSkills(weapon.class);
 
@@ -2146,6 +2156,30 @@ function populateLoadout(selectedWeapon) {
                             event.stopPropagation();
                             ammoFeedPickups = Math.max(0, Math.min(3, ammoFeedPickups + change));
                             value.textContent = ammoFeedPickups;
+                            if (attachmentInput.checked) updateStatsAfterChange();
+                        });
+                        if (change < 0) counter.appendChild(button);
+                        else counter.appendChild(value);
+                        if (change > 0) counter.appendChild(button);
+                    }
+                    attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Sharpshooter') {
+                    const counter = document.createElement('span');
+                    counter.className = 'sharpshooter-counter';
+                    counter.style.display = 'none';
+                    const value = document.createElement('span');
+                    value.className = 'sharpshooter-value';
+                    value.textContent = '0';
+                    for (const [symbol, change] of [['−', -1], ['+', 1]]) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.textContent = symbol;
+                        button.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            sharpshooterCrits = Math.max(0, Math.min(14, sharpshooterCrits + change));
+                            value.textContent = sharpshooterCrits;
                             if (attachmentInput.checked) updateStatsAfterChange();
                         });
                         if (change < 0) counter.appendChild(button);
@@ -2304,10 +2338,16 @@ function updateAttachments() {
         });
     if (!equippedAttachments.includes('Perk_LeadFed')) ammoFeedPickups = 0;
     if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
+    if (!equippedAttachments.includes('Perk_Sharpshooter')) sharpshooterCrits = 0;
     document.querySelectorAll('.ammo-feed-counter').forEach((counter) => {
         counter.style.display = counter.parentElement.querySelector('input').checked
             ? 'inline-flex' : 'none';
         counter.querySelector('span').textContent = ammoFeedPickups;
+    });
+    document.querySelectorAll('.sharpshooter-counter').forEach((counter) => {
+        counter.style.display = counter.parentElement.querySelector('input').checked
+            ? 'inline-flex' : 'none';
+        counter.querySelector('span').textContent = sharpshooterCrits;
     });
     document.querySelectorAll('.luck-of-draw-toggle').forEach((trigger) => {
         trigger.style.display = trigger.parentElement.querySelector('input').checked

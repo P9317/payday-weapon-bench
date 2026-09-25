@@ -471,7 +471,8 @@ h1 {
     padding: 0.25em 1em;
 }
 
-.ammo-feed-counter {
+.ammo-feed-counter,
+.sharpshooter-counter {
     align-items: center;
     gap: 0.15rem;
     height: 1.65rem;
@@ -483,7 +484,8 @@ h1 {
     background: var(--color-surface-dim);
 }
 
-.ammo-feed-counter button {
+.ammo-feed-counter button,
+.sharpshooter-counter button {
     width: 1.25rem;
     height: 1.25rem;
     padding: 0;
@@ -496,12 +498,15 @@ h1 {
 }
 
 .ammo-feed-counter button:hover,
-.ammo-feed-counter button:focus-visible {
+.ammo-feed-counter button:focus-visible,
+.sharpshooter-counter button:hover,
+.sharpshooter-counter button:focus-visible {
     background: var(--color-primary);
     color: var(--color-background);
 }
 
-.ammo-feed-value {
+.ammo-feed-value,
+.sharpshooter-value {
     min-width: 1rem;
     text-align: center;
     font-family: var(--font-mono);
