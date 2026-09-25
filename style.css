@@ -471,6 +471,63 @@ h1 {
     padding: 0.25em 1em;
 }
 
+.ammo-feed-counter {
+    align-items: center;
+    gap: 0.15rem;
+    height: 1.65rem;
+    margin-left: 0.3rem;
+    padding: 0.1rem;
+    vertical-align: middle;
+    border: var(--border);
+    border-radius: 0.15rem;
+    background: var(--color-surface-dim);
+}
+
+.ammo-feed-counter button {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.1rem;
+    background: transparent;
+    color: var(--color-text-alt);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ammo-feed-counter button:hover,
+.ammo-feed-counter button:focus-visible {
+    background: var(--color-primary);
+    color: var(--color-background);
+}
+
+.ammo-feed-value {
+    min-width: 1rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+}
+
+.luck-of-draw-toggle {
+    margin-left: 0.3rem;
+    padding: 0.2rem 0.35rem;
+    vertical-align: middle;
+    border: var(--border);
+    border-radius: 0.15rem;
+    background: var(--color-surface-dim);
+    color: var(--color-text-alt);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.luck-of-draw-toggle:hover,
+.luck-of-draw-toggle:focus-visible,
+.luck-of-draw-toggle[aria-pressed="true"] {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
 footer {
     display: flex;
     align-items: center;

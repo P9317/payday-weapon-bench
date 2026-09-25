@@ -469,6 +469,8 @@ const SKILL_VALUES = {
 };
 
 const MAX_SHOCK_GRENADE_HITS = 5;
+let ammoFeedPickups = 0;
+let luckOfDrawTriggered = false;
 
 const EDGE_DEPENDENT_SKILLS = [
     'longShot',
@@ -656,6 +658,11 @@ function applyLoadout(weapon, skills, attachments) {
         equippedSight?.targetingData?.targetingMagnification > 4
     )
         damageModifier = equippedSight.targetingData.targetingMagnification;
+    if (attachments.includes('Perk_Glass')) damageModifier += 0.15;
+    if (attachments.includes('Perk_Resilient')) damageModifier -= 0.15;
+    if (attachments.includes('Perk_LeadFed')) {
+        damageModifier += Math.min(0.25, ammoFeedPickups * 0.1);
+    }
 //damage increase with Skills
     for (const skill of [
         'edge',
@@ -782,6 +789,12 @@ function applyLoadout(weapon, skills, attachments) {
             fireData.damageDistanceArray = uniqueDamageArray;
         }
         
+    }
+    if (attachments.includes('Perk_Critter') && luckOfDrawTriggered) {
+        fireData.damageDistanceArray = fireData.damageDistanceArray.map((step) => ({
+            ...step,
+            damage: step.damage * 1.5,
+        }));
     }
     fireData.criticalDamageMultiplierDistanceArray = fireData.criticalDamageMultiplierDistanceArray.map(
         (critStep) => {
@@ -2034,6 +2047,8 @@ const attachmentSlots = [
 
 function populateLoadout(selectedWeapon) {
     const weapon = WEAPON_DATA[selectedWeapon];
+    ammoFeedPickups = 0;
+    luckOfDrawTriggered = false;
 
     populateSkills(weapon.class);
 
@@ -2115,6 +2130,47 @@ function populateLoadout(selectedWeapon) {
                     updateAttachments();
                     updateStatsAfterChange();
                 });
+
+                if (attachment === 'Perk_LeadFed') {
+                    const counter = document.createElement('span');
+                    counter.className = 'ammo-feed-counter';
+                    counter.style.display = 'none';
+                    const value = document.createElement('span');
+                    value.className = 'ammo-feed-value';
+                    value.textContent = '0';
+                    for (const [symbol, change] of [['−', -1], ['+', 1]]) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.textContent = symbol;
+                        button.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            ammoFeedPickups = Math.max(0, Math.min(3, ammoFeedPickups + change));
+                            value.textContent = ammoFeedPickups;
+                            if (attachmentInput.checked) updateStatsAfterChange();
+                        });
+                        if (change < 0) counter.appendChild(button);
+                        else counter.appendChild(value);
+                        if (change > 0) counter.appendChild(button);
+                    }
+                    attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Critter') {
+                    const trigger = document.createElement('button');
+                    trigger.type = 'button';
+                    trigger.className = 'luck-of-draw-toggle';
+                    trigger.textContent = '50%';
+                    trigger.setAttribute('aria-pressed', 'false');
+                    trigger.style.display = 'none';
+                    trigger.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        if (!attachmentInput.checked) return;
+                        luckOfDrawTriggered = !luckOfDrawTriggered;
+                        trigger.setAttribute('aria-pressed', String(luckOfDrawTriggered));
+                        updateStatsAfterChange();
+                    });
+                    attachmentButton.appendChild(trigger);
+                }
 
                 attachmentInput.addEventListener('contextmenu', (event) => {
                     event.preventDefault();
@@ -2241,11 +2297,23 @@ function updateSkills(selectedSkill) {
 function updateAttachments() {
     equippedAttachments = [];
 
-    return document
+    document
         .querySelectorAll('.attachment input:checked')
         .forEach((i) => {
             if (i.value !== 'None') equippedAttachments.push(i.value);
         });
+    if (!equippedAttachments.includes('Perk_LeadFed')) ammoFeedPickups = 0;
+    if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
+    document.querySelectorAll('.ammo-feed-counter').forEach((counter) => {
+        counter.style.display = counter.parentElement.querySelector('input').checked
+            ? 'inline-flex' : 'none';
+        counter.querySelector('span').textContent = ammoFeedPickups;
+    });
+    document.querySelectorAll('.luck-of-draw-toggle').forEach((trigger) => {
+        trigger.style.display = trigger.parentElement.querySelector('input').checked
+            ? 'inline-block' : 'none';
+        trigger.setAttribute('aria-pressed', String(luckOfDrawTriggered));
+    });
 }
 
 const weaponStatTemplate = document
