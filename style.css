@@ -607,6 +607,11 @@ footer span:last-child {
     font-weight: 500;
 }
 
+.final-tap-damage {
+    color: var(--color-primary);
+    font-size: 0.85em;
+}
+
 #weapon-stats-damage > div {
     display: grid;
     grid-template-columns: 1fr 1fr;

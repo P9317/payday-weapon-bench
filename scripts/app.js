@@ -627,6 +627,7 @@ function applyLoadout(weapon, skills, attachments) {
     const fireData = updatedWeapon.fireData;
 
     fireData.ammoLoaded = (equippedMag ?? fireData).ammoLoaded ?? 10;
+    fireData.finalTapMultiplier = attachments.includes('Perk_Final') ? 4 : 1;
     fireData.ammoInventory = (equippedMag ?? fireData).ammoInventory ?? 100;
     fireData.ammoInventoryMax =
         (equippedMag ?? fireData).ammoInventoryMax ?? 100;
@@ -2398,7 +2399,6 @@ function updateWeaponStats(selectedWeapon) {
             Math.round(fireData.damageDistanceArray[0].distance) / 100
         }"}`
     );
-
     const baseMultiplierStat = document.querySelector('#stat-base-multiplier');
     let baseMultiplier = fireData.criticalDamageMultiplierDistanceArray[0].multiplier;
     const hgLevel = SKILL_VALUES.HeadGames ?? 1
@@ -2494,6 +2494,11 @@ function updateWeaponStats(selectedWeapon) {
 
         damageStat.children[1].innerHTML =
             formatNumber(damageStep.damage);
+        if (fireData.finalTapMultiplier > 1) {
+            const finalTapDamage = damageStat.children[1].appendChild(document.createElement('span'));
+            finalTapDamage.className = 'final-tap-damage';
+            finalTapDamage.textContent = ` ×${fireData.finalTapMultiplier} ${formatNumber(damageStep.damage * fireData.finalTapMultiplier)}`;
+        }
     });
 
     const weaponCritStats = document.querySelector('#weapon-stats-damage > div')
