@@ -5861,7 +5861,12 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Critter"
                 ]
             }
-        }
+        },
+        "equipTime": 0.167,
+        "unequipTime": 0.300,
+        "sprintExitTime": 0.150,
+        "reloadTime": 1.5666667,
+        "reloadEmptyTime": 1.7333333
     },
     "R880": {
         "displayName": "Reinfeld 880",
@@ -8577,7 +8582,10 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Slap"
                 ]
             }
-        }
+        },
+        "equipTime": 0.167,
+        "unequipTime": 0.300,
+        "sprintExitTime": 0.150
     },
     "TAS12": {
         "displayName": "TAS-12",

@@ -16,6 +16,13 @@ const AMMO_PICKUP_PRESETS = {
     max: 10
 };
 
+// Default weapon curve values; explicit notify times in weapon data take precedence.
+const DEFAULT_WEAPON_TIMES = {
+    equip: 0.167,
+    unequip: 0.300,
+    sprintExit: 0.150,
+};
+
 const weaponOutput = {};
 const attachmentOutput = {};
 /**
@@ -2049,17 +2056,17 @@ console.log(
 
             equipTime:
                 weaponData
-                    .EquipNotifyTime,
+                    .EquipNotifyTime ?? DEFAULT_WEAPON_TIMES.equip,
 
 
             unequipTime:
                 weaponData
-                    .UnequipNotifyTime,
+                    .UnequipNotifyTime ?? DEFAULT_WEAPON_TIMES.unequip,
 
 
             sprintExitTime:
                 weaponData
-                    .SprintExitNotifyTime,
+                    .SprintExitNotifyTime ?? DEFAULT_WEAPON_TIMES.sprintExit,
 
 
             reloadTime:
