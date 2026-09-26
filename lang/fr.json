@@ -150,7 +150,7 @@
     "Speed Mag":"Chargeur Rapide",
 
     "Beveled Silencer":"Silencieux Biseauté",
-    "Express Muzzle Break":"Frein De Bouche Epress",
+    "Express Muzzle Brake":"Frein De Bouche Epress",
     "Hybrid Muzzle Break":"Frein De Bouche Hybride",
     "Indent Compensator":"Compensateur Dentelé",
     "Cylindric Silencer":"Silencieux Cylindrique",
@@ -295,7 +295,7 @@
     "Vertical Recoil":"Recul Vertical",
     "Vertical Gunkick":"Secousse Vertical",
     "Vertical Spread Radius":"Rayon De Dispersion Vertical",
-    "View Kick Recovery Speed":"Vitesse De Récupération De Recul"
+    "View Kick Recovery Speed":"Vitesse De Récupération De Recul",
     "Critical Damage Multiplier Distance":"Distance De Tir À La Tête",
 
     "perk-Perk_Assassin-desc": "Les tirs effectuées avec cette arme sont considérés comme silencieux.",
@@ -305,7 +305,7 @@
     "perk-Perk_ChainReact-desc": "Lorsque vous tuez un spécialiste avec cette arme, cela entraîne un effet de destruction de l'équipement. Vous êtes immunisé contre cet effet.",
     "perk-Perk_Critter-desc": "Chaque tir a 2% de chances d'infliger 50% de dégâts supplémentaires.",
     "perk-Perk_EdgeCrit-desc": "Lorsque vous tuez un ennemi avec un coup critique, vous obtenez un bonus EDGE qui vous permet d'infliger 10% de dégâts supplémentaires pendant 20 secondes.",
-    "perk-Perk_Final-desc": "La dernière balle du chargeur inflige 200% de dégâts supplémentaires.",
+    "perk-Perk_Final-desc": "La dernière balle du chargeur inflige 300% de dégâts supplémentaires.",
     "perk-Perk_Fool-desc": "Les dégâts infligés augmentent de 4% à chaque tir jusqu'à ce que vous arrêtez de tirer.",
     "perk-Perk_Glass-desc": "Vous infligez 15% de dégâts de base supplémentaires, mais les dégâts subis par votre blindage augmentent de 10%.",
     "perk-Perk_GritPlate-desc": "Lorsque vous perdez une plaque d'armure, vous obtenez un bonus GRIT qui vous permet de subir 10% de dégâts en moins pendant 20 secondes.",
@@ -316,7 +316,7 @@
     "perk-Perk_Resilient-desc": "Votre blindage subit 10% de dégâts en moins, mais vous infligez aussi 15% de dégâts de base en moins, toutes sources confondues.",
     "perk-Perk_Runner-desc": "Vous pouvez tirer et recharger votre arme en courant ou en glissant.",
     "perk-Perk_RushSlide-desc": "Lorsque vous glissez, vous obtenez un bonus RUSH qui vous permet de vous déplacer 10% plus vite pendant 20 secondes.",
-    "perk-Perk_Sabot-desc": "25% des dégâts infligés au blindage sont directement infligés aux PV de l'ennemi.",
+    "perk-Perk_Sabot-desc": "15% des dégâts infligés au blindage sont directement infligés aux PV de l'ennemi.",
     "perk-Perk_Sharpshooter-desc": "Chaque coup critique augmente de 15% les dégâts du prochain tir. Cet effet peut se cumuler jusqu'à un maximum de 200%. Si vous ratez un tir ou que vous touchez une partie du corps, l'effet est interrompu.",
     "perk-Perk_Slap-desc": "Vous pouvez utiliser un membre du S.W.A.T ou un membre du S.W.A.T Renforcé comme bouclier humain après leurs avoir infligés un coup à la mêlée.",
     "perk-Perk_Smith-desc": "Pour chaque coup critique, vous obtenez 0.4 de pénétration d'armure jusqu'à ce que vous rechargiez votre arme (max : 5.0). Chaque coup critique qui perfore le blindage brise une couche d'armure.",
