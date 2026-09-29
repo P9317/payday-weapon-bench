@@ -1,6 +1,22 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
+// Damage formulas are site-specific; the exported WPD does not contain these values.
+// Add new persistent damage perks here without changing the importer logic.
+const perkDamageEffects = JSON.parse(await fs.readFile(
+    new URL('./perk-damage-effects.json', import.meta.url), 'utf8'
+));
+
+// Retain manually completed descriptions when an export lacks its skill asset.
+let previousAttachments = {};
+try {
+    const existing = await fs.readFile('../scripts/attachments.js', 'utf8');
+    const json = existing.match(/^const ATTACHMENT_DATA = Object\.freeze\(([\s\S]*)\);\s*$/)?.[1];
+    if (json) previousAttachments = JSON.parse(json);
+} catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+}
+
 const weaponCategories = [
     'AssaultRifle',
     'Marksman',
@@ -2268,6 +2284,36 @@ console.log(
                     .DisplayName
                     ?.SourceString;
 
+        }
+
+        if (key.startsWith('Perk_')) {
+            const icon = attachmentData.DisplayIcon?.AssetPathName ??
+                attachmentData.DisplayIconResource?.AssetPathName ?? '';
+            const type = icon.match(/Perk(Persistent|Equipped)(?:_|Frame)/i)?.[1]?.toLowerCase() ??
+                previousAttachments[key]?.perkType;
+            if (type) attachmentOutput[key].perkType = type;
+
+            const skillPath = attachmentData.SkillDataArray?.[0]?.ObjectPath;
+            if (skillPath) {
+                try {
+                    const skill = JSON.parse(await fs.readFile(
+                        unrealPathToJson(skillPath), 'utf8'
+                    ))[0]?.Properties;
+                    const description = skill?.DescriptionText?.LocalizedString ??
+                        skill?.DescriptionText?.SourceString;
+                    if (description) attachmentOutput[key].description = description;
+                } catch (error) {
+                    console.warn(`[WARNING] ${key} 天赋描述无法读取: ${skillPath}`, error);
+                }
+            }
+
+            attachmentOutput[key].description ??= previousAttachments[key]?.description;
+
+            const damageEffect = perkDamageEffects[key] ??
+                previousAttachments[key]?.persistentDamageEffect;
+            if (type === 'persistent' && damageEffect) {
+                attachmentOutput[key].persistentDamageEffect = damageEffect;
+            }
         }
 
 

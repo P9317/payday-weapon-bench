@@ -1,0 +1,6 @@
+{
+    "Perk_EdgeCrit": { "flatBonus": 0.1 },
+    "Perk_Glass": { "flatBonus": 0.15 },
+    "Perk_LeadFed": { "perAmmoPickup": 0.1, "maxBonus": 0.25 },
+    "Perk_Resilient": { "flatBonus": -0.15 }
+}

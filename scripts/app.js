@@ -663,18 +663,21 @@ function applyLoadout(weapon, skills, attachments) {
     const secondaryPerk = getSecondaryDamagePerk(weapon);
     const damagePerks = new Set(attachments);
     if (secondaryPerk) damagePerks.add(secondaryPerk);
-    if (damagePerks.has('Perk_Glass')) damageModifier += 0.15;
-    if (damagePerks.has('Perk_Resilient')) damageModifier -= 0.15;
-    if (damagePerks.has('Perk_EdgeCrit')) damageModifier += 0.1;
-    if (damagePerks.has('Perk_LeadFed')) {
-        const secondaryPickups = secondaryPerk === 'Perk_LeadFed'
-            ? secondaryAmmoFeedPickups
-            : 0;
-        const pickups = Math.max(
-            attachments.includes('Perk_LeadFed') ? ammoFeedPickups : 0,
-            secondaryPickups
-        );
-        damageModifier += Math.min(0.25, Math.max(0, pickups) * 0.1);
+    for (const perk of damagePerks) {
+        if (ATTACHMENT_DATA[perk]?.perkType !== 'persistent' ||
+            !hasPersistentDamageEffect(perk)) continue;
+        const effect = ATTACHMENT_DATA[perk].persistentDamageEffect;
+        damageModifier += effect.flatBonus ?? 0;
+        if (effect.perAmmoPickup) {
+            const pickups = Math.max(
+                attachments.includes(perk) ? ammoFeedPickups : 0,
+                secondaryPerk === perk ? secondaryAmmoFeedPickups : 0
+            );
+            damageModifier += Math.min(
+                effect.maxBonus ?? Infinity,
+                Math.max(0, pickups) * effect.perAmmoPickup
+            );
+        }
     }
 //damage increase with Skills
     for (const skill of [
@@ -1403,10 +1406,6 @@ const sortedWeapons = Object.keys(WEAPON_DATA).sort((a, b) => {
     );
 });
 
-const secondaryDamagePerks = new Set([
-    'Perk_Glass', 'Perk_Resilient', 'Perk_EdgeCrit', 'Perk_LeadFed',
-]);
-
 function isSecondaryWeapon(weaponId) {
     const weapon = WEAPON_DATA[weaponId];
     if (!weapon) return false;
@@ -1420,6 +1419,19 @@ function getAvailableWeaponPerks(weaponId) {
     return slot ? [slot.defaultPart, ...(slot.uniqueParts ?? [])].filter(Boolean) : [];
 }
 
+function hasPersistentDamageEffect(perk) {
+    const effect = ATTACHMENT_DATA[perk]?.persistentDamageEffect;
+    return effect && (
+        Number.isFinite(effect.flatBonus) ||
+        (effect.perAmmoPickup > 0 && Number.isFinite(effect.maxBonus))
+    );
+}
+
+function getMaxAmmoPickups(perk) {
+    const effect = ATTACHMENT_DATA[perk].persistentDamageEffect;
+    return Math.ceil(effect.maxBonus / effect.perAmmoPickup);
+}
+
 let selectedSecondaryPerk = '';
 let secondaryAmmoFeedPickups = 0;
 
@@ -1427,8 +1439,8 @@ function getEligibleSecondaryPerks() {
     return [...new Set(Object.keys(WEAPON_DATA)
         .filter(isSecondaryWeapon)
         .flatMap(getAvailableWeaponPerks)
-        .filter((perk) => secondaryDamagePerks.has(perk) &&
-            ATTACHMENT_DATA[perk]?.perkType === 'persistent'))];
+        .filter((perk) => ATTACHMENT_DATA[perk]?.perkType === 'persistent' &&
+            hasPersistentDamageEffect(perk)))];
 }
 
 function getSecondaryDamagePerk(currentWeapon) {
@@ -2194,7 +2206,7 @@ function populateLoadout(selectedWeapon) {
                     updateStatsAfterChange();
                 });
 
-                if (attachment === 'Perk_LeadFed') {
+                if (ATTACHMENT_DATA[attachment]?.persistentDamageEffect?.perAmmoPickup) {
                     const counter = document.createElement('span');
                     counter.className = 'ammo-feed-counter';
                     counter.style.display = 'none';
@@ -2207,7 +2219,9 @@ function populateLoadout(selectedWeapon) {
                         button.textContent = symbol;
                         button.addEventListener('click', (event) => {
                             event.stopPropagation();
-                            ammoFeedPickups = Math.max(0, Math.min(3, ammoFeedPickups + change));
+                            ammoFeedPickups = Math.max(0, Math.min(
+                                getMaxAmmoPickups(attachment), ammoFeedPickups + change
+                            ));
                             value.textContent = ammoFeedPickups;
                             if (attachmentInput.checked) updateStatsAfterChange();
                         });
@@ -2368,11 +2382,14 @@ function populateLoadout(selectedWeapon) {
             if (slot === 'perk1' && !isSecondaryWeapon(selectedWeapon)) {
                 const secondaryPerks = getEligibleSecondaryPerks();
                 if (secondaryPerks.length) {
-                    const title = attachmentFieldset.appendChild(document.createElement('div'));
-                    title.className = 'secondary-perk-options-title';
+                    const secondaryFieldset = attachmentsSection.appendChild(
+                        document.createElement('fieldset')
+                    );
+                    secondaryFieldset.className = 'loadout-category';
+                    const title = secondaryFieldset.appendChild(document.createElement('legend'));
                     title.setAttribute('data-localisation-key', 'secondary-perk-title');
                     title.textContent = 'Secondary weapon perks';
-                    const secondaryOptions = attachmentFieldset.appendChild(document.createElement('div'));
+                    const secondaryOptions = secondaryFieldset.appendChild(document.createElement('div'));
                     secondaryOptions.className = 'loadout-category-container secondary-perk-options';
 
                     for (const perk of ['', ...secondaryPerks]) {
@@ -2405,16 +2422,18 @@ function populateLoadout(selectedWeapon) {
                         label.addEventListener('mouseleave', () => {
                             tooltip.style.visibility = 'hidden';
                         });
-                        if (perk === 'Perk_LeadFed') {
+                        if (ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup) {
                             const counter = button.appendChild(document.createElement('input'));
                             counter.className = 'secondary-ammo-pickups';
                             counter.type = 'number';
                             counter.min = 0;
-                            counter.max = 3;
+                            counter.max = getMaxAmmoPickups(perk);
                             counter.value = secondaryAmmoFeedPickups;
                             counter.setAttribute('aria-label', 'Secondary weapon ammo pickups');
                             counter.addEventListener('input', () => {
-                                secondaryAmmoFeedPickups = Math.max(0, Math.min(3, Number(counter.value) || 0));
+                                secondaryAmmoFeedPickups = Math.max(0, Math.min(
+                                    getMaxAmmoPickups(perk), Number(counter.value) || 0
+                                ));
                                 if (input.checked) updateStatsAfterChange();
                             });
                         }
@@ -2446,7 +2465,8 @@ function updateAttachments() {
         .forEach((i) => {
             if (i.value !== 'None') equippedAttachments.push(i.value);
         });
-    if (!equippedAttachments.includes('Perk_LeadFed')) ammoFeedPickups = 0;
+    if (!equippedAttachments.some((perk) =>
+        ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup)) ammoFeedPickups = 0;
     if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
     if (!equippedAttachments.includes('Perk_Sharpshooter')) sharpshooterCrits = 0;
     document.querySelectorAll('.ammo-feed-counter').forEach((counter) => {

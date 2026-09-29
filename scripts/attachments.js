@@ -3161,6 +3161,7 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "Perk_EdgeCrit": {
         "perkType": "persistent",
+        "persistentDamageEffect": { "flatBonus": 0.1 },
         "displayName": "Bleeding Edge",
         "description": "When you kill an enemy with a critical hit, you gain EDGE: deal 10% extra damage for 20s."
     },
@@ -3176,6 +3177,7 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "Perk_Glass": {
         "perkType": "persistent",
+        "persistentDamageEffect": { "flatBonus": 0.15 },
         "displayName": "Glass Cannon",
         "description": "You deal {IncreasedDamage} additional base damage but take {IncreasedIncomingArmorDamage} increased incoming damage to your armor."
     },
@@ -3186,6 +3188,7 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "Perk_LeadFed": {
         "perkType": "persistent",
+        "persistentDamageEffect": { "perAmmoPickup": 0.1, "maxBonus": 0.25 },
         "displayName": "Ammo Feed",
         "description": "Whenever you pick up ammo, you gain {IncreasedDamage} increased damage up to maximum {MaxIncreasedDamage}. This effect lasts {DecayDuration} seconds. The timer refreshes on ammo pickup."
     },
@@ -3206,6 +3209,7 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "Perk_Resilient": {
         "perkType": "persistent",
+        "persistentDamageEffect": { "flatBonus": -0.15 },
         "displayName": "Resilient",
         "description": "You take {DecreasedIncomingArmorDamage} less incoming damage to your armor, but deal {DamageReduction} less base damage from all sources."
     },
