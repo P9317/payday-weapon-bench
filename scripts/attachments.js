@@ -3130,114 +3130,142 @@ const ATTACHMENT_DATA = Object.freeze({
     },
     "PFLK_Stock_Standard": {},
     "Perk_Assassin": {
+        "perkType": "equipped",
         "displayName": "Assassin",
         "description": "Shots from this weapon are treated as silent"
     },
     "Perk_Bite": {
+        "perkType": "equipped",
         "displayName": "Hot Lead",
         "description": "Whenever you do a critical hit, reduce the weapon's armor penetration by {DecreasedArmorPenetration} of its base (down to {MinArmorPenetration}) but increase damage with {IncreasedDamage} (max {MaxIncreasedDamage}) for {BuffDuration} seconds. Critical hits refresh the timer."
     },
     "Perk_Bleed": {
+        "perkType": "equipped",
         "displayName": "Bleed",
         "description": "When you do health damage to an enemy you have {BleedChance} chance to affect them with bleed, causing them to take {BleedDamage} damage every {BleedInterval} seconds for {BleedDuration} seconds."
     },
     "Perk_Bulky": {
+        "perkType": "persistent",
         "displayName": "Bulky",
         "description": "You carry and start the game with {DecreasedInventoryAmmo} less ammo for your primary and your secondary weapon, but have {DecreasedIncomingArmorDamage} increased armor damage resistance."
     },
     "Perk_ChainReact": {
+        "perkType": "equipped",
         "displayName": "Domino Effect",
         "description": "When you kill a specialist with this weapon, it triggers their equipment destruction effect. You are immune to that effect."
     },
     "Perk_Critter": {
+        "perkType": "equipped",
         "displayName": "Luck of the Draw",
         "description": "Each shot has a {HitChance} chance to do {IncreasedDamage} extra damage."
     },
     "Perk_EdgeCrit": {
+        "perkType": "persistent",
         "displayName": "Bleeding Edge",
         "description": "When you kill an enemy with a critical hit, you gain EDGE: deal 10% extra damage for 20s."
     },
     "Perk_Final": {
+        "perkType": "equipped",
         "displayName": "Final Tap",
         "description": "The last shot in the mag deals {IncreasedDamage} additional damage."
     },
     "Perk_Fool": {
+        "perkType": "equipped",
         "displayName": "Trigger Happy",
         "description": "For every shot you fire, your damage increases by {IncreasedDamage} until you stop firing."
     },
     "Perk_Glass": {
+        "perkType": "persistent",
         "displayName": "Glass Cannon",
         "description": "You deal {IncreasedDamage} additional base damage but take {IncreasedIncomingArmorDamage} increased incoming damage to your armor."
     },
     "Perk_GritPlate": {
+        "perkType": "persistent",
         "displayName": "Battle Grit",
         "description": "When you lose an armor plate, you gain GRIT: take 10% less damage for 20s."
     },
     "Perk_LeadFed": {
+        "perkType": "persistent",
         "displayName": "Ammo Feed",
         "description": "Whenever you pick up ammo, you gain {IncreasedDamage} increased damage up to maximum {MaxIncreasedDamage}. This effect lasts {DecayDuration} seconds. The timer refreshes on ammo pickup."
     },
     "Perk_LuckyShot": {
+        "perkType": "equipped",
         "displayName": "Spray & Pray",
         "description": "Every {PenetrationCount}th shot deals critical hit damage."
     },
     "Perk_PinPuller": {
+        "perkType": "equipped",
         "displayName": "Pin Puller",
         "description": "When you use a SWAT as a human shield and shove them away, the SWAT’s smoke grenade triggers when they land. Only one grenade per SWAT can be triggered. This ability goes on a cooldown for {Cooldown} seconds."
     },
     "Perk_Quickshot": {
+        "perkType": "equipped",
         "displayName": "Quickshot",
         "description": "When you kill an enemy with a critical hit, you don’t have to cycle the weapon to fire the next shot in the magazine. Reload cancels the free cycle."
     },
     "Perk_Resilient": {
+        "perkType": "persistent",
         "displayName": "Resilient",
         "description": "You take {DecreasedIncomingArmorDamage} less incoming damage to your armor, but deal {DamageReduction} less base damage from all sources."
     },
     "Perk_Runner": {
+        "perkType": "persistent",
         "displayName": "Run & Gun",
         "description": "You can shoot and reload your weapons while sprinting or sliding."
     },
     "Perk_RushSlide": {
+        "perkType": "persistent",
         "displayName": "Accelerator",
         "description": "When you slide, you gain RUSH: move 10% faster for 20s."
     },
     "Perk_Sabot": {
+        "perkType": "equipped",
         "displayName": "Hard Cast",
         "description": "{ArmorPassthrough} of damage dealt to armor is dealt directly to the enemy's HP."
     },
     "Perk_Sharpshooter": {
+        "perkType": "equipped",
         "displayName": "Sharpshooter",
         "description": "Each critical hit increases the damage of the next shot with {IncreasedDamage}. This effect stacks up to a maximum of {MaxIncreasedDamage}. If you miss a shot or hit a body part, the effect ends."
     },
     "Perk_Slap": {
+        "perkType": "persistent",
         "displayName": "Haymaker",
         "description": "Meleeing a SWAT or Heavy SWAT allows you to take them as a human shield."
     },
     "Perk_Smith": {
+        "perkType": "equipped",
         "displayName": "Midas Touch",
         "description": "For each critical hit, gain {DecreasedArmorPenetration} armor penetration until you reload the weapon (Max: {MaxArmorPenetration}). Each Critical Hit that penetrates armor breaks one armor layer."
     },
     "Perk_Superstar": {
+        "perkType": "equipped",
         "displayName": "Target Practice",
         "description": "When you kill an enemy with a critical hit, this weapon deals {IncreasedDamage} extra damage for {DecayDuration} seconds."
     },
     "Perk_Threat": {
+        "perkType": "persistent",
         "displayName": "Browbeater",
         "description": "Shooting an unsilenced weapon will shout all civilians down within {WithinRange} meter radius. Civilians are shouted down {IncreasedDuration} longer."
     },
     "Perk_Trip": {
+        "perkType": "equipped",
         "displayName": "Knockback",
         "description": "Every shot has {IncreasedHurtStun} higher chance to trigger a Stunning/medium hurt reaction. Every shot has a minimum chance of {MinHurtStun} to trigger a stunning hurt reaction."
     },
     "Perk_Vampire": {
+        "perkType": "equipped",
         "displayName": "Vampire",
         "description": "When you deal damage with this weapon you recover {HealPercentage} of your health. This also gives you adrenaline."
     },
     "Perk_Veteran": {
+        "perkType": "equipped",
         "displayName": "Veteran",
         "description": "When you kill an enemy, you have {PickupChance} chance to immediately add the dropped ammo into the magazine. Excess ammo goes into the ammo inventory."
     },
     "Perk_WestWood": {
+        "perkType": "equipped",
         "displayName": "Fog of War",
         "description": "When killing an enemy, other enemies within {WithinRange} meters of that enemy lose {DecreasedAccuracy} accuracy for {DecayDuration}s. This effect stacks to a maximum of {MaxDecreasedAccuracy}."
     },

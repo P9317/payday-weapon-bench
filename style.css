@@ -386,6 +386,19 @@ h1 {
 
 #skill-selector { margin-bottom: 1.618em }
 
+.secondary-perk-options { margin-top: 0.5em; }
+.secondary-perk-options-title { margin-bottom: 0.35em; color: var(--color-text-dim); }
+.secondary-perk-attachment label { border-style: dashed; }
+.secondary-perk-attachment .secondary-ammo-pickups {
+    display: inline-block;
+    width: 3.5rem;
+    margin-left: 0.5em;
+    padding: 0.2em;
+    color: var(--color-text);
+    border: var(--border);
+    background: var(--color-surface-dim);
+}
+
 .loadout-category legend {
     margin-bottom: 0.25em;
     font-weight: 600;

@@ -660,11 +660,21 @@ function applyLoadout(weapon, skills, attachments) {
         equippedSight?.targetingData?.targetingMagnification > 4
     )
         damageModifier = equippedSight.targetingData.targetingMagnification;
-    if (attachments.includes('Perk_Glass')) damageModifier += 0.15;
-    if (attachments.includes('Perk_Resilient')) damageModifier -= 0.15;
-    if (attachments.includes('Perk_EdgeCrit')) damageModifier += 0.1;
-    if (attachments.includes('Perk_LeadFed')) {
-        damageModifier += Math.min(0.25, ammoFeedPickups * 0.1);
+    const secondaryPerk = getSecondaryDamagePerk(weapon);
+    const damagePerks = new Set(attachments);
+    if (secondaryPerk) damagePerks.add(secondaryPerk);
+    if (damagePerks.has('Perk_Glass')) damageModifier += 0.15;
+    if (damagePerks.has('Perk_Resilient')) damageModifier -= 0.15;
+    if (damagePerks.has('Perk_EdgeCrit')) damageModifier += 0.1;
+    if (damagePerks.has('Perk_LeadFed')) {
+        const secondaryPickups = secondaryPerk === 'Perk_LeadFed'
+            ? secondaryAmmoFeedPickups
+            : 0;
+        const pickups = Math.max(
+            attachments.includes('Perk_LeadFed') ? ammoFeedPickups : 0,
+            secondaryPickups
+        );
+        damageModifier += Math.min(0.25, Math.max(0, pickups) * 0.1);
     }
 //damage increase with Skills
     for (const skill of [
@@ -717,7 +727,8 @@ function applyLoadout(weapon, skills, attachments) {
     }
     fireData.damageDistanceArray = fireData.damageDistanceArray.map(
         (damageStep) => {
-            let damage = damageStep.damage;
+            const baseDamage = damageStep.damage;
+            let damage = baseDamage;
             let distance = isSkillMastered('PointBlank')
                 ? SKILLS['PointBlank'].Mdistancemodifier
                 : SKILLS['PointBlank'].distancemodifier
@@ -1146,6 +1157,18 @@ function weaponShotsToKillByArmorLayer(
     const requiredArmorDamage = layerArmorValue * layersToBreak;
     let DamagetoArmor = 0, armorShots = 0, increment = 0, CrackedBonus = 0;
     const hardCastEquipped = equippedAttachments?.includes('Perk_Sabot');
+    const hollowPointBonus = isSkillEquipped('HollowPointRounds')
+        ? (equippedSkillsMastered?.has('HollowPointRounds')
+            ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
+            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15))
+        : 0;
+    // Hard Cast uses the weapon damage after normal weapon-damage modifiers
+    // (EDGE, Glass Cannon, Ammo Feed, Bleeding Edge, Point Blank, etc.).
+    // Armor-only modifiers are applied later and therefore do not scale Hard Cast.
+    // Headshot multiplier and Hollow Point Rounds still amplify the HP damage.
+    const hardCastDamagePerArmorHit = hardCastEquipped
+        ? weaponDamage * 0.15 * weaponCritMultiplier * (1 + hollowPointBonus)
+        : 0;
     let hardCastKillShot = 0;
     let armorDamagePerShot = 0;
     if(weaponCritMultiplier !== 1){
@@ -1233,7 +1256,7 @@ function weaponShotsToKillByArmorLayer(
                         DamagetoArmor += Math.floor(layerValue)
                     }
                 }
-                if (hardCastEquipped && Math.min(enemyArmor, DamagetoArmor) * 0.15 >= enemyHealth) {
+                if (hardCastDamagePerArmorHit > 0 && shots * hardCastDamagePerArmorHit >= enemyHealth) {
                     hardCastKillShot = shots;
                     break;
                 }
@@ -1265,9 +1288,9 @@ function weaponShotsToKillByArmorLayer(
     } else {
         armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
         DamagetoArmor = armorDamagePerShot * armorShots;
-        if (hardCastEquipped && enemyHealth > 0 && armorDamagePerShot > 0) {
-            const killShot = Math.ceil(enemyHealth / (armorDamagePerShot * 0.15));
-            if (killShot <= armorShots && Math.min(enemyArmor, killShot * armorDamagePerShot) * 0.15 >= enemyHealth) {
+        if (hardCastDamagePerArmorHit > 0 && enemyHealth > 0) {
+            const killShot = Math.ceil(enemyHealth / hardCastDamagePerArmorHit);
+            if (killShot <= armorShots) {
                 hardCastKillShot = killShot;
             }
         }
@@ -1318,21 +1341,16 @@ function weaponShotsToKillByArmorLayer(
         }
     }
     let healthDamage = weaponDamage;
-        if (isSkillEquipped('HollowPointRounds')) {
-        const HealBonus = equippedSkillsMastered?.has('HollowPointRounds')
-            ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
-            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15); 
-            healthDamage *= (1 + HealBonus);
-            if (overflowDamage > 0) {
-                overflowDamage *= (1 + HealBonus);
-            }
+    if (hollowPointBonus > 0) {
+        healthDamage *= (1 + hollowPointBonus);
+        if (overflowDamage > 0) {
+            overflowDamage *= (1 + hollowPointBonus);
         }
+    }
     if (isSkillEquipped('Cracked')) {
         healthDamage *= (1 + CrackedBonus ?? 0);
     }
-    const hardCastHealthDamage = hardCastEquipped
-        ? Math.min(enemyArmor, DamagetoArmor) * 0.15
-        : 0;
+    const hardCastHealthDamage = hardCastDamagePerArmorHit * armorShots;
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage - hardCastHealthDamage);
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
@@ -1384,6 +1402,40 @@ const sortedWeapons = Object.keys(WEAPON_DATA).sort((a, b) => {
         WEAPON_DATA[a].dlc - WEAPON_DATA[b].dlc
     );
 });
+
+const secondaryDamagePerks = new Set([
+    'Perk_Glass', 'Perk_Resilient', 'Perk_EdgeCrit', 'Perk_LeadFed',
+]);
+
+function isSecondaryWeapon(weaponId) {
+    const weapon = WEAPON_DATA[weaponId];
+    if (!weapon) return false;
+    if (weapon.slot) return weapon.slot === 'secondary';
+    return ['Pistol', 'Revolver'].includes(weapon.class) ||
+        weapon.displayIcon?.source?.includes('WeaponsSecondary');
+}
+
+function getAvailableWeaponPerks(weaponId) {
+    const slot = WEAPON_DATA[weaponId]?.modularConfiguration?.perk1;
+    return slot ? [slot.defaultPart, ...(slot.uniqueParts ?? [])].filter(Boolean) : [];
+}
+
+let selectedSecondaryPerk = '';
+let secondaryAmmoFeedPickups = 0;
+
+function getEligibleSecondaryPerks() {
+    return [...new Set(Object.keys(WEAPON_DATA)
+        .filter(isSecondaryWeapon)
+        .flatMap(getAvailableWeaponPerks)
+        .filter((perk) => secondaryDamagePerks.has(perk) &&
+            ATTACHMENT_DATA[perk]?.perkType === 'persistent'))];
+}
+
+function getSecondaryDamagePerk(currentWeapon) {
+    return !isSecondaryWeapon(currentWeapon) &&
+        getEligibleSecondaryPerks().includes(selectedSecondaryPerk)
+        ? selectedSecondaryPerk : null;
+}
 
 function populateWeaponSelector() {
     const weaponSelector = document.querySelector('#weapon-list');
@@ -2133,9 +2185,9 @@ function populateLoadout(selectedWeapon) {
                         .replace(/([a-z])([A-Z0-9])/g, '$1 $2');
 
                 attachmentLabel.setAttribute('for', id);
-                attachmentLabel.innerHTML = attachmentName;
+                attachmentLabel.textContent = attachmentName;
                 //translate attachments翻译配件
-                attachmentLabel.setAttribute('data-localisation-key', attachmentLabel.innerHTML);
+                attachmentLabel.setAttribute('data-localisation-key', attachmentName);
 
                 attachmentInput.addEventListener('change', () => {
                     updateAttachments();
@@ -2312,6 +2364,63 @@ function populateLoadout(selectedWeapon) {
                     tooltip.style.visibility = 'hidden';
                 });
             }
+
+            if (slot === 'perk1' && !isSecondaryWeapon(selectedWeapon)) {
+                const secondaryPerks = getEligibleSecondaryPerks();
+                if (secondaryPerks.length) {
+                    const title = attachmentFieldset.appendChild(document.createElement('div'));
+                    title.className = 'secondary-perk-options-title';
+                    title.setAttribute('data-localisation-key', 'secondary-perk-title');
+                    title.textContent = 'Secondary weapon perks';
+                    const secondaryOptions = attachmentFieldset.appendChild(document.createElement('div'));
+                    secondaryOptions.className = 'loadout-category-container secondary-perk-options';
+
+                    for (const perk of ['', ...secondaryPerks]) {
+                        const button = secondaryOptions.appendChild(document.createElement('div'));
+                        button.innerHTML = attachmentTemplate.innerHTML;
+                        button.className = 'attachment secondary-perk-attachment';
+                        const input = button.children[0];
+                        const label = button.children[1];
+                        input.type = 'radio';
+                        input.name = 'secondaryPerk';
+                        input.id = 'secondary-' + (perk || 'none').toLowerCase();
+                        input.value = perk;
+                        input.checked = selectedSecondaryPerk === perk;
+                        label.setAttribute('for', input.id);
+                        label.setAttribute('data-localisation-key',
+                            perk ? ATTACHMENT_DATA[perk].displayName : 'secondary-perk-none');
+                        label.textContent = perk
+                            ? ATTACHMENT_DATA[perk].displayName
+                            : 'None';
+                        input.addEventListener('change', () => {
+                            selectedSecondaryPerk = perk;
+                            updateStatsAfterChange();
+                        });
+                        if (perk) label.addEventListener('mouseenter', (event) => {
+                            const description = getLocalisation('perk-' + perk + '-desc') ??
+                                ATTACHMENT_DATA[perk].description;
+                            const rect = event.target.getBoundingClientRect();
+                            showTooltip(rect.left + 'px', rect.top + event.target.clientHeight + 'px', description);
+                        });
+                        label.addEventListener('mouseleave', () => {
+                            tooltip.style.visibility = 'hidden';
+                        });
+                        if (perk === 'Perk_LeadFed') {
+                            const counter = button.appendChild(document.createElement('input'));
+                            counter.className = 'secondary-ammo-pickups';
+                            counter.type = 'number';
+                            counter.min = 0;
+                            counter.max = 3;
+                            counter.value = secondaryAmmoFeedPickups;
+                            counter.setAttribute('aria-label', 'Secondary weapon ammo pickups');
+                            counter.addEventListener('input', () => {
+                                secondaryAmmoFeedPickups = Math.max(0, Math.min(3, Number(counter.value) || 0));
+                                if (input.checked) updateStatsAfterChange();
+                            });
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -2333,7 +2442,7 @@ function updateAttachments() {
     equippedAttachments = [];
 
     document
-        .querySelectorAll('.attachment input:checked')
+        .querySelectorAll('.attachment input:checked:not([name="secondaryPerk"])')
         .forEach((i) => {
             if (i.value !== 'None') equippedAttachments.push(i.value);
         });
@@ -2735,12 +2844,12 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         previous = {};
 
     distanceArray.forEach((distance) => {
-        const damage = (
+        const selectedDamageStep = (
             fireData.damageDistanceArray.find(
                 (damageStep) => damageStep.distance >= distance
             ) ?? fireData.damageDistanceArray.slice(-1)[0]
-        ).damage;
-
+        );
+        const damage = selectedDamageStep.damage;
         let multiplier = headshots
             ? (
                   fireData.criticalDamageMultiplierDistanceArray.find(
