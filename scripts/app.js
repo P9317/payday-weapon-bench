@@ -1547,6 +1547,12 @@ function populateWeaponSelector() {
         weaponDLC.setAttribute('for', id);
 
         weaponInput.addEventListener('change', (event) => {
+            // Secondary weapon perks are tied to the current primary-weapon loadout.
+            // Switching weapons should always unequip them instead of carrying the
+            // previous weapon's secondary perk selection into the new loadout.
+            selectedSecondaryPerk = '';
+            secondaryAmmoFeedPickups = 0;
+
             populateLoadout(event.target.value);
             updateStatsAfterChange();
         });
@@ -2464,8 +2470,36 @@ function populateLoadout(selectedWeapon) {
                             : 'None';
                         input.addEventListener('change', () => {
                             selectedSecondaryPerk = perk;
+                            if (!ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup) {
+                                secondaryAmmoFeedPickups = 0;
+                            }
                             updateStatsAfterChange();
                         });
+
+                        // Match the normal attachment-slot interaction: right-clicking
+                        // a secondary weapon perk unequips it by selecting the None option.
+                        input.addEventListener('contextmenu', (event) => {
+                            event.preventDefault();
+                            if (!perk) return;
+
+                            const noneInput = secondaryOptions.querySelector(
+                                'input[name="secondaryPerk"][value=""]'
+                            );
+                            if (noneInput && !noneInput.checked) {
+                                noneInput.checked = true;
+                                noneInput.dispatchEvent(
+                                    new Event('change', { bubbles: true })
+                                );
+                            }
+                        });
+
+                        label.addEventListener('contextmenu', (event) => {
+                            event.preventDefault();
+                            input.dispatchEvent(
+                                new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
+                            );
+                        });
+
                         if (perk) label.addEventListener('mouseenter', (event) => {
                             const description = getLocalisation('perk-' + perk + '-desc') ??
                                 ATTACHMENT_DATA[perk].description;
