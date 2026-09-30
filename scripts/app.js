@@ -1165,13 +1165,7 @@ function weaponShotsToKillByArmorLayer(
             ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
             : (SKILLS.HollowPointRounds.basemodifier ?? 0.15))
         : 0;
-    // Hard Cast uses the weapon damage after normal weapon-damage modifiers
-    // (EDGE, Glass Cannon, Ammo Feed, Bleeding Edge, Point Blank, etc.).
-    // Armor-only modifiers are applied later and therefore do not scale Hard Cast.
-    // Headshot multiplier and Hollow Point Rounds still amplify the HP damage.
-    const hardCastDamagePerArmorHit = hardCastEquipped
-        ? weaponDamage * 0.15 * weaponCritMultiplier * (1 + hollowPointBonus)
-        : 0;
+    let hardCastHealthDamage = 0;
     let hardCastKillShot = 0;
     let armorDamagePerShot = 0;
     if(weaponCritMultiplier !== 1){
@@ -1188,6 +1182,29 @@ function weaponShotsToKillByArmorLayer(
     }else if(weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')){
         armorDamagePerShot *= 1+(SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
+
+    // Hard Cast is calculated from the armor damage actually dealt by each shot.
+    // Use the same normalization idea as armor overflow: convert armor-side damage
+    // back into equivalent weapon damage, then apply Hard Cast, headshot and
+    // Hollow Point health-damage multipliers. SMG Adept / Cracked are applied later
+    // and intentionally do not scale Hard Cast.
+    const baseArmorDamageForHardCast = weaponCritMultiplier !== 1
+        ? weaponDamage + weaponDamage * weaponCritMultiplier * 0.54
+        : weaponDamage;
+    const hardCastDamagePercent = baseArmorDamageForHardCast > 0
+        ? weaponDamage / baseArmorDamageForHardCast
+        : 0;
+    const hardCastArmorDamagePerFullHit = armorDamagePerShot;
+    const getHardCastDamageForArmorHit = (actualArmorDamage) => {
+        if (!hardCastEquipped || actualArmorDamage <= 0 || hardCastDamagePercent <= 0) {
+            return 0;
+        }
+        const hardCastSourceDamage = actualArmorDamage * hardCastDamagePercent;
+        return hardCastSourceDamage
+            * 0.15
+            * weaponCritMultiplier
+            * (1 + hollowPointBonus);
+    };
     /*let armorCritMultiplier = 1;
     const hgLevel = SKILL_VALUES.HeadGames ?? 1;
     if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
@@ -1246,8 +1263,18 @@ function weaponShotsToKillByArmorLayer(
                 if (Math.floor(currentPen) >= currentLayers) break;
                 previousArmorLayers = currentLayers;
 
-                // This shot hits armor and reduces its absolute value
+                // This shot hits armor. Hard Cast uses only the armor that this
+                // specific shot can actually remove, so the final partial armor hit
+                // produces proportionally less Hard Cast damage.
                 shots++;
+                const hardCastArmorDamageThisShot = Math.min(
+                    hardCastArmorDamagePerFullHit,
+                    Math.max(0, currentArmor)
+                );
+                hardCastHealthDamage += getHardCastDamageForArmorHit(
+                    hardCastArmorDamageThisShot
+                );
+
                 currentArmor -= armorDamagePerShot * (1 + CrackedBonus ?? 0);
                 DamagetoArmor += armorDamagePerShot * (1 + CrackedBonus ?? 0);
                 if(isSkillEquipped('ArmorPiercing')&&armorDamagePerShot>layerValue&&weaponCritMultiplier !== 1&&armorDamagePerShot<enemyArmor) {
@@ -1259,7 +1286,7 @@ function weaponShotsToKillByArmorLayer(
                         DamagetoArmor += Math.floor(layerValue)
                     }
                 }
-                if (hardCastDamagePerArmorHit > 0 && shots * hardCastDamagePerArmorHit >= enemyHealth) {
+                if (hardCastHealthDamage >= enemyHealth) {
                     hardCastKillShot = shots;
                     break;
                 }
@@ -1291,10 +1318,34 @@ function weaponShotsToKillByArmorLayer(
     } else {
         armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
         DamagetoArmor = armorDamagePerShot * armorShots;
-        if (hardCastDamagePerArmorHit > 0 && enemyHealth > 0) {
-            const killShot = Math.ceil(enemyHealth / hardCastDamagePerArmorHit);
-            if (killShot <= armorShots) {
-                hardCastKillShot = killShot;
+
+        // Accumulate Hard Cast shot-by-shot. The last armor shot may have less
+        // armor available than a full hit, so its Hard Cast damage must be
+        // recalculated from the armor actually removed by that shot.
+        if (hardCastEquipped && enemyHealth > 0 && armorShots > 0) {
+            let remainingArmorForHardCast = Math.max(0, enemyArmor);
+            for (
+                let shot = 1;
+                shot <= armorShots && remainingArmorForHardCast > 0;
+                shot++
+            ) {
+                const hardCastArmorDamageThisShot = Math.min(
+                    hardCastArmorDamagePerFullHit,
+                    remainingArmorForHardCast
+                );
+                hardCastHealthDamage += getHardCastDamageForArmorHit(
+                    hardCastArmorDamageThisShot
+                );
+
+                remainingArmorForHardCast = Math.max(
+                    0,
+                    remainingArmorForHardCast - armorDamagePerShot
+                );
+
+                if (hardCastHealthDamage >= enemyHealth) {
+                    hardCastKillShot = shot;
+                    break;
+                }
             }
         }
     }
@@ -1353,8 +1404,10 @@ function weaponShotsToKillByArmorLayer(
     if (isSkillEquipped('Cracked')) {
         healthDamage *= (1 + CrackedBonus ?? 0);
     }
-    const hardCastHealthDamage = hardCastDamagePerArmorHit * armorShots;
-    const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage - hardCastHealthDamage);
+    const remainingHealthAfterOverflow = Math.max(
+        0,
+        enemyHealth - overflowDamage - hardCastHealthDamage
+    );
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
     const fullCritHealthShots = Math.ceil(
