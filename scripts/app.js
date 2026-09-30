@@ -663,21 +663,18 @@ function applyLoadout(weapon, skills, attachments) {
     const secondaryPerk = getSecondaryDamagePerk(weapon);
     const damagePerks = new Set(attachments);
     if (secondaryPerk) damagePerks.add(secondaryPerk);
-    for (const perk of damagePerks) {
-        if (ATTACHMENT_DATA[perk]?.perkType !== 'persistent' ||
-            !hasPersistentDamageEffect(perk)) continue;
-        const effect = ATTACHMENT_DATA[perk].persistentDamageEffect;
-        damageModifier += effect.flatBonus ?? 0;
-        if (effect.perAmmoPickup) {
-            const pickups = Math.max(
-                attachments.includes(perk) ? ammoFeedPickups : 0,
-                secondaryPerk === perk ? secondaryAmmoFeedPickups : 0
-            );
-            damageModifier += Math.min(
-                effect.maxBonus ?? Infinity,
-                Math.max(0, pickups) * effect.perAmmoPickup
-            );
-        }
+    if (damagePerks.has('Perk_Glass')) damageModifier += 0.15;
+    if (damagePerks.has('Perk_Resilient')) damageModifier -= 0.15;
+    if (damagePerks.has('Perk_EdgeCrit')) damageModifier += 0.1;
+    if (damagePerks.has('Perk_LeadFed')) {
+        const secondaryPickups = secondaryPerk === 'Perk_LeadFed'
+            ? secondaryAmmoFeedPickups
+            : 0;
+        const pickups = Math.max(
+            attachments.includes('Perk_LeadFed') ? ammoFeedPickups : 0,
+            secondaryPickups
+        );
+        damageModifier += Math.min(0.25, Math.max(0, pickups) * 0.1);
     }
 //damage increase with Skills
     for (const skill of [
@@ -1165,13 +1162,7 @@ function weaponShotsToKillByArmorLayer(
             ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
             : (SKILLS.HollowPointRounds.basemodifier ?? 0.15))
         : 0;
-    // Hard Cast uses the weapon damage after normal weapon-damage modifiers
-    // (EDGE, Glass Cannon, Ammo Feed, Bleeding Edge, Point Blank, etc.).
-    // Armor-only modifiers are applied later and therefore do not scale Hard Cast.
-    // Headshot multiplier and Hollow Point Rounds still amplify the HP damage.
-    const hardCastDamagePerArmorHit = hardCastEquipped
-        ? weaponDamage * 0.15 * weaponCritMultiplier * (1 + hollowPointBonus)
-        : 0;
+    let hardCastHealthDamage = 0;
     let hardCastKillShot = 0;
     let armorDamagePerShot = 0;
     if(weaponCritMultiplier !== 1){
@@ -1188,6 +1179,30 @@ function weaponShotsToKillByArmorLayer(
     }else if(weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')){
         armorDamagePerShot *= 1+(SKILLS.HeadGames?.modifier ?? 0) * hgLevel;
     }
+
+    // Hard Cast is derived from the damage dealt to armor, using the same
+    // normalization idea as armor-overflow damage. On a headshot, armor damage
+    // contains an armor-specific headshot component, so convert it back to an
+    // equivalent weapon-damage value before applying the normal headshot multiplier.
+    // SMG-only armor modifiers (SMG Adept / Cracked) are intentionally applied later
+    // and therefore do not affect Hard Cast.
+    const baseArmorDamageForHardCast = weaponCritMultiplier !== 1
+        ? weaponDamage + weaponDamage * weaponCritMultiplier * 0.54
+        : weaponDamage;
+    const hardCastDamagePercent = baseArmorDamageForHardCast > 0
+        ? weaponDamage / baseArmorDamageForHardCast
+        : 0;
+    // Keep the pre-SMG/Cracked armor-hit value for Hard Cast. Hard Cast must be
+    // recalculated for every shot because the final armor hit may only remove the
+    // armor that is actually left instead of dealing a full armor hit.
+    const hardCastArmorDamagePerFullHit = armorDamagePerShot;
+    const getHardCastDamageForArmorHit = (actualArmorDamage) => {
+        if (!hardCastEquipped || actualArmorDamage <= 0 || hardCastDamagePercent <= 0) {
+            return 0;
+        }
+        const hardCastSourceDamage = actualArmorDamage * hardCastDamagePercent;
+        return hardCastSourceDamage * 0.15 * weaponCritMultiplier * (1 + hollowPointBonus);
+    };
     /*let armorCritMultiplier = 1;
     const hgLevel = SKILL_VALUES.HeadGames ?? 1;
     if (weaponCritMultiplier !== 1&&isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
@@ -1246,8 +1261,17 @@ function weaponShotsToKillByArmorLayer(
                 if (Math.floor(currentPen) >= currentLayers) break;
                 previousArmorLayers = currentLayers;
 
-                // This shot hits armor and reduces its absolute value
+                // This shot hits armor. Hard Cast is calculated from the armor
+                // actually removed by this specific hit, so a final partial armor hit
+                // produces proportionally less Hard Cast damage.
                 shots++;
+                const armorBeforeShot = currentArmor;
+                const hardCastArmorDamageThisShot = Math.min(
+                    hardCastArmorDamagePerFullHit,
+                    Math.max(0, armorBeforeShot)
+                );
+                hardCastHealthDamage += getHardCastDamageForArmorHit(hardCastArmorDamageThisShot);
+
                 currentArmor -= armorDamagePerShot * (1 + CrackedBonus ?? 0);
                 DamagetoArmor += armorDamagePerShot * (1 + CrackedBonus ?? 0);
                 if(isSkillEquipped('ArmorPiercing')&&armorDamagePerShot>layerValue&&weaponCritMultiplier !== 1&&armorDamagePerShot<enemyArmor) {
@@ -1259,7 +1283,7 @@ function weaponShotsToKillByArmorLayer(
                         DamagetoArmor += Math.floor(layerValue)
                     }
                 }
-                if (hardCastDamagePerArmorHit > 0 && shots * hardCastDamagePerArmorHit >= enemyHealth) {
+                if (hardCastHealthDamage >= enemyHealth) {
                     hardCastKillShot = shots;
                     break;
                 }
@@ -1291,10 +1315,32 @@ function weaponShotsToKillByArmorLayer(
     } else {
         armorShots = requiredArmorDamage > 0 ? Math.ceil(requiredArmorDamage / armorDamagePerShot) : 0;
         DamagetoArmor = armorDamagePerShot * armorShots;
-        if (hardCastDamagePerArmorHit > 0 && enemyHealth > 0) {
-            const killShot = Math.ceil(enemyHealth / hardCastDamagePerArmorHit);
-            if (killShot <= armorShots) {
-                hardCastKillShot = killShot;
+
+        // Hard Cast must be accumulated shot-by-shot. The last armor shot may only
+        // remove the armor that remains, so it cannot reuse the first shot's full
+        // Hard Cast value. Keep armorShots/DamagetoArmor unchanged so this fix does
+        // not alter the existing armor-layer or overflow behaviour.
+        if (hardCastEquipped && enemyHealth > 0 && armorShots > 0) {
+            let remainingArmorForHardCast = Math.max(0, enemyArmor);
+            for (let shot = 1; shot <= armorShots && remainingArmorForHardCast > 0; shot++) {
+                const hardCastArmorDamageThisShot = Math.min(
+                    hardCastArmorDamagePerFullHit,
+                    remainingArmorForHardCast
+                );
+                hardCastHealthDamage += getHardCastDamageForArmorHit(hardCastArmorDamageThisShot);
+
+                // armorDamagePerShot is the actual armor-side shot damage used by the
+                // existing armor calculation (including modifiers applied after the
+                // Hard Cast base was captured).
+                remainingArmorForHardCast = Math.max(
+                    0,
+                    remainingArmorForHardCast - armorDamagePerShot
+                );
+
+                if (hardCastHealthDamage >= enemyHealth) {
+                    hardCastKillShot = shot;
+                    break;
+                }
             }
         }
     }
@@ -1353,7 +1399,6 @@ function weaponShotsToKillByArmorLayer(
     if (isSkillEquipped('Cracked')) {
         healthDamage *= (1 + CrackedBonus ?? 0);
     }
-    const hardCastHealthDamage = hardCastDamagePerArmorHit * armorShots;
     const remainingHealthAfterOverflow = Math.max(0, enemyHealth - overflowDamage - hardCastHealthDamage);
 
     const nonCritHealthShots = Math.ceil(remainingHealthAfterOverflow / healthDamage);
@@ -1406,6 +1451,10 @@ const sortedWeapons = Object.keys(WEAPON_DATA).sort((a, b) => {
     );
 });
 
+const secondaryDamagePerks = new Set([
+    'Perk_Glass', 'Perk_Resilient', 'Perk_EdgeCrit', 'Perk_LeadFed',
+]);
+
 function isSecondaryWeapon(weaponId) {
     const weapon = WEAPON_DATA[weaponId];
     if (!weapon) return false;
@@ -1419,19 +1468,6 @@ function getAvailableWeaponPerks(weaponId) {
     return slot ? [slot.defaultPart, ...(slot.uniqueParts ?? [])].filter(Boolean) : [];
 }
 
-function hasPersistentDamageEffect(perk) {
-    const effect = ATTACHMENT_DATA[perk]?.persistentDamageEffect;
-    return effect && (
-        Number.isFinite(effect.flatBonus) ||
-        (effect.perAmmoPickup > 0 && Number.isFinite(effect.maxBonus))
-    );
-}
-
-function getMaxAmmoPickups(perk) {
-    const effect = ATTACHMENT_DATA[perk].persistentDamageEffect;
-    return Math.ceil(effect.maxBonus / effect.perAmmoPickup);
-}
-
 let selectedSecondaryPerk = '';
 let secondaryAmmoFeedPickups = 0;
 
@@ -1439,8 +1475,8 @@ function getEligibleSecondaryPerks() {
     return [...new Set(Object.keys(WEAPON_DATA)
         .filter(isSecondaryWeapon)
         .flatMap(getAvailableWeaponPerks)
-        .filter((perk) => ATTACHMENT_DATA[perk]?.perkType === 'persistent' &&
-            hasPersistentDamageEffect(perk)))];
+        .filter((perk) => secondaryDamagePerks.has(perk) &&
+            ATTACHMENT_DATA[perk]?.perkType === 'persistent'))];
 }
 
 function getSecondaryDamagePerk(currentWeapon) {
@@ -2206,7 +2242,7 @@ function populateLoadout(selectedWeapon) {
                     updateStatsAfterChange();
                 });
 
-                if (ATTACHMENT_DATA[attachment]?.persistentDamageEffect?.perAmmoPickup) {
+                if (attachment === 'Perk_LeadFed') {
                     const counter = document.createElement('span');
                     counter.className = 'ammo-feed-counter';
                     counter.style.display = 'none';
@@ -2219,9 +2255,7 @@ function populateLoadout(selectedWeapon) {
                         button.textContent = symbol;
                         button.addEventListener('click', (event) => {
                             event.stopPropagation();
-                            ammoFeedPickups = Math.max(0, Math.min(
-                                getMaxAmmoPickups(attachment), ammoFeedPickups + change
-                            ));
+                            ammoFeedPickups = Math.max(0, Math.min(3, ammoFeedPickups + change));
                             value.textContent = ammoFeedPickups;
                             if (attachmentInput.checked) updateStatsAfterChange();
                         });
@@ -2382,14 +2416,11 @@ function populateLoadout(selectedWeapon) {
             if (slot === 'perk1' && !isSecondaryWeapon(selectedWeapon)) {
                 const secondaryPerks = getEligibleSecondaryPerks();
                 if (secondaryPerks.length) {
-                    const secondaryFieldset = attachmentsSection.appendChild(
-                        document.createElement('fieldset')
-                    );
-                    secondaryFieldset.className = 'loadout-category';
-                    const title = secondaryFieldset.appendChild(document.createElement('legend'));
+                    const title = attachmentFieldset.appendChild(document.createElement('div'));
+                    title.className = 'secondary-perk-options-title';
                     title.setAttribute('data-localisation-key', 'secondary-perk-title');
                     title.textContent = 'Secondary weapon perks';
-                    const secondaryOptions = secondaryFieldset.appendChild(document.createElement('div'));
+                    const secondaryOptions = attachmentFieldset.appendChild(document.createElement('div'));
                     secondaryOptions.className = 'loadout-category-container secondary-perk-options';
 
                     for (const perk of ['', ...secondaryPerks]) {
@@ -2422,18 +2453,16 @@ function populateLoadout(selectedWeapon) {
                         label.addEventListener('mouseleave', () => {
                             tooltip.style.visibility = 'hidden';
                         });
-                        if (ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup) {
+                        if (perk === 'Perk_LeadFed') {
                             const counter = button.appendChild(document.createElement('input'));
                             counter.className = 'secondary-ammo-pickups';
                             counter.type = 'number';
                             counter.min = 0;
-                            counter.max = getMaxAmmoPickups(perk);
+                            counter.max = 3;
                             counter.value = secondaryAmmoFeedPickups;
                             counter.setAttribute('aria-label', 'Secondary weapon ammo pickups');
                             counter.addEventListener('input', () => {
-                                secondaryAmmoFeedPickups = Math.max(0, Math.min(
-                                    getMaxAmmoPickups(perk), Number(counter.value) || 0
-                                ));
+                                secondaryAmmoFeedPickups = Math.max(0, Math.min(3, Number(counter.value) || 0));
                                 if (input.checked) updateStatsAfterChange();
                             });
                         }
@@ -2465,8 +2494,7 @@ function updateAttachments() {
         .forEach((i) => {
             if (i.value !== 'None') equippedAttachments.push(i.value);
         });
-    if (!equippedAttachments.some((perk) =>
-        ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup)) ammoFeedPickups = 0;
+    if (!equippedAttachments.includes('Perk_LeadFed')) ammoFeedPickups = 0;
     if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
     if (!equippedAttachments.includes('Perk_Sharpshooter')) sharpshooterCrits = 0;
     document.querySelectorAll('.ammo-feed-counter').forEach((counter) => {
