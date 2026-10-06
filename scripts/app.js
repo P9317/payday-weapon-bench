@@ -3130,12 +3130,14 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
 //        );
         const projectiles = Math.max(1, Math.floor(fireData.projectilesPerFiredRound ?? 1));
         const initialStacks = fireData.sharpshooterInitialStacks;
+        const damageWithoutSharpshooter = initialStacks != null
+            ? damage / getSharpshooterMultiplier(initialStacks) : damage;
         const criticalHits = headshots && enemy.displayName !== 'Drone' && multiplier !== 1;
-        const damageForProjectile = initialStacks != null ? (index) => {
+        const damageForProjectile = initialStacks != null ? (index, startingStacks = initialStacks) => {
             const roundIndex = Math.floor(index / projectiles);
-            const stacks = criticalHits ? initialStacks + roundIndex
-                : roundIndex === 0 ? initialStacks : 0;
-            return damage / getSharpshooterMultiplier(initialStacks) * getSharpshooterMultiplier(stacks);
+            const stacks = criticalHits ? startingStacks + roundIndex
+                : roundIndex === 0 ? startingStacks : 0;
+            return damageWithoutSharpshooter * getSharpshooterMultiplier(stacks);
         } : null;
         const headshotBonus = headshots
             ? 1 + (isSkillEquipped('HeadGames')
@@ -3158,7 +3160,9 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             let remainingVisor = needsVisorHits ? enemy.visorArmor : 0;
             const visorTolerance = Math.max(1, enemy.visorArmor ?? 0) * Number.EPSILON * 16;
             while (remainingVisor > visorTolerance) {
-                const damageToVisor = visorDamage(damageForProjectile(visorProjectiles));
+                // Shield window hits neither receive nor build Sharpshooter's bonus.
+                const damageToVisor = visorDamage(enemy.displayName === 'Shield'
+                    ? damageWithoutSharpshooter : damageForProjectile(visorProjectiles));
                 if (!(damageToVisor > 0)) {
                     visorProjectiles = Infinity;
                     break;
@@ -3168,10 +3172,14 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             }
             // Preserve the existing rule that the visor and health phases use
             // separate rounds, including for weapons with multiple projectiles.
-            firstProjectile = Math.ceil(visorProjectiles / projectiles) * projectiles;
+            firstProjectile = enemy.displayName === 'Shield' ? 0
+                : Math.ceil(visorProjectiles / projectiles) * projectiles;
         }
+        // An actual window hit ends the critical-hit chain; bypassing it does not.
+        const healthInitialStacks = enemy.displayName === 'Shield' && visorProjectiles > 0
+            ? 0 : initialStacks;
         const shotsToKill = damageForProjectile ? weaponShotsToKillPerShot(
-            (index) => damageForProjectile(firstProjectile + index),
+            (index) => damageForProjectile(firstProjectile + index, healthInitialStacks),
             multiplier,
             fireData.armorPenetration,
             enemy.health,
@@ -3184,7 +3192,8 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         );
         if (hasVisor) {
             const shotsToBreakVisor = visorProjectiles ??
-                (needsVisorHits ? Math.ceil(enemy.visorArmor / visorDamage(damage)) : 0);
+                (needsVisorHits ? Math.ceil(enemy.visorArmor / visorDamage(enemy.displayName === 'Shield'
+                    ? damageWithoutSharpshooter : damage)) : 0);
             shotsToKill.visorShots = shotsToBreakVisor;
             shotsToKill.nonVisorShots = shotsToKill.totalShots;
             if (headshots) shotsToKill.totalShots += shotsToBreakVisor;
