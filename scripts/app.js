@@ -3132,13 +3132,22 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         const initialStacks = fireData.sharpshooterInitialStacks;
         const damageWithoutSharpshooter = initialStacks != null
             ? damage / getSharpshooterMultiplier(initialStacks) : damage;
+        const finalTapMultiplier = fireData.finalTapMultiplier ?? 1;
+        const magazineSize = Math.max(1, Math.floor(fireData.ammoLoaded ?? 1));
+        const finalTapForProjectile = (index) =>
+            (Math.floor(index / projectiles) + 1) % magazineSize === 0 ? finalTapMultiplier : 1;
         const criticalHits = headshots && enemy.displayName !== 'Drone' && multiplier !== 1;
-        const damageForProjectile = initialStacks != null ? (index, startingStacks = initialStacks) => {
-            const roundIndex = Math.floor(index / projectiles);
-            const stacks = criticalHits ? startingStacks + roundIndex
-                : roundIndex === 0 ? startingStacks : 0;
-            return damageWithoutSharpshooter * getSharpshooterMultiplier(stacks);
-        } : null;
+        const damageForProjectile = initialStacks != null || finalTapMultiplier > 1
+            ? (index, startingStacks = initialStacks, stackOffset = 0) => {
+                let shotDamage = damageWithoutSharpshooter;
+                if (initialStacks != null) {
+                    const roundIndex = Math.floor((index - stackOffset) / projectiles);
+                    const stacks = criticalHits ? startingStacks + roundIndex
+                        : roundIndex === 0 ? startingStacks : 0;
+                    shotDamage *= getSharpshooterMultiplier(stacks);
+                }
+                return shotDamage * finalTapForProjectile(index);
+            } : null;
         const headshotBonus = headshots
             ? 1 + (isSkillEquipped('HeadGames')
                 ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0)
@@ -3162,7 +3171,8 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             while (remainingVisor > visorTolerance) {
                 // Shield window hits neither receive nor build Sharpshooter's bonus.
                 const damageToVisor = visorDamage(enemy.displayName === 'Shield'
-                    ? damageWithoutSharpshooter : damageForProjectile(visorProjectiles));
+                    ? damageWithoutSharpshooter * finalTapForProjectile(visorProjectiles)
+                    : damageForProjectile(visorProjectiles));
                 if (!(damageToVisor > 0)) {
                     visorProjectiles = Infinity;
                     break;
@@ -3172,14 +3182,15 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             }
             // Preserve the existing rule that the visor and health phases use
             // separate rounds, including for weapons with multiple projectiles.
-            firstProjectile = enemy.displayName === 'Shield' ? 0
-                : Math.ceil(visorProjectiles / projectiles) * projectiles;
+            firstProjectile = Math.ceil(visorProjectiles / projectiles) * projectiles;
         }
         // An actual window hit ends the critical-hit chain; bypassing it does not.
-        const healthInitialStacks = enemy.displayName === 'Shield' && visorProjectiles > 0
-            ? 0 : initialStacks;
+        const resetStacksAfterVisor = enemy.displayName === 'Shield' && visorProjectiles > 0;
+        const healthInitialStacks = resetStacksAfterVisor ? 0 : initialStacks;
+        // Reset critical stacks independently of the magazine's fired-round count.
+        const healthStackOffset = resetStacksAfterVisor ? firstProjectile : 0;
         const shotsToKill = damageForProjectile ? weaponShotsToKillPerShot(
-            (index) => damageForProjectile(firstProjectile + index, healthInitialStacks),
+            (index) => damageForProjectile(firstProjectile + index, healthInitialStacks, healthStackOffset),
             multiplier,
             fireData.armorPenetration,
             enemy.health,
