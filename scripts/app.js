@@ -469,9 +469,23 @@ const SKILL_VALUES = {
 };
 
 const MAX_SHOCK_GRENADE_HITS = 5;
+const TRIGGER_HAPPY_DAMAGE_PER_SHOT = 0.04;
+const SPRAY_AND_PRAY_SHOT_INTERVAL = 4;
+const TARGET_PRACTICE_DAMAGE_BONUS = 0.25;
+const TARGET_PRACTICE_DURATION = 5;
+const HOT_LEAD_MAX_STACKS = 10;
+const HOT_LEAD_DAMAGE_PER_STACK = 0.15;
+const HOT_LEAD_PENETRATION_LOSS_PER_STACK = 0.1;
+const HOT_LEAD_DURATION = 7;
+const MIDAS_TOUCH_PENETRATION_PER_CRIT = 0.4;
+const MIDAS_TOUCH_MAX_PENETRATION_BONUS = 5;
+const MIDAS_TOUCH_MAX_STACKS = Math.ceil(MIDAS_TOUCH_MAX_PENETRATION_BONUS / MIDAS_TOUCH_PENETRATION_PER_CRIT);
 let ammoFeedPickups = 0;
 let luckOfDrawTriggered = false;
 let sharpshooterCrits = 0;
+let hotLeadBodyStacks = 0;
+let midasTouchCrits = 0;
+let targetPracticeTriggered = false;
 
 const EDGE_DEPENDENT_SKILLS = [
     'longShot',
@@ -822,6 +836,17 @@ function applyLoadout(weapon, skills, attachments) {
             damage: step.damage * multiplier,
         }));
     }
+    fireData.triggerHappyEnabled = attachments.includes('Perk_Fool');
+    fireData.sprayAndPrayEnabled = attachments.includes('Perk_LuckyShot');
+    fireData.targetPracticeEnabled = attachments.includes('Perk_Superstar');
+    fireData.targetPracticeInitiallyActive = fireData.targetPracticeEnabled && targetPracticeTriggered;
+    fireData.hotLeadEnabled = attachments.includes('Perk_Bite');
+    fireData.hotLeadBaseArmorPenetration = WEAPON_DATA[weapon].fireData.armorPenetration ?? 0;
+    fireData.hotLeadBodyStacks = fireData.hotLeadEnabled
+        ? normalizeHotLeadStacks(hotLeadBodyStacks) : 0;
+    fireData.midasTouchEnabled = attachments.includes('Perk_Smith');
+    fireData.midasTouchInitialStacks = fireData.midasTouchEnabled
+        ? normalizeMidasTouchStacks(midasTouchCrits) : 0;
     fireData.criticalDamageMultiplierDistanceArray = fireData.criticalDamageMultiplierDistanceArray.map(
         (critStep) => {
             return {
@@ -1441,6 +1466,257 @@ function weaponShotsToKillByArmorLayer(
 
 function getSharpshooterMultiplier(stacks) {
     return 1 + Math.min(2, Math.max(0, stacks) * 0.15);
+}
+
+function getTriggerHappyMultiplier(stacks) {
+    return 1 + Math.max(0, stacks) * TRIGGER_HAPPY_DAMAGE_PER_SHOT;
+}
+
+function getTargetPracticeDamageMultiplier(active) {
+    return active ? 1 + TARGET_PRACTICE_DAMAGE_BONUS : 1;
+}
+
+function isSprayAndPrayActive(fireData, enemy) {
+    return !!fireData.sprayAndPrayEnabled && enemy.displayName !== 'Bulldozer';
+}
+
+function normalizeHotLeadStacks(stacks) {
+    const value = Number(stacks);
+    return Number.isFinite(value)
+        ? Math.min(HOT_LEAD_MAX_STACKS, Math.max(0, Math.floor(value))) : 0;
+}
+
+function getHotLeadDamageMultiplier(stacks) {
+    return 1 + normalizeHotLeadStacks(stacks) * HOT_LEAD_DAMAGE_PER_STACK;
+}
+
+function getHotLeadArmorPenetration(stacks, basePenetration, configuredPenetration, breakingBonus = 0) {
+    const base = Math.max(0, basePenetration);
+    const baseMultiplier = Math.max(0,
+        1 - normalizeHotLeadStacks(stacks) * HOT_LEAD_PENETRATION_LOSS_PER_STACK);
+    // The perk reduces the original base stat; attachment and skill bonuses
+    // (including Breaking Point accumulated during this target) stay separate.
+    const additionalPenetration = configuredPenetration - base + breakingBonus;
+    const penetration = base * baseMultiplier + additionalPenetration;
+    // Keep exact integer thresholds from falling below an armor layer because
+    // of floating-point noise (for example, 5 * (1 - 6 * 0.1)).
+    return Math.max(0, Number(penetration.toFixed(12)));
+}
+
+function normalizeMidasTouchStacks(stacks) {
+    const value = Number(stacks);
+    return Number.isFinite(value)
+        ? Math.min(MIDAS_TOUCH_MAX_STACKS, Math.max(0, Math.floor(value))) : 0;
+}
+
+function getMidasTouchPenetrationBonus(stacks) {
+    return Math.min(MIDAS_TOUCH_MAX_PENETRATION_BONUS,
+        normalizeMidasTouchStacks(stacks) * MIDAS_TOUCH_PENETRATION_PER_CRIT);
+}
+
+function getDynamicArmorPenetration(fireData, hotLeadStacks, midasStacks, breakingBonus = 0) {
+    const configuredPenetration = Number(fireData.armorPenetration ?? 0);
+    const penetration = fireData.hotLeadEnabled
+        ? getHotLeadArmorPenetration(hotLeadStacks,
+            fireData.hotLeadBaseArmorPenetration ?? configuredPenetration,
+            configuredPenetration, breakingBonus)
+        : configuredPenetration + breakingBonus;
+    const midasBonus = fireData.midasTouchEnabled
+        ? getMidasTouchPenetrationBonus(midasStacks) : 0;
+    return Math.max(0, Number((penetration + midasBonus).toFixed(12)));
+}
+
+// Resolve each fired round's critical damage and penetration before its pellets.
+// Critical-hit perks update only after that round has finished.
+function weaponShotsToKillWithDynamicPenetration(weapon, enemy, headshots, weaponCritMultiplier,
+    damageForProjectile, visorDamage) {
+    const fireData = weapon.fireData;
+    const sprayAndPrayActive = isSprayAndPrayActive(fireData, enemy);
+    const projectiles = Math.max(1, Math.floor(fireData.projectilesPerFiredRound ?? 1));
+    const naturalCriticalDamage = headshots && enemy.displayName !== 'Drone' && weaponCritMultiplier !== 1;
+    if (enemy.displayName === 'Drone' && !sprayAndPrayActive) weaponCritMultiplier = 1;
+    let stacks = fireData.hotLeadEnabled ? normalizeHotLeadStacks(fireData.hotLeadBodyStacks) : 0;
+    let midasStacks = fireData.midasTouchEnabled ? normalizeMidasTouchStacks(fireData.midasTouchInitialStacks) : 0;
+    const magazineSize = Math.max(1, Math.floor(fireData.ammoLoaded ?? 1));
+    let expiresAt = stacks > 0 ? HOT_LEAD_DURATION : 0;
+    let targetPracticeExpiresAt = fireData.targetPracticeInitiallyActive ? TARGET_PRACTICE_DURATION : 0;
+    let rounds = 0, armoredCrits = 0, armoredNonCrits = 0,
+        unarmoredCrits = 0, unarmoredNonCrits = 0, visorShots = 0;
+    const hasVisor = enemy.displayName === 'Bulldozer' || enemy.displayName === 'Shield';
+    const result = () => ({
+        armoredCrits, armoredNonCrits, unarmoredCrits, unarmoredNonCrits,
+        totalShots: rounds,
+        ...(hasVisor && { visorShots,
+            nonVisorShots: armoredCrits + armoredNonCrits + unarmoredCrits + unarmoredNonCrits }),
+    });
+    const impossible = () => {
+        rounds = Infinity;
+        if (naturalCriticalDamage && !sprayAndPrayActive) unarmoredCrits = Infinity;
+        else unarmoredNonCrits = Infinity;
+        return result();
+    };
+    if (!(damageForProjectile(0) > 0)) return impossible();
+
+    const hollowPointBonus = isSkillEquipped('HollowPointRounds')
+        ? (isSkillMastered('HollowPointRounds')
+            ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
+            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15)) : 0;
+    const criticalArmorBonus = 1 + (isSkillEquipped('HeadGames')
+            ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0)
+            + (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0);
+    const smgArmorBonus = isSkillEquipped('SMGAdept')
+        ? 1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * (SKILL_VALUES.SMGAdept ?? 1) : 1;
+    const hardCastEquipped = equippedAttachments.includes('Perk_Sabot');
+    const layers = Math.max(0, Math.floor(enemy.armorLayer || 0));
+    const layerValue = layers > 0 ? enemy.armor / layers : 0;
+    const armorTolerance = Math.max(1, enemy.armor, 80 * layers) * Number.EPSILON * 16;
+    const healthTolerance = Math.max(1, enemy.health) * Number.EPSILON * 16;
+    const visorTolerance = Math.max(1, enemy.visorArmor ?? 0) * Number.EPSILON * 16;
+    const advancedArmor = (fireData.midasTouchEnabled && (naturalCriticalDamage || sprayAndPrayActive)) || isSkillEquipped('BreakingPoint') ||
+        isSkillEquipped('Cracked') || isSkillEquipped('ArmorPiercing');
+    const penetrationIncrement = isSkillEquipped('BreakingPoint')
+        ? (isSkillMastered('BreakingPoint')
+            ? (SKILLS.BreakingPoint.masteredmodifier ?? 0.15)
+            : (SKILLS.BreakingPoint.basemodifier ?? 0.05)) : 0;
+    let remainingHealth = enemy.health, remainingArmor = enemy.armor;
+    let remainingLayers = layers, remainingVisor = enemy.visorArmor ?? 0;
+    let damageToArmor = 0, processedOverflow = 0, crackedBonus = 0, breakingBonus = 0;
+    let sharpStartingStacks = fireData.sharpshooterInitialStacks;
+    let sharpStackOffset = 0;
+    let mixedSharpStacks = sharpStartingStacks ?? 0;
+
+    while (remainingHealth > healthTolerance) {
+        if (rounds > 0 && rounds % magazineSize === 0) midasStacks = 0;
+        const shotTime = timeToKill(weapon, rounds + 1);
+        const timeTolerance = Math.max(1, shotTime, expiresAt) * Number.EPSILON * 16;
+        if (stacks > 0 && shotTime >= expiresAt - timeTolerance) stacks = 0;
+        const targetPracticeTolerance = Math.max(1, shotTime, targetPracticeExpiresAt) * Number.EPSILON * 16;
+        const targetPracticeActive = fireData.targetPracticeEnabled &&
+            shotTime < targetPracticeExpiresAt - targetPracticeTolerance;
+        const damageMultiplier = (fireData.hotLeadEnabled ? getHotLeadDamageMultiplier(stacks) : 1) *
+            getTargetPracticeDamageMultiplier(targetPracticeActive);
+        const shotPenetration = getDynamicArmorPenetration(fireData, stacks, midasStacks, breakingBonus);
+        const hitsVisor = headshots && remainingVisor > visorTolerance &&
+            (enemy.displayName === 'Bulldozer' ||
+                (enemy.displayName === 'Shield' && shotPenetration < enemy.visorArmorHardness - 0.99));
+        // Count fired rounds across armor, health and reloads; pellets share
+        // one trigger. A forced critical hit still follows the selected aim.
+        const forcedCritical = sprayAndPrayActive &&
+            (rounds + 1) % SPRAY_AND_PRAY_SHOT_INTERVAL === 0;
+        const isCriticalDamage = naturalCriticalDamage || forcedCritical;
+        const shotCritMultiplier = isCriticalDamage ? weaponCritMultiplier : 1;
+        const headshotArmorBonus = isCriticalDamage ? criticalArmorBonus : 1;
+        const baseArmorMultiplier = isCriticalDamage ? 1 + shotCritMultiplier * 0.54 : 1;
+        let triggeredCritical = false;
+        let penetratedCritical = false;
+
+        // Every pellet from this round uses the state before this round. A
+        // successful critical round grants one stack only after it is resolved.
+        for (let pellet = 0; pellet < projectiles && remainingHealth > healthTolerance; pellet++) {
+            const index = rounds * projectiles + pellet;
+            let damage = damageForProjectile(index, sharpStartingStacks, sharpStackOffset,
+                !(hitsVisor && enemy.displayName === 'Shield'),
+                sprayAndPrayActive ? mixedSharpStacks : undefined) * damageMultiplier;
+            if (!(damage > 0)) return impossible();
+            if (hitsVisor) {
+                remainingVisor -= visorDamage(damage);
+                visorShots++;
+                if (enemy.displayName === 'Bulldozer') triggeredCritical = true;
+                // As in the existing calculator, a visor-breaking round does
+                // not also deliver its unused pellets to the enemy's health.
+                if (remainingVisor <= visorTolerance) break;
+                continue;
+            }
+            if (enemy.displayName === 'Bulldozer' && isSkillEquipped('Sunburn')) {
+                damage /= 1 + (SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1);
+            }
+            const effectivePenetration = getDynamicArmorPenetration(fireData, stacks, midasStacks, breakingBonus);
+            const requiredArmorDamage = 80 * Math.max(layers - Math.floor(effectivePenetration), 0);
+            const hitsArmor = advancedArmor
+                ? layers > 0 && remainingArmor > armorTolerance && Math.floor(effectivePenetration) < remainingLayers
+                : damageToArmor < requiredArmorDamage - armorTolerance;
+
+            if (hitsArmor) {
+                if (isCriticalDamage) armoredCrits++;
+                else armoredNonCrits++;
+                const hardCastArmorDamage = damage * baseArmorMultiplier * headshotArmorBonus;
+                const armorDamageBeforeCracked = hardCastArmorDamage * smgArmorBonus;
+                if (hardCastEquipped) {
+                    const actualArmorHit = Math.min(hardCastArmorDamage, Math.max(0, remainingArmor));
+                    remainingHealth -= actualArmorHit / baseArmorMultiplier * 0.15 *
+                        shotCritMultiplier * (1 + hollowPointBonus);
+                }
+                const previousLayers = remainingLayers;
+                const armorDamage = armorDamageBeforeCracked * (1 + crackedBonus);
+                remainingArmor -= armorDamage;
+                damageToArmor += armorDamage;
+                if (isSkillEquipped('ArmorPiercing') && armorDamageBeforeCracked > layerValue &&
+                    isCriticalDamage && armorDamageBeforeCracked < enemy.armor) {
+                    remainingArmor -= Math.floor(layerValue);
+                    if (remainingArmor <= 0) {
+                        remainingArmor = 0;
+                        damageToArmor = enemy.armor;
+                    } else {
+                        damageToArmor += Math.floor(layerValue);
+                    }
+                }
+                const totalOverflow = Math.max(0, damageToArmor - enemy.armor);
+                const newOverflow = Math.max(0, totalOverflow - processedOverflow);
+                remainingHealth -= newOverflow * shotCritMultiplier / headshotArmorBonus /
+                    (1 + shotCritMultiplier * 0.54) * (1 + hollowPointBonus);
+                processedOverflow = Math.max(processedOverflow, totalOverflow);
+                breakingBonus += Math.max(0, penetrationIncrement);
+                remainingLayers = layerValue > 0
+                    ? Math.max(0, Math.ceil((remainingArmor - armorTolerance) / layerValue)) : 0;
+                if (isSkillEquipped('Cracked') && previousLayers > remainingLayers) {
+                    crackedBonus += isSkillMastered('Cracked')
+                        ? (SKILLS.Cracked?.masteredmodifier ?? 0.3)
+                        : (SKILLS.Cracked?.basemodifier ?? 0.1);
+                }
+            } else {
+                if (isCriticalDamage) unarmoredCrits++;
+                else unarmoredNonCrits++;
+                remainingHealth -= damage * shotCritMultiplier *
+                    (1 + hollowPointBonus) * (1 + crackedBonus);
+                if (isCriticalDamage && remainingArmor > armorTolerance && remainingLayers > 0) {
+                    penetratedCritical = true;
+                }
+            }
+            if (isCriticalDamage) triggeredCritical = true;
+        }
+        rounds++;
+        if (hitsVisor && enemy.displayName === 'Shield') {
+            sharpStartingStacks = 0;
+            sharpStackOffset = rounds * projectiles;
+        }
+        if (sprayAndPrayActive && fireData.sharpshooterInitialStacks != null) {
+            mixedSharpStacks = triggeredCritical ? Math.min(14, mixedSharpStacks + 1) : 0;
+        }
+        if (triggeredCritical) {
+            if (fireData.targetPracticeEnabled) {
+                targetPracticeExpiresAt = shotTime + TARGET_PRACTICE_DURATION;
+            }
+            if (fireData.hotLeadEnabled) {
+                stacks = Math.min(HOT_LEAD_MAX_STACKS, stacks + 1);
+                expiresAt = shotTime + HOT_LEAD_DURATION;
+            }
+            if (fireData.midasTouchEnabled) {
+                midasStacks = Math.min(MIDAS_TOUCH_MAX_STACKS, midasStacks + 1);
+            }
+        }
+        if (fireData.midasTouchEnabled && penetratedCritical) {
+            const removedArmor = Math.min(layerValue, Math.max(0, remainingArmor));
+            remainingArmor -= removedArmor;
+            damageToArmor += removedArmor;
+            remainingLayers = Math.max(0, remainingLayers - 1);
+            if (isSkillEquipped('Cracked') && removedArmor > armorTolerance) {
+                crackedBonus += isSkillMastered('Cracked')
+                    ? (SKILLS.Cracked?.masteredmodifier ?? 0.3)
+                    : (SKILLS.Cracked?.basemodifier ?? 0.1);
+            }
+        }
+    }
+    return result();
 }
 
 // Variable-damage counterpart of weaponShotsToKillByArmorLayer. The existing
@@ -2302,6 +2578,9 @@ function populateLoadout(selectedWeapon) {
     ammoFeedPickups = 0;
     luckOfDrawTriggered = false;
     sharpshooterCrits = 0;
+    hotLeadBodyStacks = 0;
+    midasTouchCrits = 0;
+    targetPracticeTriggered = false;
 
     populateSkills(weapon.class);
 
@@ -2432,6 +2711,71 @@ function populateLoadout(selectedWeapon) {
                         if (change > 0) counter.appendChild(button);
                     }
                     attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Smith') {
+                    const counter = document.createElement('span');
+                    counter.className = 'midas-touch-counter';
+                    counter.style.display = 'none';
+                    const value = document.createElement('span');
+                    value.className = 'midas-touch-value';
+                    value.textContent = '0';
+                    for (const [symbol, change] of [['−', -1], ['+', 1]]) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.textContent = symbol;
+                        button.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            midasTouchCrits = normalizeMidasTouchStacks(midasTouchCrits + change);
+                            value.textContent = midasTouchCrits;
+                            if (attachmentInput.checked) updateStatsAfterChange();
+                        });
+                        if (change < 0) counter.appendChild(button);
+                        else counter.appendChild(value);
+                        if (change > 0) counter.appendChild(button);
+                    }
+                    attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Bite') {
+                    const counter = document.createElement('span');
+                    counter.className = 'hot-lead-counter';
+                    counter.style.display = 'none';
+                    const value = document.createElement('span');
+                    value.className = 'hot-lead-value';
+                    value.textContent = '0';
+                    for (const [symbol, change] of [['−', -1], ['+', 1]]) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.textContent = symbol;
+                        button.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            hotLeadBodyStacks = normalizeHotLeadStacks(hotLeadBodyStacks + change);
+                            value.textContent = hotLeadBodyStacks;
+                            if (attachmentInput.checked) updateStatsAfterChange();
+                        });
+                        if (change < 0) counter.appendChild(button);
+                        else counter.appendChild(value);
+                        if (change > 0) counter.appendChild(button);
+                    }
+                    attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Superstar') {
+                    const trigger = document.createElement('button');
+                    trigger.type = 'button';
+                    trigger.className = 'target-practice-toggle';
+                    trigger.textContent = '25%';
+                    trigger.setAttribute('aria-pressed', 'false');
+                    trigger.style.display = 'none';
+                    trigger.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        if (!attachmentInput.checked) return;
+                        targetPracticeTriggered = !targetPracticeTriggered;
+                        trigger.setAttribute('aria-pressed', String(targetPracticeTriggered));
+                        updateStatsAfterChange();
+                    });
+                    attachmentButton.appendChild(trigger);
                 }
 
                 if (attachment === 'Perk_Critter') {
@@ -2675,6 +3019,9 @@ function updateAttachments() {
         ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup)) ammoFeedPickups = 0;
     if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
     if (!equippedAttachments.includes('Perk_Sharpshooter')) sharpshooterCrits = 0;
+    if (!equippedAttachments.includes('Perk_Bite')) hotLeadBodyStacks = 0;
+    if (!equippedAttachments.includes('Perk_Smith')) midasTouchCrits = 0;
+    if (!equippedAttachments.includes('Perk_Superstar')) targetPracticeTriggered = false;
     document.querySelectorAll('.ammo-feed-counter').forEach((counter) => {
         counter.style.display = counter.parentElement.querySelector('input').checked
             ? 'inline-flex' : 'none';
@@ -2685,10 +3032,25 @@ function updateAttachments() {
             ? 'inline-flex' : 'none';
         counter.querySelector('span').textContent = sharpshooterCrits;
     });
+    document.querySelectorAll('.hot-lead-counter').forEach((counter) => {
+        counter.style.display = counter.parentElement.querySelector('input').checked
+            ? 'inline-flex' : 'none';
+        counter.querySelector('.hot-lead-value').textContent = hotLeadBodyStacks;
+    });
+    document.querySelectorAll('.midas-touch-counter').forEach((counter) => {
+        counter.style.display = counter.parentElement.querySelector('input').checked
+            ? 'inline-flex' : 'none';
+        counter.querySelector('.midas-touch-value').textContent = midasTouchCrits;
+    });
     document.querySelectorAll('.luck-of-draw-toggle').forEach((trigger) => {
         trigger.style.display = trigger.parentElement.querySelector('input').checked
             ? 'inline-block' : 'none';
         trigger.setAttribute('aria-pressed', String(luckOfDrawTriggered));
+    });
+    document.querySelectorAll('.target-practice-toggle').forEach((trigger) => {
+        trigger.style.display = trigger.parentElement.querySelector('input').checked
+            ? 'inline-block' : 'none';
+        trigger.setAttribute('aria-pressed', String(targetPracticeTriggered));
     });
 }
 
@@ -2707,6 +3069,13 @@ function updateWeaponStats(selectedWeapon) {
     );
 
     const fireData = weapon.fireData;
+    const hotLeadDamageMultiplier = fireData.hotLeadEnabled
+        ? getHotLeadDamageMultiplier(fireData.hotLeadBodyStacks) : 1;
+    const targetPracticeDamageMultiplier = getTargetPracticeDamageMultiplier(fireData.targetPracticeInitiallyActive);
+    const displayedDamageDistanceArray = fireData.damageDistanceArray.map((step) => ({
+        ...step,
+        damage: step.damage * hotLeadDamageMultiplier * targetPracticeDamageMultiplier,
+    }));
 
     const baseDamageStat = document.querySelector('#stat-base-damage');
     if (
@@ -2714,13 +3083,13 @@ function updateWeaponStats(selectedWeapon) {
         fireData.projectilesPerFiredRound > 1
     ) {
         baseDamageStat.innerHTML =
-            formatNumber(fireData.damageDistanceArray[0].damage) +
+            formatNumber(displayedDamageDistanceArray[0].damage) +
             '*' +
             Math.round(fireData.projectilesPerFiredRound) +
             '/';
     } else {
         baseDamageStat.innerHTML =
-            formatNumber(fireData.damageDistanceArray[0].damage) +
+            formatNumber(displayedDamageDistanceArray[0].damage) +
             '/';
     }
 
@@ -2758,7 +3127,9 @@ function updateWeaponStats(selectedWeapon) {
         }"}`
     );
 
-    const rawAp = Number(fireData.armorPenetration ?? 0);
+    const rawAp = fireData.hotLeadEnabled || fireData.midasTouchEnabled
+        ? getDynamicArmorPenetration(fireData, fireData.hotLeadBodyStacks, fireData.midasTouchInitialStacks)
+        : Number(fireData.armorPenetration ?? 0);
     const apDisplay = formatNumber(rawAp).toString().replace(/\.0+$/, '');
     document.querySelector('#stat-armor-penetration').innerHTML = apDisplay;
 
@@ -2809,7 +3180,7 @@ function updateWeaponStats(selectedWeapon) {
     ).children[0];
     weaponDamageStats.innerHTML = '';
 
-    weapon.fireData.damageDistanceArray.forEach((damageStep) => {
+    displayedDamageDistanceArray.forEach((damageStep) => {
         const damageStat = weaponDamageStats.appendChild(
             document.createElement('div')
         );
@@ -3045,9 +3416,11 @@ function updateWeaponStats(selectedWeapon) {
 
 function shotsToKillAtDistances(weapon, enemy, headshots) {
     const fireData = weapon.fireData;
+    const sprayAndPrayActive = isSprayAndPrayActive(fireData, enemy);
 
-    // 当装备 CallingShotgun 时，只使用修改后的伤害距离数组，以避免使用未修改的距离数值
-    const distanceArray = isSkillEquipped('CallingShotgun')
+    // Calling Shotgun normally uses damage ranges; Spray & Pray also needs
+    // critical-multiplier ranges for its periodic critical rounds.
+    const distanceArray = isSkillEquipped('CallingShotgun') && !sprayAndPrayActive
         ? [
             ...new Set([
                 ...fireData.damageDistanceArray.map(
@@ -3076,7 +3449,8 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             ) ?? fireData.damageDistanceArray.slice(-1)[0]
         );
         const damage = selectedDamageStep.damage;
-        let multiplier = headshots
+        const usesCriticalDamage = headshots || sprayAndPrayActive;
+        let multiplier = usesCriticalDamage
             ? (
                   fireData.criticalDamageMultiplierDistanceArray.find(
                       (critMultiplierStep) =>
@@ -3086,11 +3460,11 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
               ).multiplier
             : 1;
 
-        if (headshots && isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
+        if (usesCriticalDamage && isSkillEquipped('HeadGames')&&isSkillEquipped('SkullTrauma')) {
             multiplier *= 1 + (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1)+(SKILLS.SkullTrauma?.modifier ?? 0.15);
-        }else if(headshots &&isSkillEquipped('SkullTrauma')){
+        }else if(usesCriticalDamage &&isSkillEquipped('SkullTrauma')){
             multiplier *= 1+(SKILLS.SkullTrauma?.modifier ?? 0.15);
-        }else if(headshots &&isSkillEquipped('HeadGames')){
+        }else if(usesCriticalDamage &&isSkillEquipped('HeadGames')){
             multiplier *= 1+(SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1);
         }
 
@@ -3137,13 +3511,19 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         const finalTapForProjectile = (index) =>
             (Math.floor(index / projectiles) + 1) % magazineSize === 0 ? finalTapMultiplier : 1;
         const criticalHits = headshots && enemy.displayName !== 'Drone' && multiplier !== 1;
-        const damageForProjectile = initialStacks != null || finalTapMultiplier > 1
-            ? (index, startingStacks = initialStacks, stackOffset = 0) => {
+        const damageForProjectile = initialStacks != null || fireData.triggerHappyEnabled || finalTapMultiplier > 1
+            ? (index, startingStacks = initialStacks, stackOffset = 0, applySharpshooter = true,
+                mixedStacks) => {
                 let shotDamage = damageWithoutSharpshooter;
-                if (initialStacks != null) {
+                if (fireData.triggerHappyEnabled) {
+                    const roundIndex = Math.floor(index / projectiles);
+                    // One stack per fired round; reload starts a new firing streak.
+                    shotDamage *= getTriggerHappyMultiplier(roundIndex % magazineSize);
+                }
+                if (initialStacks != null && applySharpshooter) {
                     const roundIndex = Math.floor((index - stackOffset) / projectiles);
-                    const stacks = criticalHits ? startingStacks + roundIndex
-                        : roundIndex === 0 ? startingStacks : 0;
+                    const stacks = mixedStacks ?? (criticalHits ? startingStacks + roundIndex
+                        : roundIndex === 0 ? startingStacks : 0);
                     shotDamage *= getSharpshooterMultiplier(stacks);
                 }
                 return shotDamage * finalTapForProjectile(index);
@@ -3160,6 +3540,21 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             return enemy.displayName === 'Bulldozer'
                 ? (baseDamage + baseDamage * multiplier * 0.2) * headshotBonus : baseDamage;
         };
+        if ((fireData.targetPracticeEnabled && (criticalHits ||
+            (headshots && enemy.displayName === 'Bulldozer') || fireData.targetPracticeInitiallyActive)) ||
+            (sprayAndPrayActive && !criticalHits) || (fireData.hotLeadEnabled && (criticalHits ||
+            (headshots && enemy.displayName === 'Bulldozer') || fireData.hotLeadBodyStacks > 0)) ||
+            (fireData.midasTouchEnabled && (criticalHits ||
+                (headshots && enemy.displayName === 'Bulldozer') || fireData.midasTouchInitialStacks > 0))) {
+            const shotsToKill = weaponShotsToKillWithDynamicPenetration(weapon,
+                { ...enemy, armor: enemyArmor, armorLayer: enemyArmorLayer }, headshots, multiplier,
+                damageForProjectile ?? (() => damage), visorDamage);
+            if (JSON.stringify(shotsToKill) !== JSON.stringify(previous)) {
+                shotsToKillAtDistances[Math.round(distance)] = shotsToKill;
+            }
+            previous = shotsToKill;
+            return;
+        }
         const hasVisor = enemy.displayName === 'Bulldozer' || enemy.displayName === 'Shield';
         const needsVisorHits = enemy.displayName === 'Bulldozer' ||
             fireData.armorPenetration < enemy.visorArmorHardness - 0.99;
@@ -3170,9 +3565,10 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             const visorTolerance = Math.max(1, enemy.visorArmor ?? 0) * Number.EPSILON * 16;
             while (remainingVisor > visorTolerance) {
                 // Shield window hits neither receive nor build Sharpshooter's bonus.
-                const damageToVisor = visorDamage(enemy.displayName === 'Shield'
-                    ? damageWithoutSharpshooter * finalTapForProjectile(visorProjectiles)
-                    : damageForProjectile(visorProjectiles));
+                // Trigger Happy still grows with each fired round at the window.
+                const damageToVisor = visorDamage(damageForProjectile(
+                    visorProjectiles, initialStacks, 0, enemy.displayName !== 'Shield'
+                ));
                 if (!(damageToVisor > 0)) {
                     visorProjectiles = Infinity;
                     break;
@@ -3460,6 +3856,7 @@ function updateDamageStats(selectedWeapon) {
             enemyData,
             false
         );
+        const showBodyCriticalHits = isSprayAndPrayActive(weapon.fireData, enemyData);
 
         for (distance in bodyShotDamageDistanceStats) {
             const damageBreakpoint = bodyShotTtkStat.appendChild(
@@ -3497,10 +3894,13 @@ function updateDamageStats(selectedWeapon) {
             );
             damageBreakdown.classList = ['damage-breakdown'];
 
-            if (enemyData.armor)
-                damageBreakdown.innerHTML += `${bodyShotDamageDistanceStats[distance].armoredNonCrits}B + `;
-
-            damageBreakdown.innerHTML += `${bodyShotDamageDistanceStats[distance].unarmoredNonCrits}B`;
+            const bodyShots = bodyShotDamageDistanceStats[distance];
+            if (enemyData.armor) {
+                if (showBodyCriticalHits) damageBreakdown.innerHTML += `${bodyShots.armoredCrits}H`;
+                damageBreakdown.innerHTML += `${bodyShots.armoredNonCrits}B + `;
+            }
+            if (showBodyCriticalHits) damageBreakdown.innerHTML += `${bodyShots.unarmoredCrits}H`;
+            damageBreakdown.innerHTML += `${bodyShots.unarmoredNonCrits}B`;
 
             const ttk = damageBreakdown.appendChild(
                 document.createElement('span')

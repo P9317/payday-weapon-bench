@@ -485,7 +485,9 @@ h1 {
 }
 
 .ammo-feed-counter,
-.sharpshooter-counter {
+.sharpshooter-counter,
+.hot-lead-counter,
+.midas-touch-counter {
     align-items: center;
     gap: 0.15rem;
     height: 1.65rem;
@@ -498,7 +500,9 @@ h1 {
 }
 
 .ammo-feed-counter button,
-.sharpshooter-counter button {
+.sharpshooter-counter button,
+.hot-lead-counter button,
+.midas-touch-counter button {
     width: 1.25rem;
     height: 1.25rem;
     padding: 0;
@@ -513,20 +517,27 @@ h1 {
 .ammo-feed-counter button:hover,
 .ammo-feed-counter button:focus-visible,
 .sharpshooter-counter button:hover,
-.sharpshooter-counter button:focus-visible {
+.sharpshooter-counter button:focus-visible,
+.hot-lead-counter button:hover,
+.hot-lead-counter button:focus-visible,
+.midas-touch-counter button:hover,
+.midas-touch-counter button:focus-visible {
     background: var(--color-primary);
     color: var(--color-background);
 }
 
 .ammo-feed-value,
-.sharpshooter-value {
+.sharpshooter-value,
+.hot-lead-value,
+.midas-touch-value {
     min-width: 1rem;
     text-align: center;
     font-family: var(--font-mono);
     font-size: 0.85em;
 }
 
-.luck-of-draw-toggle {
+.luck-of-draw-toggle,
+.target-practice-toggle {
     margin-left: 0.3rem;
     padding: 0.2rem 0.35rem;
     vertical-align: middle;
@@ -541,7 +552,10 @@ h1 {
 
 .luck-of-draw-toggle:hover,
 .luck-of-draw-toggle:focus-visible,
-.luck-of-draw-toggle[aria-pressed="true"] {
+.luck-of-draw-toggle[aria-pressed="true"],
+.target-practice-toggle:hover,
+.target-practice-toggle:focus-visible,
+.target-practice-toggle[aria-pressed="true"] {
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
