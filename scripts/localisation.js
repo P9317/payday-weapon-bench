@@ -23,19 +23,35 @@ if (localStorage.getItem('locale')) {
 }
 
 let localisations = {};
+const localisationRequests = new Map();
 
-setLocale(currentLocale);
+async function loadLocalisation(locale) {
+    if (localisations[locale]) return localisations[locale];
+
+    if (!localisationRequests.has(locale)) {
+        localisationRequests.set(locale, fetchLocalisation(locale)
+            .then((data) => {
+                localisations[locale] = data;
+                return data;
+            })
+            .finally(() => localisationRequests.delete(locale)));
+    }
+
+    return localisationRequests.get(locale);
+}
 
 async function initialiseDefaultLocale() {
-    if (!localisations[defaultLocale])
-        localisations[defaultLocale] = await fetchLocalisation(defaultLocale);
+    await loadLocalisation(defaultLocale);
 }
 
 async function setLocale(locale) {
     currentLocale = locale;
 
-    if (!localisations[locale])
-        localisations[locale] = await fetchLocalisation(locale);
+    await initialiseDefaultLocale();
+    await loadLocalisation(locale);
+
+    // A slower, earlier request must not overwrite the latest language choice.
+    if (currentLocale !== locale) return;
 
     localStorage.setItem('locale', locale);
 
@@ -93,9 +109,9 @@ function localise(element) {
 function getLocalisation(key) {
     let locale = currentLocale;
 
-    if (!localisations[currentLocale][key]) locale = defaultLocale;
+    if (!localisations[currentLocale]?.[key]) locale = defaultLocale;
 
-    return localisations[locale][key];
+    return localisations[locale]?.[key];
 }
 
 function getPluralForm(localisation, count) {

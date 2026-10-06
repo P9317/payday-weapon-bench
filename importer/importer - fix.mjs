@@ -41,6 +41,75 @@ const DEFAULT_WEAPON_TIMES = {
 
 const weaponOutput = {};
 const attachmentOutput = {};
+const weaponIdsByDataPath = new Map();
+const weaponIdsByDataName = new Map();
+
+function normaliseDataPath(filePath) {
+    return path.resolve(filePath).replace(/\\/g, '/').toLowerCase();
+}
+
+function getReferenceAssetName(reference) {
+    return reference?.ObjectName?.match(/'([^']+)'$/)?.[1]?.split('.').pop() ??
+        reference?.ObjectPath?.replace(/\\/g, '/').split('/').pop()?.split('.')[0];
+}
+
+async function importPresetPerks(files) {
+    const presets = files.filter((file) => file.isFile() &&
+        /^DA_Preset_.*\.json$/i.test(file.name))
+        .sort((a, b) => path.join(a.parentPath, a.name).localeCompare(
+            path.join(b.parentPath, b.name)
+        ));
+
+    for (const presetFile of presets) {
+        const presetPath = path.join(presetFile.parentPath, presetFile.name);
+        let exports;
+        try {
+            exports = JSON.parse(await fs.readFile(presetPath, 'utf8'));
+            if (!Array.isArray(exports)) throw new TypeError('Expected an export array');
+        } catch (error) {
+            console.warn(`[WARNING] 无法读取武器预设: ${presetPath}`, error);
+            continue;
+        }
+
+        for (const preset of exports) {
+            if (preset.Type !== 'SBZWeaponPresetConfigData') continue;
+            const data = preset.Properties ?? {};
+            const perks = (data.ModData ?? [])
+                .filter((mod) => /SLOT_Perk\d*(?:\.|')/i.test(mod.Key ?? ''))
+                .map((mod) => getReferenceAssetName(mod.Value?.Part))
+                .filter((name) => /^WPD_Perk_/.test(name ?? ''))
+                .map((name) => name.replace(/^WPD_/, ''));
+            if (!perks.length) continue;
+
+            const weaponRef = data.WeaponData;
+            const weaponId = weaponRef?.ObjectPath
+                ? weaponIdsByDataPath.get(normaliseDataPath(
+                    unrealPathToJson(weaponRef.ObjectPath)
+                ))
+                : weaponIdsByDataName.get(getReferenceAssetName(weaponRef));
+            const weapon = weaponOutput[weaponId];
+            if (!weapon) {
+                console.warn(`[WARNING] ${presetFile.name} 的原型武器未导入，跳过预设天赋`);
+                continue;
+            }
+
+            const slot = weapon.modularConfiguration.perk1 ??= {
+                defaultPart: null, uniqueParts: []
+            };
+            const available = new Set([slot.defaultPart, ...slot.uniqueParts]);
+            const added = [];
+            for (const perk of perks) {
+                if (available.has(perk)) continue;
+                slot.uniqueParts.push(perk);
+                available.add(perk);
+                added.push(perk);
+            }
+            if (added.length) {
+                console.log(`[PresetPerks] ${presetFile.name} -> ${weaponId}: ${added.join(', ')}`);
+            }
+        }
+    }
+}
 /**
  * ============================================================
  * DLC / content source resolver
@@ -718,6 +787,12 @@ try {
                 )
 
             )[0].Properties;
+
+        weaponIdsByDataPath.set(normaliseDataPath(weaponDataPath), weapon.name);
+        const dataName = path.basename(weaponDataFileName, '.json');
+        // Names are a fallback only when the preset does not include an ObjectPath.
+        weaponIdsByDataName.set(dataName, weaponIdsByDataName.has(dataName)
+            ? null : weapon.name);
 
 
         /*
@@ -2135,6 +2210,9 @@ console.log(
      * ============================================================
      */
 
+    // Merge preset perks before generating weapons.js; keep the prototype's default.
+    await importPresetPerks(files);
+
     const sortedWeaponData =
 
         Object
@@ -2810,5 +2888,7 @@ catch (
     console.error(
         err
     );
+
+    process.exitCode = 1;
 
 }

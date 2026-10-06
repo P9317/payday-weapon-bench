@@ -311,7 +311,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Bleed",
                     "Perk_Sharpshooter",
                     "Perk_Glass",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_ChainReact"
                 ]
             }
         },
@@ -847,7 +848,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Assassin",
                     "Perk_Bulky",
                     "Perk_Glass",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Sharpshooter"
                 ]
             }
         },
@@ -1177,7 +1179,10 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_LeadFed",
                     "Perk_GritPlate",
                     "Perk_Runner",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_LuckyShot",
+                    "Perk_Threat",
+                    "Perk_Veteran"
                 ]
             }
         },
@@ -1445,7 +1450,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Assassin",
                     "Perk_Bulky",
                     "Perk_Glass",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_PinPuller"
                 ]
             }
         },
@@ -1756,7 +1762,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Perk_Vampire",
                     "Perk_Runner",
-                    "Perk_Glass"
+                    "Perk_Glass",
+                    "Perk_Slap"
                 ]
             }
         },
@@ -2066,7 +2073,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Perk_Vampire",
                     "Perk_Runner",
-                    "Perk_Glass"
+                    "Perk_Glass",
+                    "Perk_Bite"
                 ]
             }
         },
@@ -3767,7 +3775,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_LeadFed",
                     "Perk_GritPlate",
                     "Perk_Runner",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Trip"
                 ]
             }
         },
@@ -4391,7 +4400,9 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_RushSlide",
                     "Perk_Runner",
                     "Perk_Resilient",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Final",
+                    "Perk_Glass"
                 ]
             }
         },
@@ -4717,7 +4728,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_LeadFed",
                     "Perk_GritPlate",
                     "Perk_Runner",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Vampire"
                 ]
             }
         },
@@ -5047,7 +5059,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Perk_Vampire",
                     "Perk_Runner",
-                    "Perk_Glass"
+                    "Perk_Glass",
+                    "Perk_LeadFed"
                 ]
             }
         },
@@ -5646,7 +5659,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Perk_ChainReact",
                     "Perk_Threat",
-                    "Perk_Glass"
+                    "Perk_Glass",
+                    "Perk_WestWood"
                 ]
             }
         },
@@ -5863,10 +5877,8 @@ const WEAPON_DATA = Object.freeze({
             }
         },
         "equipTime": 0.167,
-        "unequipTime": 0.300,
-        "sprintExitTime": 0.150,
-        "reloadTime": 1.5666667,
-        "reloadEmptyTime": 1.7333333
+        "unequipTime": 0.3,
+        "sprintExitTime": 0.15
     },
     "R880": {
         "displayName": "Reinfeld 880",
@@ -6080,7 +6092,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_RushSlide",
                     "Perk_Runner",
                     "Perk_Resilient",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Bulky"
                 ]
             }
         },
@@ -6283,7 +6296,9 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_Bleed",
                     "Perk_Sharpshooter",
                     "Perk_Glass",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_Quickshot",
+                    "Perk_Sabot"
                 ]
             }
         },
@@ -6892,7 +6907,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_PinPuller",
                     "Perk_Glass",
                     "Perk_Runner",
-                    "Perk_Slap"
+                    "Perk_Slap",
+                    "Perk_Resilient"
                 ]
             }
         },
@@ -7707,7 +7723,9 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_PinPuller",
                     "Perk_Glass",
                     "Perk_Runner",
-                    "Perk_Slap"
+                    "Perk_Slap",
+                    "Perk_Superstar",
+                    "Perk_EdgeCrit"
                 ]
             }
         },
@@ -8287,7 +8305,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_PinPuller",
                     "Perk_Glass",
                     "Perk_Runner",
-                    "Perk_Slap"
+                    "Perk_Slap",
+                    "Perk_Bleed"
                 ]
             }
         },
@@ -8579,13 +8598,14 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_PinPuller",
                     "Perk_Glass",
                     "Perk_Runner",
-                    "Perk_Slap"
+                    "Perk_Slap",
+                    "Perk_Fool"
                 ]
             }
         },
         "equipTime": 0.167,
-        "unequipTime": 0.300,
-        "sprintExitTime": 0.150
+        "unequipTime": 0.3,
+        "sprintExitTime": 0.15
     },
     "TAS12": {
         "displayName": "TAS-12",
@@ -9131,7 +9151,8 @@ const WEAPON_DATA = Object.freeze({
                     "Perk_LeadFed",
                     "Perk_GritPlate",
                     "Perk_Runner",
-                    "Perk_Critter"
+                    "Perk_Critter",
+                    "Perk_RushSlide"
                 ]
             }
         },
@@ -9439,7 +9460,8 @@ const WEAPON_DATA = Object.freeze({
                 "uniqueParts": [
                     "Perk_Vampire",
                     "Perk_Runner",
-                    "Perk_Glass"
+                    "Perk_Glass",
+                    "Perk_Smith"
                 ]
             }
         },

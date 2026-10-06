@@ -43,7 +43,7 @@ function getCurrentWeapon() {
 
 /**
  * @param {HTMLElement} element
- * @param {string} tooltipContent
+ * @param {string|function(): string} tooltipContent
  */
 function addTooltipEvents(element, tooltipContent) {
     element.addEventListener('mouseenter', (event) => {
@@ -51,7 +51,7 @@ function addTooltipEvents(element, tooltipContent) {
         showTooltip(
             rect.left + 'px', 
             rect.top + event.target.clientHeight + 'px', 
-            tooltipContent
+            typeof tooltipContent === 'function' ? tooltipContent() : tooltipContent
         );
     });
     element.addEventListener('mouseleave', () => {
@@ -813,11 +813,13 @@ function applyLoadout(weapon, skills, attachments) {
             damage: step.damage * 1.5,
         }));
     }
-    if (attachments.includes('Perk_Sharpshooter') && sharpshooterCrits > 0) {
-        const bonus = Math.min(2, sharpshooterCrits * 0.15);
+    fireData.sharpshooterInitialStacks = attachments.includes('Perk_Sharpshooter')
+        ? Math.min(14, Math.max(0, Math.floor(sharpshooterCrits))) : null;
+    if (fireData.sharpshooterInitialStacks > 0) {
+        const multiplier = getSharpshooterMultiplier(fireData.sharpshooterInitialStacks);
         fireData.damageDistanceArray = fireData.damageDistanceArray.map((step) => ({
             ...step,
-            damage: step.damage * (1 + bonus),
+            damage: step.damage * multiplier,
         }));
     }
     fireData.criticalDamageMultiplierDistanceArray = fireData.criticalDamageMultiplierDistanceArray.map(
@@ -1437,6 +1439,125 @@ function weaponShotsToKillByArmorLayer(
     };
 }
 
+function getSharpshooterMultiplier(stacks) {
+    return 1 + Math.min(2, Math.max(0, stacks) * 0.15);
+}
+
+// Variable-damage counterpart of weaponShotsToKillByArmorLayer. The existing
+// armor, overflow and skill formulas are retained, while damage is read anew
+// for each projectile. Callers group projectiles into one fired round.
+function weaponShotsToKillPerShot(
+    damageForProjectile,
+    weaponCritMultiplier,
+    armorPenetration,
+    enemyHealth,
+    enemyArmor,
+    armorlayer,
+    enemyName = ''
+) {
+    if (enemyName === 'Drone') weaponCritMultiplier = 1;
+    const isCritical = weaponCritMultiplier !== 1;
+    let armorShots = 0, healthShots = 0;
+    const result = () => ({
+        armoredCrits: isCritical ? armorShots : 0,
+        armoredNonCrits: isCritical ? 0 : armorShots,
+        unarmoredCrits: isCritical ? healthShots : 0,
+        unarmoredNonCrits: isCritical ? 0 : healthShots,
+        totalShots: armorShots + healthShots,
+    });
+    if (!(damageForProjectile(0) > 0)) {
+        healthShots = Infinity;
+        return result();
+    }
+
+    const hollowPointBonus = isSkillEquipped('HollowPointRounds')
+        ? (isSkillMastered('HollowPointRounds')
+            ? (SKILLS.HollowPointRounds.masteredmodifier ?? 0.4)
+            : (SKILLS.HollowPointRounds.basemodifier ?? 0.15)) : 0;
+    const headshotArmorBonus = isCritical
+        ? 1 + (isSkillEquipped('HeadGames')
+            ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0)
+            + (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0)
+        : 1;
+    const baseArmorMultiplier = isCritical ? 1 + weaponCritMultiplier * 0.54 : 1;
+    const smgArmorBonus = isSkillEquipped('SMGAdept')
+        ? 1 + (SKILLS.SMGAdept?.modifier ?? 0.02) * (SKILL_VALUES.SMGAdept ?? 1) : 1;
+    const hardCastEquipped = equippedAttachments.includes('Perk_Sabot');
+    const readHit = (index) => {
+        let damage = damageForProjectile(index);
+        if (enemyName === 'Bulldozer' && isSkillEquipped('Sunburn')) {
+            damage /= 1 + (SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1);
+        }
+        const hardCastArmorDamage = damage * baseArmorMultiplier * headshotArmorBonus;
+        return { damage, hardCastArmorDamage, armorDamage: hardCastArmorDamage * smgArmorBonus };
+    };
+
+    const layers = Math.max(0, Math.floor(armorlayer || 0));
+    const requiredArmorDamage = 80 * Math.max(layers - Math.floor(armorPenetration || 0), 0);
+    const armorTolerance = Math.max(1, enemyArmor, requiredArmorDamage) * Number.EPSILON * 16;
+    const healthTolerance = Math.max(1, enemyHealth) * Number.EPSILON * 16;
+    const layerValue = layers > 0 ? enemyArmor / layers : 0;
+    const advancedArmor = isSkillEquipped('BreakingPoint') ||
+        isSkillEquipped('Cracked') || isSkillEquipped('ArmorPiercing');
+    const penetrationIncrement = isSkillEquipped('BreakingPoint')
+        ? (isSkillMastered('BreakingPoint')
+            ? (SKILLS.BreakingPoint.masteredmodifier ?? 0.15)
+            : (SKILLS.BreakingPoint.basemodifier ?? 0.05)) : 0;
+    let remainingArmor = enemyArmor, remainingLayers = layers;
+    let currentPenetration = armorPenetration ?? 0;
+    let damageToArmor = 0, crackedBonus = 0, hardCastHealthDamage = 0;
+    const needsArmorHit = () => advancedArmor
+        ? layers > 0 && remainingArmor > armorTolerance && Math.floor(currentPenetration) < remainingLayers
+        : damageToArmor < requiredArmorDamage - armorTolerance;
+
+    while (needsArmorHit()) {
+        const hit = readHit(armorShots);
+        armorShots++;
+        if (hardCastEquipped) {
+            const actualArmorHit = Math.min(hit.hardCastArmorDamage, Math.max(0, remainingArmor));
+            hardCastHealthDamage += actualArmorHit / baseArmorMultiplier * 0.15 *
+                weaponCritMultiplier * (1 + hollowPointBonus);
+        }
+        const previousLayers = remainingLayers;
+        const armorDamage = hit.armorDamage * (1 + crackedBonus);
+        remainingArmor -= armorDamage;
+        damageToArmor += armorDamage;
+        if (isSkillEquipped('ArmorPiercing') && hit.armorDamage > layerValue &&
+            isCritical && hit.armorDamage < enemyArmor) {
+            remainingArmor -= Math.floor(layerValue);
+            if (remainingArmor <= 0) {
+                remainingArmor = 0;
+                damageToArmor = enemyArmor;
+            } else {
+                damageToArmor += Math.floor(layerValue);
+            }
+        }
+        if (hardCastEquipped && hardCastHealthDamage >= enemyHealth - healthTolerance) return result();
+        currentPenetration += Math.max(0, penetrationIncrement);
+        remainingLayers = layerValue > 0
+            ? Math.max(0, Math.ceil((remainingArmor - armorTolerance) / layerValue)) : 0;
+        if (isSkillEquipped('Cracked') && previousLayers > remainingLayers) {
+            crackedBonus += isSkillMastered('Cracked')
+                ? (SKILLS.Cracked?.masteredmodifier ?? 0.3)
+                : (SKILLS.Cracked?.basemodifier ?? 0.1);
+        }
+    }
+
+    // Normalize the last armor hit's overflow using the same factors as the
+    // fixed-damage calculator. Cracked's accumulated bonus applies to health.
+    let overflowDamage = Math.max(0, damageToArmor - enemyArmor);
+    overflowDamage *= weaponCritMultiplier / headshotArmorBonus /
+        (1 + weaponCritMultiplier * 0.54) * (1 + hollowPointBonus);
+    let remainingHealth = Math.max(0, enemyHealth - hardCastHealthDamage - overflowDamage);
+    while (remainingHealth > healthTolerance) {
+        const hit = readHit(armorShots + healthShots);
+        remainingHealth -= hit.damage * weaponCritMultiplier *
+            (1 + hollowPointBonus) * (1 + crackedBonus);
+        healthShots++;
+    }
+    return result();
+}
+
 let equippedSkills = [],
     equippedSkillsMastered = new Set(),
     equippedAttachments = [];
@@ -1558,10 +1679,10 @@ function populateWeaponSelector() {
         });
 
         if (weapon == 'CAR4') weaponInput.checked = true;
-
-        populateLoadout('CAR4');
-        updateStatsAfterChange();
     }
+
+    populateLoadout('CAR4');
+    updateStatsAfterChange();
 }
 
 const tooltip = document.querySelector('#tooltip');
@@ -2115,14 +2236,12 @@ function populateSkills(weaponClass = 'Assault Rifle') {
             );
         });
 
-        const tooltipBody = `
+        addTooltipEvents(skillLabel, () => `
             <span class="tooltip-title">${getLocalisation(
                 SKILLS[skill].name
             )}</span>
             <span>${getLocalisation(SKILLS[skill].description)}</span>
-        `;
-        
-        addTooltipEvents(skillLabel, tooltipBody);
+        `);
     }
 }
 
@@ -3009,31 +3128,63 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
 //            enemy.health,
 //            enemyArmor
 //        );
-        const shotsToKill = weaponShotsToKillByArmorLayer(
-            damage,
+        const projectiles = Math.max(1, Math.floor(fireData.projectilesPerFiredRound ?? 1));
+        const initialStacks = fireData.sharpshooterInitialStacks;
+        const criticalHits = headshots && enemy.displayName !== 'Drone' && multiplier !== 1;
+        const damageForProjectile = initialStacks != null ? (index) => {
+            const roundIndex = Math.floor(index / projectiles);
+            const stacks = criticalHits ? initialStacks + roundIndex
+                : roundIndex === 0 ? initialStacks : 0;
+            return damage / getSharpshooterMultiplier(initialStacks) * getSharpshooterMultiplier(stacks);
+        } : null;
+        const headshotBonus = headshots
+            ? 1 + (isSkillEquipped('HeadGames')
+                ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0)
+                + (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0)
+            : 1;
+        const visorDamage = (shotDamage) => {
+            const baseDamage = isSkillEquipped('Sunburn')
+                ? shotDamage / (1 + (SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1))
+                : shotDamage;
+            return enemy.displayName === 'Bulldozer'
+                ? (baseDamage + baseDamage * multiplier * 0.2) * headshotBonus : baseDamage;
+        };
+        const hasVisor = enemy.displayName === 'Bulldozer' || enemy.displayName === 'Shield';
+        const needsVisorHits = enemy.displayName === 'Bulldozer' ||
+            fireData.armorPenetration < enemy.visorArmorHardness - 0.99;
+        let visorProjectiles = null, firstProjectile = 0;
+        if (damageForProjectile && headshots && hasVisor) {
+            visorProjectiles = 0;
+            let remainingVisor = needsVisorHits ? enemy.visorArmor : 0;
+            const visorTolerance = Math.max(1, enemy.visorArmor ?? 0) * Number.EPSILON * 16;
+            while (remainingVisor > visorTolerance) {
+                const damageToVisor = visorDamage(damageForProjectile(visorProjectiles));
+                if (!(damageToVisor > 0)) {
+                    visorProjectiles = Infinity;
+                    break;
+                }
+                remainingVisor -= damageToVisor;
+                visorProjectiles++;
+            }
+            // Preserve the existing rule that the visor and health phases use
+            // separate rounds, including for weapons with multiple projectiles.
+            firstProjectile = Math.ceil(visorProjectiles / projectiles) * projectiles;
+        }
+        const shotsToKill = damageForProjectile ? weaponShotsToKillPerShot(
+            (index) => damageForProjectile(firstProjectile + index),
             multiplier,
             fireData.armorPenetration,
             enemy.health,
             enemyArmor,
             enemyArmorLayer,
             enemy.displayName
+        ) : weaponShotsToKillByArmorLayer(
+            damage, multiplier, fireData.armorPenetration,
+            enemy.health, enemyArmor, enemyArmorLayer, enemy.displayName
         );
-        let damagetoVisor = damage;
-        if (enemy.displayName == 'Bulldozer' || enemy.displayName == 'Shield') {
-            if(isSkillEquipped('Sunburn')){
-                damagetoVisor = damage/(1+(SKILLS.Sunburn?.modifier ?? 0) * (SKILL_VALUES.Sunburn ?? 1));
-            }
-            const headshotBonus = headshots && (isSkillEquipped('HeadGames') || isSkillEquipped('SkullTrauma'))
-                ? (1 + (isSkillEquipped('HeadGames') ? (SKILLS.HeadGames?.modifier ?? 0) * (SKILL_VALUES.HeadGames ?? 1) : 0) +
-                   (isSkillEquipped('SkullTrauma') ? (SKILLS.SkullTrauma?.modifier ?? 0.15) : 0))
-                : 1;
-
-            const shotsToBreakVisor = enemy.displayName == 'Bulldozer'
-                ? Math.ceil(enemy.visorArmor / ((damagetoVisor+damagetoVisor*multiplier*0.2) * headshotBonus))
-                : fireData.armorPenetration < enemy.visorArmorHardness - 0.99
-                ? Math.ceil(enemy.visorArmor / damagetoVisor)
-                : 0;
-
+        if (hasVisor) {
+            const shotsToBreakVisor = visorProjectiles ??
+                (needsVisorHits ? Math.ceil(enemy.visorArmor / visorDamage(damage)) : 0);
             shotsToKill.visorShots = shotsToBreakVisor;
             shotsToKill.nonVisorShots = shotsToKill.totalShots;
             if (headshots) shotsToKill.totalShots += shotsToBreakVisor;
@@ -3084,6 +3235,10 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         }, {});
 }
 
+function getReloadCount(shotsToKill, magazineSize) {
+    return Math.max(0, Math.floor((shotsToKill - 1) / magazineSize));
+}
+
 function timeToKill(weapon, shotsToKill) {
     let TTK = (shotsToKill - 1) / (weapon.fireData.roundsPerMinute / 60);
 
@@ -3096,7 +3251,7 @@ function timeToKill(weapon, shotsToKill) {
     if (shotsToKill > weapon.fireData.ammoLoaded)
         TTK +=
             weapon.reloadEmptyTime *
-            Math.floor(shotsToKill / weapon.fireData.ammoLoaded);
+            getReloadCount(shotsToKill, weapon.fireData.ammoLoaded);
 
     return TTK;
 }
@@ -3337,8 +3492,8 @@ function updateDamageStats(selectedWeapon) {
             );
 
             if (totalShots > weapon.fireData.ammoLoaded) {
-                const reloads = Math.floor(
-                    totalShots / weapon.fireData.ammoLoaded
+                const reloads = getReloadCount(
+                    totalShots, weapon.fireData.ammoLoaded
                 );
 
                 const ttkReloads = damageBreakdown.appendChild(
@@ -3435,8 +3590,8 @@ function updateDamageStats(selectedWeapon) {
             );
 
             if (totalShots > weapon.fireData.ammoLoaded) {
-                const reloads = Math.floor(
-                    totalShots / weapon.fireData.ammoLoaded
+                const reloads = getReloadCount(
+                    totalShots, weapon.fireData.ammoLoaded
                 );
 
                 const ttkReloads = damageBreakdown.appendChild(
@@ -3460,9 +3615,9 @@ function updateDamageStats(selectedWeapon) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     await initialiseDefaultLocale();
+    await setLocale(currentLocale);
     preloadImages(SKILL_ICONS_TO_PRELOAD);
     populateWeaponSelector();
-    populateSkills();
 
     const localeSwitcher = document.querySelector('#locale-switcher');
 
