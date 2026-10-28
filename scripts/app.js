@@ -768,6 +768,9 @@ function applyLoadout(weapon, skills, attachments) {
             };
         }
     )
+        .filter((item, index, array) => !array.some(other =>
+            other.distance === item.distance && other.damage > item.damage
+        ))
 
         .filter((item, index, array) => {
         // Find all items with the same damage value
@@ -1860,6 +1863,7 @@ function isSecondaryWeapon(weaponId) {
     const weapon = WEAPON_DATA[weaponId];
     if (!weapon) return false;
     if (weapon.slot) return weapon.slot === 'secondary';
+    if (weapon.category === 'Dual') return false;
     return ['Pistol', 'Revolver'].includes(weapon.class) ||
         weapon.displayIcon?.source?.includes('WeaponsSecondary');
 }
@@ -2563,6 +2567,7 @@ document.querySelector('template.attachment').remove();
 
 const attachmentSlots = [
     'perk1',
+    'chargingHandle',
     'sight',
     'mag',
     'barrelExtension',
@@ -2868,8 +2873,8 @@ function populateLoadout(selectedWeapon) {
                             modifier.value > 0
                                 ? '+' + modifier.value
                                 : modifier.value;
-                        attachmentStats.push(getLocalisation(attribute) + ' ' + value);
-                        //attachmentStats.push(attribute + ' ' + value);
+                        const attributeName = getLocalisation(attribute) ?? attribute;
+                        attachmentStats.push(attributeName + ' ' + value);
                     });
 
                     if (attachmentData.description) {
