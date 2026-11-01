@@ -3566,7 +3566,7 @@ const ATTACHMENT_DATA = Object.freeze({
     "Perk_Pelletpopper": {
         "displayName": "Double-Cross",
         "perkType": "equipped",
-        "description": "The more pellets that hit your target, the higher the damage increase of your next shot, for a maximum {MaxIncreasedDamage} increase. This effect resets after {BuffDuration} seconds."
+        "description": "The more pellets that hit your target, the higher the damage increase of your next shot, for a maximum 50% increase. This effect resets after 2 seconds."
     },
     "Perk_PinPuller": {
         "displayName": "Pin Puller",

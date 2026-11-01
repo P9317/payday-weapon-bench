@@ -371,7 +371,6 @@
     "Vampire": "Vampire",
     "Veteran": "Veteran",
     "Fog of War": "Fog of War",
-    "Glass Cannon (Secondary Weapon)": "Glass Cannon (Secondary Weapon)",
     "Killer Motor": "Killer Motor",
     "12G Grim Compensator": "12G Grim Compensator",
     "Torqued Choke": "Torqued Choke",
@@ -397,7 +396,7 @@
     "Slim Vertical Grip": "Slim Vertical Grip",
     "perk-Perk_Lawman-desc": "After a critical hit, your weapon cycle speed is increased by {IncreasedReloadSpeed}.",
     "perk-Perk_Numbskull-desc": "Every critical hit has a {HitChance} chance to deal damage to an enemy within a {WithinRange}m radius.",
-    "perk-Perk_Pelletpopper-desc": "The more pellets that hit your target, the higher the damage increase of your next shot, for a maximum {MaxIncreasedDamage} increase. This effect resets after {BuffDuration} seconds.",
+    "perk-Perk_Pelletpopper-desc": "The more pellets that hit your target, the higher the damage increase of your next shot, for a maximum 50% increase. This effect resets after 2 seconds.",
     "perk-Perk_Rapido-desc": "After reloading, your ADS, reload, and weapon swap speed is increased by {IncreasedEquipSpeed} for {BuffDuration} seconds.",
     "perk-Perk_Trickshot-desc": "This weapon's swap speed is increased by {IncreasedEquipSpeed}. When you swap to this weapon, it deals {IncreasedDamage} extra damage for {BuffDuration} seconds."
 }

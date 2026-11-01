@@ -1,7 +1,7 @@
 {
     "title": "Payday 3 武器数据站",
     "credits": "由Jade 🌺制作 ✦ 技能图标由Sydch设计 ✦ 特别感谢Price9317和Lunar Pearl",
-    "whats-new": "更新至3.9.1更新",
+    "whats-new": "更新至3.10更新",
     "dlc-1": "语法错误",
     "dlc-2": "警钟长鸣",
     "dlc-3": "解救休斯顿",
@@ -366,7 +366,6 @@
     "perk-Perk_WestWood-desc": "击杀敌人时，该敌人周围 3 米内的其他敌人精准度降低 15%，持续 3 秒。最多叠加至 90%。",
     "secondary-perk-title": "副武器天赋",
     "secondary-perk-none": "无",
-    "Glass Cannon (Secondary Weapon)": "玻璃大炮（副武器）",
     "Killer Motor": "杀手马达",
     "12G Grim Compensator": "12G Grim补偿器",
     "Brute Compensator": "粗犷补偿器",
@@ -385,7 +384,7 @@
     "Trickshot": "正午时刻",
     "perk-Perk_Lawman-desc": "打出暴击后，武器射速提升 {IncreasedReloadSpeed}。",
     "perk-Perk_Numbskull-desc": "每次暴击时，都有 {HitChance} 几率对 {WithinRange} 米范围内的一名敌人造成伤害。",
-    "perk-Perk_Pelletpopper-desc": "命中目标的弹丸越多，下一次射击时的伤害增幅就越高，最高增幅可达 {MaxIncreasedDamage}。此效果将在 {BuffDuration} 秒后重置。",
+    "perk-Perk_Pelletpopper-desc": "命中目标的弹丸越多，下一次射击时的伤害增幅就越高，最高增幅可达 50%。此效果将在 2 秒后重置。",
     "perk-Perk_Rapido-desc": "重新装填后，你的瞄准、重新装填以及武器切换速度提升 {IncreasedEquipSpeed}，持续 {BuffDuration} 秒。",
     "perk-Perk_Trickshot-desc": "此武器的切换速度提升 {IncreasedEquipSpeed}。切换至此武器后，此武器可额外造成 {IncreasedDamage} 点伤害，持续 {BuffDuration} 秒。"
 }

@@ -486,6 +486,7 @@ h1 {
 
 .ammo-feed-counter,
 .sharpshooter-counter,
+.pellet-popper-counter,
 .hot-lead-counter,
 .midas-touch-counter {
     align-items: center;
@@ -501,6 +502,7 @@ h1 {
 
 .ammo-feed-counter button,
 .sharpshooter-counter button,
+.pellet-popper-counter button,
 .hot-lead-counter button,
 .midas-touch-counter button {
     width: 1.25rem;
@@ -518,6 +520,8 @@ h1 {
 .ammo-feed-counter button:focus-visible,
 .sharpshooter-counter button:hover,
 .sharpshooter-counter button:focus-visible,
+.pellet-popper-counter button:hover,
+.pellet-popper-counter button:focus-visible,
 .hot-lead-counter button:hover,
 .hot-lead-counter button:focus-visible,
 .midas-touch-counter button:hover,
@@ -528,12 +532,17 @@ h1 {
 
 .ammo-feed-value,
 .sharpshooter-value,
+.pellet-popper-value,
 .hot-lead-value,
 .midas-touch-value {
     min-width: 1rem;
     text-align: center;
     font-family: var(--font-mono);
     font-size: 0.85em;
+}
+
+.pellet-popper-value {
+    flex: 0 0 7ch;
 }
 
 .luck-of-draw-toggle,

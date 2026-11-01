@@ -473,6 +473,8 @@ const TRIGGER_HAPPY_DAMAGE_PER_SHOT = 0.04;
 const SPRAY_AND_PRAY_SHOT_INTERVAL = 4;
 const TARGET_PRACTICE_DAMAGE_BONUS = 0.25;
 const TARGET_PRACTICE_DURATION = 5;
+const PELLET_POPPER_MAX_BONUS = 0.5;
+const PELLET_POPPER_DURATION = 2;
 const HOT_LEAD_MAX_STACKS = 10;
 const HOT_LEAD_DAMAGE_PER_STACK = 0.15;
 const HOT_LEAD_PENETRATION_LOSS_PER_STACK = 0.1;
@@ -483,6 +485,7 @@ const MIDAS_TOUCH_MAX_STACKS = Math.ceil(MIDAS_TOUCH_MAX_PENETRATION_BONUS / MID
 let ammoFeedPickups = 0;
 let luckOfDrawTriggered = false;
 let sharpshooterCrits = 0;
+let pelletPopperHits = 0;
 let hotLeadBodyStacks = 0;
 let midasTouchCrits = 0;
 let targetPracticeTriggered = false;
@@ -639,6 +642,13 @@ function applyLoadout(weapon, skills, attachments) {
         ]?.magazineData;
 
     const fireData = updatedWeapon.fireData;
+    if (attachments.includes('Perk_Pelletpopper')) {
+        fireData.pelletPopperInitialHits = normalizePelletPopperHits(
+            pelletPopperHits, fireData.projectilesPerFiredRound);
+    }
+    // Double-Cross adds to the base-damage group, before Sunburn's multiplier.
+    const pelletPopperDamageScale = isSkillEquipped('Sunburn')
+        ? 1 + SKILLS.Sunburn.modifier * (SKILL_VALUES.Sunburn ?? 1) : 1;
 
     fireData.ammoLoaded = (equippedMag ?? fireData).ammoLoaded ?? 10;
     fireData.finalTapMultiplier = attachments.includes('Perk_Final') ? 4 : 1;
@@ -765,6 +775,9 @@ function applyLoadout(weapon, skills, attachments) {
             return {
                 damage: damage,
                 distance: damageStep.distance + rangeModifier,
+                ...(fireData.pelletPopperInitialHits != null && {
+                    pelletPopperDamagePerBonus: baseDamage * pelletPopperDamageScale,
+                }),
             };
         }
     )
@@ -795,6 +808,10 @@ function applyLoadout(weapon, skills, attachments) {
                     WEAPON_DATA[weapon].fireData.damageDistanceArray[0].damage *
                     (damageModifier + pointBlankModifier),
                 distance: distance,
+                ...(fireData.pelletPopperInitialHits != null && {
+                    pelletPopperDamagePerBonus: WEAPON_DATA[weapon].fireData
+                        .damageDistanceArray[0].damage * pelletPopperDamageScale,
+                }),
             });
         } else if (fireData.damageDistanceArray[0].distance < distance) {
             // Insert face to face's 5m range second in the array
@@ -805,6 +822,10 @@ function applyLoadout(weapon, skills, attachments) {
             fireData.damageDistanceArray.splice(1, 0, {
                 damage: damage,
                 distance: distance,
+                ...(fireData.pelletPopperInitialHits != null && {
+                    pelletPopperDamagePerBonus: WEAPON_DATA[weapon].fireData
+                        .damageDistanceArray[1].damage * pelletPopperDamageScale,
+                }),
             });
             
             const uniqueDamageArray = [];
@@ -1467,6 +1488,21 @@ function weaponShotsToKillByArmorLayer(
     };
 }
 
+function normalizePelletPopperHits(hits, projectiles = 1) {
+    return Math.min(Math.max(1, Math.floor(projectiles)),
+        Math.max(0, Math.floor(Number(hits) || 0)));
+}
+
+function getPelletPopperBonus(hits, projectiles = 1) {
+    return PELLET_POPPER_MAX_BONUS * normalizePelletPopperHits(hits, projectiles) /
+        Math.max(1, Math.floor(projectiles));
+}
+
+function updatePelletPopperState(hits, projectiles, shotTime) {
+    const count = normalizePelletPopperHits(hits, projectiles);
+    return { hits: count, expiresAt: count > 0 ? shotTime + PELLET_POPPER_DURATION : 0 };
+}
+
 function getSharpshooterMultiplier(stacks) {
     return 1 + Math.min(2, Math.max(0, stacks) * 0.15);
 }
@@ -1587,10 +1623,16 @@ function weaponShotsToKillWithDynamicPenetration(weapon, enemy, headshots, weapo
     let sharpStartingStacks = fireData.sharpshooterInitialStacks;
     let sharpStackOffset = 0;
     let mixedSharpStacks = sharpStartingStacks ?? 0;
+    let pelletPopperState = updatePelletPopperState(
+        fireData.pelletPopperInitialHits ?? 0, projectiles, 0);
 
     while (remainingHealth > healthTolerance) {
         if (rounds > 0 && rounds % magazineSize === 0) midasStacks = 0;
         const shotTime = timeToKill(weapon, rounds + 1);
+        const pelletPopperTolerance = Math.max(1, shotTime, pelletPopperState.expiresAt) * Number.EPSILON * 16;
+        const pelletPopperBonus = shotTime < pelletPopperState.expiresAt - pelletPopperTolerance
+            ? getPelletPopperBonus(pelletPopperState.hits, projectiles) : 0;
+        let pelletPopperRoundHits = 0;
         const timeTolerance = Math.max(1, shotTime, expiresAt) * Number.EPSILON * 16;
         if (stacks > 0 && shotTime >= expiresAt - timeTolerance) stacks = 0;
         const targetPracticeTolerance = Math.max(1, shotTime, targetPracticeExpiresAt) * Number.EPSILON * 16;
@@ -1619,8 +1661,9 @@ function weaponShotsToKillWithDynamicPenetration(weapon, enemy, headshots, weapo
             const index = rounds * projectiles + pellet;
             let damage = damageForProjectile(index, sharpStartingStacks, sharpStackOffset,
                 !(hitsVisor && enemy.displayName === 'Shield'),
-                sprayAndPrayActive ? mixedSharpStacks : undefined) * damageMultiplier;
+                sprayAndPrayActive ? mixedSharpStacks : undefined, pelletPopperBonus) * damageMultiplier;
             if (!(damage > 0)) return impossible();
+            pelletPopperRoundHits++;
             if (hitsVisor) {
                 remainingVisor -= visorDamage(damage);
                 visorShots++;
@@ -1664,10 +1707,17 @@ function weaponShotsToKillWithDynamicPenetration(weapon, enemy, headshots, weapo
                     }
                 }
                 const totalOverflow = Math.max(0, damageToArmor - enemy.armor);
-                const newOverflow = Math.max(0, totalOverflow - processedOverflow);
+                // Retain the existing armor-phase formula for Double-Cross.
+                const armorPhaseContinues = advancedArmor
+                    ? remainingArmor > armorTolerance &&
+                        Math.floor(effectivePenetration + Math.max(0, penetrationIncrement)) <
+                        Math.max(0, Math.ceil((remainingArmor - armorTolerance) / layerValue))
+                    : damageToArmor < requiredArmorDamage - armorTolerance;
+                const deferOverflow = fireData.pelletPopperInitialHits != null && armorPhaseContinues;
+                const newOverflow = deferOverflow ? 0 : Math.max(0, totalOverflow - processedOverflow);
                 remainingHealth -= newOverflow * shotCritMultiplier / headshotArmorBonus /
                     (1 + shotCritMultiplier * 0.54) * (1 + hollowPointBonus);
-                processedOverflow = Math.max(processedOverflow, totalOverflow);
+                if (!deferOverflow) processedOverflow = Math.max(processedOverflow, totalOverflow);
                 breakingBonus += Math.max(0, penetrationIncrement);
                 remainingLayers = layerValue > 0
                     ? Math.max(0, Math.ceil((remainingArmor - armorTolerance) / layerValue)) : 0;
@@ -1688,6 +1738,10 @@ function weaponShotsToKillWithDynamicPenetration(weapon, enemy, headshots, weapo
             if (isCriticalDamage) triggeredCritical = true;
         }
         rounds++;
+        if (fireData.pelletPopperInitialHits != null) {
+            // All pellets use the previous round's bonus; armor and visor hits count.
+            pelletPopperState = updatePelletPopperState(pelletPopperRoundHits, projectiles, shotTime);
+        }
         if (hitsVisor && enemy.displayName === 'Shield') {
             sharpStartingStacks = 0;
             sharpStackOffset = rounds * projectiles;
@@ -2583,6 +2637,7 @@ function populateLoadout(selectedWeapon) {
     ammoFeedPickups = 0;
     luckOfDrawTriggered = false;
     sharpshooterCrits = 0;
+    pelletPopperHits = 0;
     hotLeadBodyStacks = 0;
     midasTouchCrits = 0;
     targetPracticeTriggered = false;
@@ -2691,6 +2746,32 @@ function populateLoadout(selectedWeapon) {
                         else counter.appendChild(value);
                         if (change > 0) counter.appendChild(button);
                     }
+                    attachmentButton.appendChild(counter);
+                }
+
+                if (attachment === 'Perk_Pelletpopper') {
+                    const counter = document.createElement('span');
+                    counter.className = 'pellet-popper-counter';
+                    counter.style.display = 'none';
+                    counter.dataset.projectiles = weapon.fireData.projectilesPerFiredRound ?? 1;
+                    const value = document.createElement('span');
+                    value.className = 'pellet-popper-value';
+                    counter.appendChild(value);
+                    for (const [symbol, change] of [['−', -1], ['+', 1]]) {
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.textContent = symbol;
+                        button.addEventListener('click', (event) => {
+                            event.stopPropagation();
+                            pelletPopperHits = normalizePelletPopperHits(
+                                pelletPopperHits + change, Number(counter.dataset.projectiles));
+                            updatePelletPopperCounter(counter);
+                            if (attachmentInput.checked) updateStatsAfterChange();
+                        });
+                        if (change < 0) counter.prepend(button);
+                        else counter.appendChild(button);
+                    }
+                    updatePelletPopperCounter(counter);
                     attachmentButton.appendChild(counter);
                 }
 
@@ -3012,6 +3093,12 @@ function updateSkills(selectedSkill) {
     }
 }
 
+function updatePelletPopperCounter(counter) {
+    const projectiles = Number(counter.dataset.projectiles);
+    counter.querySelector('.pellet-popper-value').textContent =
+        '+' + formatNumber(getPelletPopperBonus(pelletPopperHits, projectiles) * 100) + '%';
+}
+
 function updateAttachments() {
     equippedAttachments = [];
 
@@ -3024,6 +3111,7 @@ function updateAttachments() {
         ATTACHMENT_DATA[perk]?.persistentDamageEffect?.perAmmoPickup)) ammoFeedPickups = 0;
     if (!equippedAttachments.includes('Perk_Critter')) luckOfDrawTriggered = false;
     if (!equippedAttachments.includes('Perk_Sharpshooter')) sharpshooterCrits = 0;
+    if (!equippedAttachments.includes('Perk_Pelletpopper')) pelletPopperHits = 0;
     if (!equippedAttachments.includes('Perk_Bite')) hotLeadBodyStacks = 0;
     if (!equippedAttachments.includes('Perk_Smith')) midasTouchCrits = 0;
     if (!equippedAttachments.includes('Perk_Superstar')) targetPracticeTriggered = false;
@@ -3031,6 +3119,11 @@ function updateAttachments() {
         counter.style.display = counter.parentElement.querySelector('input').checked
             ? 'inline-flex' : 'none';
         counter.querySelector('span').textContent = ammoFeedPickups;
+    });
+    document.querySelectorAll('.pellet-popper-counter').forEach((counter) => {
+        counter.style.display = counter.parentElement.querySelector('input').checked
+            ? 'inline-flex' : 'none';
+        updatePelletPopperCounter(counter);
     });
     document.querySelectorAll('.sharpshooter-counter').forEach((counter) => {
         counter.style.display = counter.parentElement.querySelector('input').checked
@@ -3079,7 +3172,9 @@ function updateWeaponStats(selectedWeapon) {
     const targetPracticeDamageMultiplier = getTargetPracticeDamageMultiplier(fireData.targetPracticeInitiallyActive);
     const displayedDamageDistanceArray = fireData.damageDistanceArray.map((step) => ({
         ...step,
-        damage: step.damage * hotLeadDamageMultiplier * targetPracticeDamageMultiplier,
+        damage: (step.damage + (step.pelletPopperDamagePerBonus ?? 0) *
+            getPelletPopperBonus(fireData.pelletPopperInitialHits ?? 0, fireData.projectilesPerFiredRound)) *
+            hotLeadDamageMultiplier * targetPracticeDamageMultiplier,
     }));
 
     const baseDamageStat = document.querySelector('#stat-base-damage');
@@ -3516,10 +3611,12 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
         const finalTapForProjectile = (index) =>
             (Math.floor(index / projectiles) + 1) % magazineSize === 0 ? finalTapMultiplier : 1;
         const criticalHits = headshots && enemy.displayName !== 'Drone' && multiplier !== 1;
-        const damageForProjectile = initialStacks != null || fireData.triggerHappyEnabled || finalTapMultiplier > 1
+        const damageForProjectile = initialStacks != null || fireData.triggerHappyEnabled || finalTapMultiplier > 1 ||
+            fireData.pelletPopperInitialHits != null
             ? (index, startingStacks = initialStacks, stackOffset = 0, applySharpshooter = true,
-                mixedStacks) => {
-                let shotDamage = damageWithoutSharpshooter;
+                mixedStacks, pelletPopperBonus = getPelletPopperBonus(fireData.pelletPopperInitialHits ?? 0, projectiles)) => {
+                let shotDamage = damageWithoutSharpshooter +
+                    (selectedDamageStep.pelletPopperDamagePerBonus ?? 0) * pelletPopperBonus;
                 if (fireData.triggerHappyEnabled) {
                     const roundIndex = Math.floor(index / projectiles);
                     // One stack per fired round; reload starts a new firing streak.
@@ -3545,7 +3642,7 @@ function shotsToKillAtDistances(weapon, enemy, headshots) {
             return enemy.displayName === 'Bulldozer'
                 ? (baseDamage + baseDamage * multiplier * 0.2) * headshotBonus : baseDamage;
         };
-        if ((fireData.targetPracticeEnabled && (criticalHits ||
+        if (fireData.pelletPopperInitialHits != null || (fireData.targetPracticeEnabled && (criticalHits ||
             (headshots && enemy.displayName === 'Bulldozer') || fireData.targetPracticeInitiallyActive)) ||
             (sprayAndPrayActive && !criticalHits) || (fireData.hotLeadEnabled && (criticalHits ||
             (headshots && enemy.displayName === 'Bulldozer') || fireData.hotLeadBodyStacks > 0)) ||
